@@ -24,7 +24,7 @@ if [ "$AUTO_INGEST" = "true" ]; then
     PDF_FLAG="--no-enable-pdf"
   fi
 
-  python3 scripts/raglocal.py ingest --doc-root "$INGEST_DOC_ROOT" $REBUILD_FLAG $PDF_FLAG
+  uv run python scripts/raglocal.py ingest --doc-root "$INGEST_DOC_ROOT" $REBUILD_FLAG $PDF_FLAG
 fi
 
 exec sh -c "PYTHONPATH=src uv run uvicorn rag_codegen.app:app --host ${HOST} --port ${PORT}"

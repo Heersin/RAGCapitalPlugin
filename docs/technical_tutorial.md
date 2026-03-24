@@ -189,6 +189,17 @@ curl -X POST http://localhost:8000/ingest \
 - HTML JavaDoc
 - Java 示例
 
+项目现在已经正式依赖 `pypdf`，所以把 `enable_pdf` 改成 `true` 时，容器和本地环境都会尝试解析 PDF。
+
+需要注意：
+
+- 当前 PDF 是否纳入索引，还取决于文件名能否映射到支持的插件类型
+- 目前主要识别：
+  - `action`
+  - `drc`
+  - `constraint`
+- 其他更泛化的 PDF 指南如果没有映射到这些类型，当前仍可能跳过
+
 ### 执行之后会产出什么
 
 系统会把结果写到：
@@ -400,10 +411,10 @@ curl -X POST http://localhost:8000/ingest \
 常见命令：
 
 ```bash
-python3 scripts/raglocal.py setup
-python3 scripts/raglocal.py ingest --doc-root sample/plugin
-python3 scripts/raglocal.py serve --host 0.0.0.0 --port 8000
-python3 scripts/raglocal.py dev --doc-root sample/plugin
+uv run python scripts/raglocal.py setup
+uv run python scripts/raglocal.py ingest --doc-root sample/plugin
+uv run python scripts/raglocal.py serve --host 0.0.0.0 --port 8000
+uv run python scripts/raglocal.py dev --doc-root sample/plugin
 ```
 
 ## 10. Dokploy 部署文件

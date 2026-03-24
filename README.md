@@ -4,7 +4,7 @@ A local-first RAG prototype for generating closed-source plugin code from docs.
 
 ## Scope
 - Supported plugin types: `action`, `drc`, `constraint`
-- Input docs: JavaDoc HTML + Java examples (+ optional PDF)
+- Input docs: JavaDoc HTML + Java examples (+ supported PDF via `pypdf`)
 - Output style: `core class + template`
 
 ## API
@@ -40,6 +40,8 @@ curl -X POST http://localhost:8000/ingest \
   -H 'Content-Type: application/json' \
   -d '{"doc_root":"sample/plugin","rebuild":true,"enable_pdf":false}'
 ```
+
+Enable PDF parsing by setting `enable_pdf` to `true` when your doc root contains PDF guides.
 
 5. Retrieve evidence:
 ```bash
@@ -96,10 +98,10 @@ curl -X POST http://localhost:8000/evaluate/run \
 Use `scripts/raglocal.py` to simplify common workflows:
 
 ```bash
-python3 scripts/raglocal.py setup
-python3 scripts/raglocal.py ingest --doc-root sample/plugin
-python3 scripts/raglocal.py serve --host 0.0.0.0 --port 8000
-python3 scripts/raglocal.py dev --doc-root sample/plugin
+uv run python scripts/raglocal.py setup
+uv run python scripts/raglocal.py ingest --doc-root sample/plugin
+uv run python scripts/raglocal.py serve --host 0.0.0.0 --port 8000
+uv run python scripts/raglocal.py dev --doc-root sample/plugin
 ```
 
 ## Dependency Management (uv)
@@ -126,5 +128,5 @@ If not configured, service uses deterministic local mock generation.
 - Dense index: `runtime/dense_index.npz`
 
 ## Notes
-- PDF ingest is optional and disabled by default.
+- PDF ingest is supported and controlled by the `enable_pdf` ingest flag.
 - This prototype prioritizes API correctness and hallucination reduction.

@@ -280,6 +280,8 @@ class Ingestor:
             return "drc"
         if "constraint" in n:
             return "constraint"
+        if "plugin" in n:
+            return "core"
         return None
 
     def _extract_first(self, text: str, pattern: str) -> Optional[str]:
