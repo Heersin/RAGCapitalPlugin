@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://www.mentor.com/harness/Schema/bridgesbuildList" author="system" creationDate="2014-07-25" creationTime="15:03:53" dtdversion="BuildListMgr 1.0" name="example4" schemaVersion="1_0" overwritebuildlists="true">
+  <buildlistmgr id="UID52e7f7-1480c781e87-2d74541398def4af87da30952f02f321" modified="9" haschildren="true">
+    <buildlist buildlistmaintenance="MANUAL" description="" effectivityvalue="" folderpath="" id="UID4e2806-1476cdbac10-2d74541398def4af87da30952f02f321" modified="2" name="logicBuildList2" releaselevel="Draft" type="logic">
+      <buildlistdetail design="UID52e7f7-1480c781e77-2d74541398def4af87da30952f02f321" id="UID4e2806-1476cdbac10-2d74541398def4af87da30952f02f321"/>
+      <ecoref buildlist_id="UID4e2806-1476cdbac10-2d74541398def4af87da30952f02f321" id="UID52e7f7-1480c781e8a-2d74541398def4af87da30952f02f321"/>
+      <ecoref buildlist_id="UID4e2806-1476cdbac10-2d74541398def4af87da30952f02f321" id="UID52e7f7-1480c781e89-2d74541398def4af87da30952f02f321"/>
+    </buildlist>
+  </buildlistmgr>
+</project>

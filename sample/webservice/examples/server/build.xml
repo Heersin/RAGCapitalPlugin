@@ -1,0 +1,59 @@
+<project name="Example CIS external services Builder" default="build" basedir=".">
+
+	<property environment="env"/>
+	<condition property="capitalhome" value="${env.CAPITAL_HOME}">
+	<not>
+		<contains string="${env.CAPITAL_HOME}" substring="env."/>
+	</not>
+	</condition>
+	<condition property="capitalhome" value="${env.CHS_HOME}">
+	<not>
+		<contains string="${capitalhome}" substring="env." />
+	</not>
+	</condition>
+
+	<property name="clientdir" value="${capitalhome}/WebServiceExamples"/>
+	<property name="deploydir" value="${capitalhome}/adaptors/webapps/DemoWebApp"/>
+	<property name="webdir" value="${deploydir}/WEB-INF"/>
+	<property name="libdir" value="${webdir}/lib"/>
+	<property name="srcdir" value="src"/>
+	<property name="destdir" value="WEB-INF"/>
+	<property name="compdir" value="${destdir}/classes"/>
+	<property name="debug" value="true"/>
+
+	<target name="init">
+		<!-- client build needed for round trip -->
+		<ant dir="../client"/>
+		<mkdir dir="${destdir}"/>
+		<mkdir dir="${compdir}"/>
+		<mkdir dir="${deploydir}"/>
+		<mkdir dir="${libdir}"/>
+		<mkdir dir="${webdir}"/>
+	</target>
+
+	<target name="build" depends="init">
+
+		<javac srcdir="${srcdir}" destdir="${compdir}" debug="${debug}">
+			<classpath>
+				<pathelement path="${capitalhome}/lib/servlet-api-3.0.jar"/>
+				<pathelement path="${clientdir}/wscommon.jar"/>
+				<pathelement path="${clientdir}/wsclient.jar"/>
+			</classpath>
+		</javac>
+
+		<copy todir="${webdir}" includeEmptyDirs="true">
+			<fileset dir="${destdir}"/>
+		</copy>
+		<copy todir="${libdir}">
+			<fileset dir="${clientdir}" includes="*.jar"/>
+		</copy>
+		<copy todir="${libdir}" file="${capitalhome}/lib/xerces.jar"/>
+	</target>
+
+	<target name="clean">
+		<ant dir="../client" target="clean"/>
+		<delete dir="${deploydir}"/>
+		<delete dir="${compdir}"/>
+	</target>
+
+</project>

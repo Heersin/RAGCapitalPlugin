@@ -1,0 +1,59 @@
+<project name="Example Java CIS Client Builder" default="build" basedir=".">
+
+	<property environment="env"/>
+	<condition property="capitalhome" value="${env.CAPITAL_HOME}">
+	<not>
+		<contains string="${env.CAPITAL_HOME}" substring="env."/>
+	</not>
+	</condition>
+	<condition property="capitalhome" value="${env.CHS_HOME}">
+	<not>
+		<contains string="${capitalhome}" substring="env." />
+	</not>
+	</condition>
+
+	<property name="clientdir" value="${capitalhome}/WebServiceExamples"/>
+	<property name="srcdir" value="src"/>
+	<property name="destdir" value="build"/>
+	<property name="debug" value="true"/>
+
+	<target name="init">
+		<ant dir="../common"/>
+		<mkdir dir="${destdir}"/>
+		<mkdir dir="${clientdir}"/>
+	</target>
+
+	<target name="build" depends="init">
+
+		<javac srcdir="${srcdir}" destdir="${destdir}" debug="${debug}">
+			<classpath>
+				<pathelement path="${clientdir}/wscommon.jar"/>
+				<pathelement path="${capitalhome}/lib/javax.ws.rs-api-2.0.jar"/>
+				<pathelement path="${capitalhome}/lib/jersey-media-multipart.jar"/>
+				<pathelement path="${capitalhome}/lib/jackson-databind.jar"/>
+				<pathelement path="${capitalhome}/lib/jackson-core.jar"/>
+				<pathelement path="${capitalhome}/lib/annotations.jar"/>
+			</classpath>
+		</javac>
+
+		<jar jarfile="${clientdir}/wsclient.jar" basedir="${destdir}">
+			<manifest>
+				<attribute name="Main-Class" value="com.example.webservice.client.ClientMain"/>
+				<attribute name="Class-Path"
+						   value="../lib/xerces.jar wscommon.jar"/>
+			</manifest>
+		</jar>
+
+		<copy todir="${clientdir}" file="run.bat"/>
+		<copy todir="${clientdir}" file="run.sh"/>
+	</target>
+
+	<target name="clean">
+		<ant dir="../common" target="clean"/>
+		<delete dir="${destdir}"/>
+		<delete file="${clientdir}/wsclient.jar"/>
+		<delete file="${clientdir}/run.bat"/>
+		<delete file="${clientdir}/run.sh"/>
+	</target>
+
+</project>

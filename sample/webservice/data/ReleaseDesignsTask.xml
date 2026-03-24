@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- projectname: this parameter refers to the name of the project under consideration-->
+<!-- annotate: this parameter defines if the diagrams should be annotated after the release of the design. Accepts true/false.-->
+<!-- warningaserror: this parameter defines that the warnings that arise out of design rule checks to be treated as errors. Accepts true/false.-->
+<project projectname="example1" annotate="false" warningaserror="false">
+  <!-- name: this parameter refers to the name of the design to be released-->
+  <!-- revision: this parameter refers to the revision of the design to be released-->
+  <!-- releasestatus: this parameter refers to the target release level of type Released to which the design needs to be transitioned-->
+  <wiringdesign name="Design1" revision="1" releasestatus="Complete"/>
+  <wiringdesign name="Design2" revision="1" releasestatus="Complete"/>
+</project>

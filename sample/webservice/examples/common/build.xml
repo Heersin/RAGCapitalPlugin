@@ -1,0 +1,43 @@
+<project name="Example Web Services Builder" default="build" basedir=".">
+
+	<property environment="env"/>
+	<condition property="capitalhome" value="${env.CAPITAL_HOME}">
+	<not>
+		<contains string="${env.CAPITAL_HOME}" substring="env."/>
+	</not>
+	</condition>
+	<condition property="capitalhome" value="${env.CHS_HOME}">
+	<not>
+		<contains string="${capitalhome}" substring="env." />
+	</not>
+	</condition>
+
+	<property name="clientdir" value="${capitalhome}/WebServiceExamples"/>
+	<property name="srcdir" value="src"/>
+	<property name="destdir" value="build"/>
+	<property name="debug" value="true"/>
+
+	<target name="init">
+		<mkdir dir="${destdir}"/>
+		<mkdir dir="${clientdir}"/>
+	</target>
+
+	<target name="build" depends="init">
+
+		<javac srcdir="${srcdir}" destdir="${destdir}" debug="${debug}">
+		</javac>
+
+		<jar jarfile="${clientdir}/wscommon.jar" basedir="${destdir}">
+		<manifest>
+			<attribute name="Class-Path"
+						   value="../lib/xerces.jar"/>
+			</manifest>
+	</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${destdir}"/>
+		<delete file="${clientdir}/wscommon.jar"/>
+	</target>
+
+</project>

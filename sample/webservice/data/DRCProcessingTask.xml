@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<drcsettings project="exampleproject" drcobject="UID6a6ebd-13e5c321c48-87fecf32183b52214ad60e22ba7de368" result="$CHS_HOME/temp/drc_task_result.csv">
+  <!-- drcobject should be UID of a valid design/buildlist/sbom.-->
+  <!-- this UID can be obtained via listdesigns etc services.-->
+  <!-- result is optional and is provided to write drc results as csv.-->
+  <!-- title of check is used only for documentation purpose here.-->
+  <!-- for plugin drcs the drcname attribute should be like-->
+  <!-- Logic.Checks.plugin:Java//{plugin url as seen in File/Plugins plugin details dialog}.-->
+  <drctorun drcname="Logic.Checks.BuildListDuplicateNameCheck" severity="Error" title="Duplicate Names across Designs"/>
+  <drctorun drcname="Logic.Checks.BuildListIncompatibleMatesOnBlocksCheck" severity="Error" title="Inconsistent mating of connectors on blocks across designs"/>
+  <drctorun drcname="Logic.Checks.BuildListReusablePinCheck" severity="Error" title="Inconsistent shared pin connections across designs"/>
+  <drctorun drcname="Logic.Checks.FunctionSharedObjectUsageCheck" severity="Error" title="Invalid name for shared object"/>
+  <drctorun drcname="Logic.Checks.WiresFitSharedCavityCheck" severity="Error" title="Wires fit shared cavity mismatch"/>
+  <drctorun drcname="Logic.Checks.AssemblyPrefsConsistencyCheck" severity="Error" title="Mismatch between assembly content and project preference"/>
+  <drctorun drcname="Logic.Checks.BlockAssociationCheck" severity="Error" title="Invalid design association on hierarchical block"/>
+  <drctorun drcname="Logic.Checks.BlockConsistencyCheck" severity="Error" title="Hierarchical block connectivity does not match with associated design"/>
+  <drctorun drcname="Logic.Checks.BlockPinsMismatchCheck" severity="Error" title="Hierarchical block pins does not match with associated design pins"/>
+  <drctorun drcname="Logic.Checks.CheckRuleLogicSetAttributes" severity="Error" title="Object that breaks attribute/property rule"/>
+  <drctorun drcname="Logic.Checks.ConductorDetailsLibraryCheck" severity="Error" title="No conductor library part available"/>
+  <drctorun drcname="Logic.Checks.ConnectivitySchematicCheck" severity="Error" title="Unplaced object"/>
+  <drctorun drcname="Logic.Checks.ConnectorCavityMatchCheck" severity="Error" title="Library connector cavity count mismatch"/>
+  <drctorun drcname="Logic.Checks.ConnectorConnectivityCheck" severity="Error" title="Unconnected connector"/>
+  <drctorun drcname="Logic.Checks.DanglingInterconnectCheck" severity="Error" title="Interconnect not terminating at a pin"/>
+  <drctorun drcname="Logic.Checks.DanglingNetCheck" severity="Error" title="Net not terminating at a pin"/>
+  <drctorun drcname="Logic.Checks.DanglingShieldCheck" severity="Error" title="Shield termination not terminating at a pin"/>
+  <drctorun drcname="Logic.Checks.DanglingWireCheck" severity="Error" title="Wire not terminating at a pin"/>
+  <drctorun drcname="Logic.Checks.DeviceConnectivityCheck" severity="Error" title="Unconnected device"/>
+  <drctorun drcname="Logic.Checks.DeviceConnectorsOnlyCheck" severity="Error" title="Harness connector not defined in device library footprint"/>
+  <drctorun drcname="Logic.Checks.DevicePinsOverlapButNotConnectedCheck" severity="Error" title="Overlapped device pins not connected"/>
+  <drctorun drcname="Logic.Checks.FitsCavityCheck" severity="Error" title="Wire fits cavity mismatch"/>
+  <drctorun drcname="Logic.Checks.HarnCheckComponentFitsPosition" severity="Error" title="Position assigned does not match library definition"/>
+  <drctorun drcname="Logic.Checks.ICDApplicabilityCheck" severity="Error" title="Unplaced ICD"/>
+  <drctorun drcname="Logic.Checks.ICDBackGroundPinSignalConnectivtyCheck" severity="Error" title="Background ICD pin signal connectivity inconsistency"/>
+  <drctorun drcname="Logic.Checks.ICDOptExpAndPropMismatchCheck" severity="Error" title="ICD option expression and property mismatch"/>
+  <drctorun drcname="Logic.Checks.ICDPartMismatchesCheck" severity="Error" title="ICD part number mismatch"/>
+  <drctorun drcname="Logic.Checks.ICDPinSignalConnectivityCheck" severity="Error" title="ICD pin signal connectivity inconsistency"/>
+  <drctorun drcname="Logic.Checks.ICDReleaseLevelCheck" severity="Error" title="Invalid release level on ICD"/>
+  <drctorun drcname="Logic.Checks.IncompatibleMatesOnBlockCheck" severity="Error" title="Incompatible mates on hierarchical block"/>
+  <drctorun drcname="Logic.Checks.InconsistentIncludeOnBOMStatusCheck" severity="Error" title="Include-on-BOM status changed"/>
+  <drctorun drcname="Logic.Checks.InterconnectAllocationCheck" severity="Error" title="Mismatch between interconnect pins and conductors"/>
+  <drctorun drcname="Logic.Checks.InterconnectMateMatchCheck" severity="Error" title="Mismatched cavity on interconnect connector and device"/>
+  <drctorun drcname="Logic.Checks.LibraryFootprintMatchesCheck" severity="Error" title="Invalid library footprint"/>
+  <drctorun drcname="Logic.Checks.LibraryMulticoreMatchCheck" severity="Error" title="Library multicore mismatch"/>
+  <drctorun drcname="Logic.Checks.LibraryPartNotCurrentCheck" severity="Error" title="Status of library part is not current"/>
+  <drctorun drcname="Logic.Checks.LibraryPartRequiredForDeviceCheck" severity="Error" title="Library part required for device"/>
+  <drctorun drcname="Logic.Checks.LibraryPartRevisionStatusCheck" severity="Error" title="Library part not latest revision"/>
+  <drctorun drcname="Logic.Checks.LogicAssemblyDetailsNotUsedInDesign" severity="Error" title="Assembly library definition not used in design"/>
+  <drctorun drcname="Logic.Checks.LogicAssemblyLibraryPartConsistencyCheck" severity="Error" title="Design assembly does not match the library assembly"/>
+  <drctorun drcname="Logic.Checks.LogicComponentOnBOMWithOutPartCheck" severity="Error" title="Included on BOM with no part number"/>
+  <drctorun drcname="Logic.Checks.LogicDesignDuplicateNameCheck" severity="Error" title="Duplicate Names in Design"/>
+  <drctorun drcname="Logic.Checks.LogicDesignDuplicatePinCheck" severity="Error" title="Multiple instances of pin within the design"/>
+  <drctorun drcname="Logic.Checks.LogicDesignInvalidNameCheck" severity="Error" title="Invalid name for component"/>
+  <drctorun drcname="Logic.Checks.LogicDesignSharedObjectUsageCheck" severity="Error" title="Invalid name for shared object"/>
+  <drctorun drcname="Logic.Checks.LogicDesignViolatesModularRelationshipsCheck" severity="Error" title="Design that breaks module code relationships"/>
+  <drctorun drcname="Logic.Checks.LogicLibPartViolatesScopeDefnCheck" severity="Error" title="Out of scope component"/>
+  <drctorun drcname="Logic.Checks.LogicObjectViolatesModularRelationshipsCheck" severity="Error" title="Object that breaks module code relationships"/>
+  <drctorun drcname="Logic.Checks.LogicObsoleteOptionsCheck" severity="Error" title="Obsolete option"/>
+  <drctorun drcname="Logic.Checks.LogicTextIsRenderableCheck" severity="Error" title="Text cannot be shown or printed in chosen font"/>
+  <drctorun drcname="Logic.Checks.LogicTextIsTranslatableCheck" severity="Error" title="No translation for text"/>
+  <drctorun drcname="Logic.Checks.MatedCavityMatchCheck" severity="Error" title="Incompatible mated connector"/>
+  <drctorun drcname="Logic.Checks.MulticoreConductorsHasIndicatorsCheck" severity="Error" title="Incorrect number of indicators on a multicore"/>
+  <drctorun drcname="Logic.Checks.MultipleICDDefinitionsExistsCheck" severity="Error" title="Multiple ICD definitions exist"/>
+  <drctorun drcname="Logic.Checks.OutOfDateCommentSymbolCheck" severity="Error" title="Comment symbol requires update"/>
+  <drctorun drcname="Logic.Checks.OutOfDateSymbolCheck" severity="Error" title="Electrical symbol requires update"/>
+  <drctorun drcname="Logic.Checks.PinsNotOnTheGridCheck" severity="Error" title="Pin not on the grid"/>
+  <drctorun drcname="Logic.Checks.RingTerminalPartInconsistencyCheck" severity="Error" title="Ring terminal with connector part number"/>
+  <drctorun drcname="Logic.Checks.SegmentOverlapCheck" severity="Error" title="Overlapping conductors"/>
+  <drctorun drcname="Logic.Checks.SharedObjectDuplicateNameCheck" severity="Error" title="Duplicate Names for Shared Objects in Project"/>
+  <drctorun drcname="Logic.Checks.ShieldConnectivityCheck" severity="Error" title="Shield terminating at more than two pins"/>
+  <drctorun drcname="Logic.Checks.ShortDescriptionOutOfSyncCheck" severity="Error" title="Invalid short description"/>
+  <drctorun drcname="Logic.Checks.SpliceConnectivityCheck" severity="Error" title="Unconnected splice"/>
+  <drctorun drcname="Logic.Checks.StudPinRingTerminalMateMatchCheck" severity="Error" title="Invalid ring terminal on stud pin"/>
+  <drctorun drcname="Logic.Checks.SymbolRequiredForDeviceCheck" severity="Error" title="Missing symbol for device"/>
+  <drctorun drcname="Logic.Checks.ValidLibraryPinsCheck" severity="Error" title="Invalid library pin mapping"/>
+  <drctorun drcname="Logic.Checks.ValidLibraryReferenceCheck" severity="Error" title="Invalid library reference"/>
+  <drctorun drcname="Logic.Checks.ValidLibrarySymbolCheck" severity="Error" title="Invalid library symbol"/>
+  <drctorun drcname="Logic.Checks.WireNotAllowedCheck" severity="Error" title="Wire not allowed"/>
+  <drctorun drcname="Integrator.Checks.CheckCavityConnectedToWrongSignal" severity="Error" title="Signal wire mismatch at cavity"/>
+  <drctorun drcname="Integrator.Checks.CheckCavityWithMultipleSignals" severity="Error" title="Multiple signals mapped to cavity"/>
+  <drctorun drcname="Integrator.Checks.CheckConstrainedPlacements" severity="Error" title="Mismatched device footprint"/>
+  <drctorun drcname="Integrator.Checks.CheckDanglingBundle" severity="Error" title="Unterminated bundle"/>
+  <drctorun drcname="Integrator.Checks.CheckDeadWiring" severity="Error" title="Wiring with no harness level"/>
+  <drctorun drcname="Integrator.Checks.CheckDuplicateName" severity="Error" title="Duplicate names in the design"/>
+  <drctorun drcname="Integrator.Checks.CheckEmptyBundle" severity="Error" title="Empty bundle"/>
+  <drctorun drcname="Integrator.Checks.CheckEmptyMulticore" severity="Error" title="Empty physical multicore"/>
+  <drctorun drcname="Integrator.Checks.CheckEmptySlots" severity="Error" title="Empty slot"/>
+  <drctorun drcname="Integrator.Checks.CheckFitsCavity" severity="Error" title="Wire fits cavity mismatch"/>
+  <drctorun drcname="Integrator.Checks.CheckFunctionalMulticore" severity="Error" title="Mismatched physical and logical multicore"/>
+  <drctorun drcname="Integrator.Checks.CheckGroundPlacement" severity="Error" title="Ground device that breaks placement rule"/>
+  <drctorun drcname="Integrator.Checks.CheckGroundPlacementConstraints" severity="Error" title="Ground placement constraint violation"/>
+  <drctorun drcname="Integrator.Checks.CheckHarnessDuplicateName" severity="Error" title="Duplicate names in a harness"/>
+  <drctorun drcname="Integrator.Checks.CheckHarnessLevel" severity="Error" title="Inconsistent harness level"/>
+  <drctorun drcname="Integrator.Checks.CheckIncompleteRoutingConfig" severity="Error" title="Incomplete wiring in vehicle configuration"/>
+  <drctorun drcname="Integrator.Checks.CheckInefficientSplicing" severity="Error" title="Two-wire splice"/>
+  <drctorun drcname="Integrator.Checks.CheckInlineHalfMismatch" severity="Error" title="Inline cavity signal mismatch"/>
+  <drctorun drcname="Integrator.Checks.CheckLibraryConnectorNumCavities" severity="Error" title="Library connector cavity count mismatch"/>
+  <drctorun drcname="Integrator.Checks.CheckLibraryMateMismatch" severity="Error" title="Inline mate part mismatch"/>
+  <drctorun drcname="Integrator.Checks.CheckLibraryMulticoreContents" severity="Error" title="Library multicore mismatch"/>
+  <drctorun drcname="Integrator.Checks.CheckLibraryObjectRefExists" severity="Error" title="Reference to non-existent library object"/>
+  <drctorun drcname="Integrator.Checks.CheckLibraryPartNotCurrent" severity="Error" title="Status of library part is not current"/>
+  <drctorun drcname="Integrator.Checks.CheckLibraryPartRequiredForConnector" severity="Error" title="Library part required for connector"/>
+  <drctorun drcname="Integrator.Checks.CheckLibraryPartRequiredForSlot" severity="Error" title="Library part required for slot"/>
+  <drctorun drcname="Integrator.Checks.CheckMissingCustomConstraint" severity="Error" title="Missing custom constraint"/>
+  <drctorun drcname="Integrator.Checks.CheckModuleCode" severity="Error" title="Inconsistent module code"/>
+  <drctorun drcname="Integrator.Checks.CheckOptionExpressionHarnessLevel" severity="Error" title="Mismatched wire option expression and harness level"/>
+  <drctorun drcname="Integrator.Checks.CheckOptionVariance" severity="Error" title="Inconsistent option-based variance"/>
+  <drctorun drcname="Integrator.Checks.CheckOutOfDateCommentSymbol" severity="Error" title="Comment symbol requires update"/>
+  <drctorun drcname="Integrator.Checks.CheckPlacementRule" severity="Error" title="Placement conflict"/>
+  <drctorun drcname="Integrator.Checks.CheckRedundantWiring" severity="Error" title="Redundant wires"/>
+  <drctorun drcname="Integrator.Checks.CheckRefinedConnCavityMatch" severity="Error" title="Refined connector cavity mismatch"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleAdditionalWireLength" severity="Error" title="Wire that breaks length change rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleAssignConnector" severity="Error" title="Assign connector rule violation"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleBackshellUsage" severity="Error" title="Signal that breaks backshell usage rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleConstraintsViolatingRuleHierarchy" severity="Error" title="Constraint that breaks rule hierarchy"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleMapSameCavBySignal" severity="Error" title="Map same cavity by signal rule violation"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleMaxWiresPerMultiterm" severity="Error" title="Multiterm that breaks number of wires rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleMaxWiresPerSplice" severity="Error" title="Splice that breaks number of wires rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleMinSpliceSeparation" severity="Error" title="Minimum splice separation rule violation"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleMulticoreSpecification" severity="Error" title="Multicore that breaks specification rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleNetworkSpecification" severity="Error" title="Network wiring that breaks specified limit"/>
+  <drctorun drcname="Integrator.Checks.CheckRulePigtailUsage" severity="Error" title="Signal that breaks pigtail usage rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRulePlaceByProperty" severity="Error" title="Slot that breaks placement rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleRouteByProperty" severity="Error" title="Wire that breaks routing rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleSetAttributes" severity="Error" title="Object that breaks attribute/property rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleSignalCavMap" severity="Error" title="Map signal to inline cavity rule violation"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleSpliceSpecification" severity="Error" title="Splice that breaks specification rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleTerminalSpecification" severity="Error" title="Wire that breaks terminal specification rule"/>
+  <drctorun drcname="Integrator.Checks.CheckRuleWirePartSpecification" severity="Error" title="Wire that breaks specification rule"/>
+  <drctorun drcname="Integrator.Checks.CheckTerminalBarConsistency" severity="Error" title="Inconsistent terminal bar"/>
+  <drctorun drcname="Integrator.Checks.CheckUnconnectedWires" severity="Error" title="Unconnected wire"/>
+  <drctorun drcname="Integrator.Checks.CheckUnmappedDevicePins" severity="Error" title="Device pin not connected to a device connector"/>
+  <drctorun drcname="Integrator.Checks.CheckUnpromotedOptions" severity="Error" title="Inconsistent harness option"/>
+  <drctorun drcname="Integrator.Checks.CheckUnusedFunctionalSource" severity="Error" title="Unplaced device"/>
+  <drctorun drcname="Integrator.Checks.ConductorDetailsLibraryCheck" severity="Error" title="No conductor library part available"/>
+  <drctorun drcname="Integrator.Checks.InconsistentIncludeOnBOMStatusCheck" severity="Error" title="Include-on-BOM status changed"/>
+  <drctorun drcname="Integrator.Checks.IntegratorObsoleteOptionsCheck" severity="Error" title="Obsolete option"/>
+  <drctorun drcname="Integrator.Checks.IntegratorTextIsRenderableCheck" severity="Error" title="Text cannot be shown or printed in chosen font"/>
+  <drctorun drcname="Integrator.Checks.IntegratorTextIsTranslatableCheck" severity="Error" title="No translation for text"/>
+  <drctorun drcname="Integrator.Checks.LibraryPartRevisionStatusCheck" severity="Error" title="Library part not latest revision"/>
+  <drctorun drcname="Integrator.Checks.MulticoreRouteCheck" severity="Error" title="Multicore wires follow different paths"/>
+  <drctorun drcname="Integrator.Checks.TopoLibPartViolatesScopeDefnCheck" severity="Error" title="Out of scope component"/>
+  <drctorun drcname="Harness.Checks.AssemblyPrefsConsistencyCheck" severity="Error" title="Mismatch between assembly content and project preference"/>
+  <drctorun drcname="Harness.Checks.FixturePartValidityCheck" severity="Error" title="Fixture part number validity"/>
+  <drctorun drcname="Harness.Checks.HarnCheckAlternativeValidCavityPlugParts" severity="Error" title="Alternative cavity plug available"/>
+  <drctorun drcname="Harness.Checks.HarnCheckAlternativeValidCavitySealParts" severity="Error" title="Alternative cavity seal available"/>
+  <drctorun drcname="Harness.Checks.HarnCheckAlternativeValidCavityTerminalParts" severity="Error" title="Alternative terminal available"/>
+  <drctorun drcname="Harness.Checks.HarnCheckAssemblyDetailsNotUsedInDesign" severity="Error" title="Assembly library definition not used in design"/>
+  <drctorun drcname="Harness.Checks.HarnCheckAssemblyLibraryPartConsistency" severity="Error" title="Design assembly does not match the library assembly"/>
+  <drctorun drcname="Harness.Checks.HarnCheckAssemblySplitsInDerivative" severity="Error" title="Assembly splits in derivative design"/>
+  <drctorun drcname="Harness.Checks.HarnCheckBlankTerminalMaterialDriver" severity="Error" title="Blank terminal material driver"/>
+  <drctorun drcname="Harness.Checks.HarnCheckBundleAttributes" severity="Error" title="Calculated bundle width exceeds max bundle width"/>
+  <drctorun drcname="Harness.Checks.HarnCheckBundleLength" severity="Error" title="Different graphical and physical bundle lengths"/>
+  <drctorun drcname="Harness.Checks.HarnCheckBundleRefNodeOrder" severity="Error" title="Inconsistent variant position reference node"/>
+  <drctorun drcname="Harness.Checks.HarnCheckCavityComponentFittingWires" severity="Error" title="Cavity component does not fit wire"/>
+  <drctorun drcname="Harness.Checks.HarnCheckCavityMLC" severity="Error" title="Cavity multi-location components without cavities"/>
+  <drctorun drcname="Harness.Checks.HarnCheckCavityWithSealHavingNoWires" severity="Error" title="Cavity with seal but no wire"/>
+  <drctorun drcname="Harness.Checks.HarnCheckCavityWithTerminalHavingNoWires" severity="Error" title="Cavity with terminal but no wire"/>
+  <drctorun drcname="Harness.Checks.HarnCheckCenterstripRouteValidity" severity="Error" title="Centerstrip splice not on wire route"/>
+  <drctorun drcname="Harness.Checks.HarnCheckComponentFitsPosition" severity="Error" title="Position assigned does not match library definition"/>
+  <drctorun drcname="Harness.Checks.HarnCheckComponentHousingSelectionValidity" severity="Error" title="Component does not exist in housing definition"/>
+  <drctorun drcname="Harness.Checks.HarnCheckComponentNotOnAnyBranch" severity="Error" title="Component not located on any bundle"/>
+  <drctorun drcname="Harness.Checks.HarnCheckComponentOnBOMWithOutPart" severity="Error" title="Included on BOM with no part number"/>
+  <drctorun drcname="Harness.Checks.HarnCheckConnectorWithDifferentTermMat" severity="Error" title="Mismatched mated connectors and terminal material"/>
+  <drctorun drcname="Harness.Checks.HarnCheckConnectorWithNoDressedRoute" severity="Error" title="Undefined route for dressed connector"/>
+  <drctorun drcname="Harness.Checks.HarnCheckDanglingBundle" severity="Error" title="Unterminated bundle"/>
+  <drctorun drcname="Harness.Checks.HarnCheckDesignAssemblyExtraComponentsConsistency" severity="Error" title="Assembly component not in library"/>
+  <drctorun drcname="Harness.Checks.HarnCheckDuplicateBundle" severity="Error" title="Multiple variant bundles"/>
+  <drctorun drcname="Harness.Checks.HarnCheckDuplicateName" severity="Error" title="Multiple components with same name"/>
+  <drctorun drcname="Harness.Checks.HarnCheckDuplicateRefNode" severity="Error" title="Mid-bundle component with multiple locations in the same child"/>
+  <drctorun drcname="Harness.Checks.HarnCheckDuplicateVariantPositionObject" severity="Error" title="Multiple instances for variant position object on a derivative"/>
+  <drctorun drcname="Harness.Checks.HarnCheckEmptyBundle" severity="Error" title="Empty bundle"/>
+  <drctorun drcname="Harness.Checks.HarnCheckEmptyMulticore" severity="Error" title="Empty multicore"/>
+  <drctorun drcname="Harness.Checks.HarnCheckInappropriateTerminalMaterialOrType" severity="Error" title="Inappropriate terminal material or type for wire"/>
+  <drctorun drcname="Harness.Checks.HarnCheckInsufficientDistanceBetweenItems" severity="Error" title="Insufficient distance between items"/>
+  <drctorun drcname="Harness.Checks.HarnCheckInsulationCodesConsistency" severity="Error" title="Inconsistent insulation code"/>
+  <drctorun drcname="Harness.Checks.HarnCheckInvalidPart" severity="Error" title="Obsolete or invalid part number"/>
+  <drctorun drcname="Harness.Checks.HarnCheckInvalidRefNodeDimension" severity="Error" title="Invalid variant position"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForBundleInsulation" severity="Error" title="Library part required for bundle insulation"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForClip" severity="Error" title="Library part required for clip"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForConnector" severity="Error" title="Library part required for connector"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForDevice" severity="Error" title="Library part required for device"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForGrommet" severity="Error" title="Library part required for grommet"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForMLC" severity="Error" title="Library part required for multi-location component"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForMulticore" severity="Error" title="Library part required for multicore"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForNodeInsulation" severity="Error" title="Library part required for node insulation"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForSplice" severity="Error" title="Library part required for splice"/>
+  <drctorun drcname="Harness.Checks.HarnCheckLibraryPartRequiredForWire" severity="Error" title="Library part required for wire"/>
+  <drctorun drcname="Harness.Checks.HarnCheckMandatoryItemSelectionValidity" severity="Error" title="Invalid mandatory item selection"/>
+  <drctorun drcname="Harness.Checks.HarnCheckMinBendRadius" severity="Error" title="Bundle arc below minimum bend radius"/>
+  <drctorun drcname="Harness.Checks.HarnCheckMultipleComponentsAtPosition" severity="Error" title="Multiple components at position"/>
+  <drctorun drcname="Harness.Checks.HarnCheckNestedAssembliesConsistency" severity="Error" title="Nested assembly contains in-house assembly/multicore"/>
+  <drctorun drcname="Harness.Checks.HarnCheckNoWireStripLength" severity="Error" title="Wire with zero strip length"/>
+  <drctorun drcname="Harness.Checks.HarnCheckNodeMLC" severity="Error" title="Multi-location component without node"/>
+  <drctorun drcname="Harness.Checks.HarnCheckNonModularConnectorWithTwoBundle" severity="Error" title="Non-modular connector is connected to more than one bundle"/>
+  <drctorun drcname="Harness.Checks.HarnCheckOptionExpressionValidity" severity="Error" title="Option on object not applicable to design"/>
+  <drctorun drcname="Harness.Checks.HarnCheckOverbraidEndTerminationLocationValidity" severity="Error" title="Invalid overbraid end termination"/>
+  <drctorun drcname="Harness.Checks.HarnCheckOverlappingInsulationLayers" severity="Error" title="Overlapping insulation layers with same layer number"/>
+  <drctorun drcname="Harness.Checks.HarnCheckPlugWireAtSameCavity" severity="Error" title="Plug and wire at the same cavity"/>
+  <drctorun drcname="Harness.Checks.HarnCheckRuleRouteWireByProperty" severity="Error" title="Wire that breaks routing rule"/>
+  <drctorun drcname="Harness.Checks.HarnCheckRuleSetAttributes" severity="Error" title="Violated attribute/property rule"/>
+  <drctorun drcname="Harness.Checks.HarnCheckSealPluggedMarkedNone" severity="Error" title="Cavity with plug or seal marked as &quot;none&quot;"/>
+  <drctorun drcname="Harness.Checks.HarnCheckSealedUnsealedConnectors" severity="Error" title="Sealed and unsealed components exist"/>
+  <drctorun drcname="Harness.Checks.HarnCheckTrueWireDoubleTermination" severity="Error" title="Terminal material code mismatch at double termination"/>
+  <drctorun drcname="Harness.Checks.HarnCheckTubeNotFittingBundle" severity="Error" title="Tube does not fit bundle"/>
+  <drctorun drcname="Harness.Checks.HarnCheckUnconnectedWires" severity="Error" title="Unconnected wire"/>
+  <drctorun drcname="Harness.Checks.HarnCheckUnsourcedPart" severity="Error" title="Library part without supplier number"/>
+  <drctorun drcname="Harness.Checks.HarnCheckUnterminatedWireEnd" severity="Error" title="Unterminated wire end"/>
+  <drctorun drcname="Harness.Checks.HarnCheckValidBOMIDValues" severity="Error" title="Missing BOM ID"/>
+  <drctorun drcname="Harness.Checks.HarnCheckValidWireDefinition" severity="Error" title="Invalid wire attributes versus library definition"/>
+  <drctorun drcname="Harness.Checks.HarnCheckVariantPositionObjectConsistency" severity="Error" title="Inconsistent variant position object"/>
+  <drctorun drcname="Harness.Checks.HarnCheckVariantPositionWiringConsistency" severity="Error" title="Inconsistent variant position wiring"/>
+  <drctorun drcname="Harness.Checks.HarnCheckWireAndCavityTerminalMismatch" severity="Error" title="Mismatched wire and cavity terminal material"/>
+  <drctorun drcname="Harness.Checks.HarnCheckWireFitsCavity" severity="Error" title="Wire does not fit cavity"/>
+  <drctorun drcname="Harness.Checks.HarnCheckWireInsulationLengthConsistency" severity="Error" title="Assembly insulation/wire length in design does not match library definition"/>
+  <drctorun drcname="Harness.Checks.HarnCheckWireMLC" severity="Error" title="Multi-location component without a wire end"/>
+  <drctorun drcname="Harness.Checks.HarnCheckWirePath" severity="Error" title="Invalid wire path"/>
+  <drctorun drcname="Harness.Checks.HarnCheckWireRouteValidity" severity="Error" title="Invalid wire route"/>
+  <drctorun drcname="Harness.Checks.HarnMultiEntryConnectorNonRoutedWire" severity="Error" title="Unrouted wire to multi-entry connector"/>
+  <drctorun drcname="Harness.Checks.HarnMultiEntryConnectorWireRouteConsistency" severity="Error" title="Connector route does not exist in library definition"/>
+  <drctorun drcname="Harness.Checks.HarnObsoleteOptionsCheck" severity="Error" title="Obsolete option"/>
+  <drctorun drcname="Harness.Checks.HarnessLibPartViolatesScopeDefnCheck" severity="Error" title="Out of scope component"/>
+  <drctorun drcname="Harness.Checks.HarnessTextIsRenderableCheck" severity="Error" title="Text cannot be shown or printed in chosen font"/>
+  <drctorun drcname="Harness.Checks.HarnessTextIsTranslatableCheck" severity="Error" title="No translation for text"/>
+  <drctorun drcname="Harness.Checks.InconsistentIncludeOnBOMStatusCheck" severity="Error" title="Include-on-BOM status changed"/>
+  <drctorun drcname="Harness.Checks.LibraryPartRevisionStatusCheck" severity="Error" title="Library part not latest revision"/>
+  <drctorun drcname="Harness.Checks.LogicDesignInvalidNameCheck" severity="Error" title="Invalid name for component"/>
+  <drctorun drcname="Harness.Checks.ModularCheckAssemblyAssignationConsistency" severity="Error" title="Inconsistent assembly module code"/>
+  <drctorun drcname="Harness.Checks.ModularCheckChildDesignsWillContainNoObjects" severity="Error" title="Empty modular design"/>
+  <drctorun drcname="Harness.Checks.ModularCheckChildModuleDesignsReferenceModuleCodesNotOnComposite" severity="Error" title="Child module design references module code not on composite"/>
+  <drctorun drcname="Harness.Checks.ModularCheckDesignHasUnusedApplicableModuleCodes" severity="Error" title="Design has applicable module code that is not assigned to any object"/>
+  <drctorun drcname="Harness.Checks.ModularCheckDesignViolatesRelationships" severity="Error" title="Design that breaks module code relationships"/>
+  <drctorun drcname="Harness.Checks.ModularCheckModuleCodesUsedInParentNotConsumedByChildModule" severity="Error" title="Module code used on composite but not consumed by child module"/>
+  <drctorun drcname="Harness.Checks.ModularCheckMulticoreInnerCoreAssignationConsistency" severity="Error" title="Inconsistent multicore inner core module code"/>
+  <drctorun drcname="Harness.Checks.ModularCheckObjectAssignedATechnicaModuleCodeThatHasNoCombinations" severity="Error" title="Object assigned a technical module code that has no associated combinations"/>
+  <drctorun drcname="Harness.Checks.ModularCheckObjectHasToLongModularExpression" severity="Error" title="Modular expression too long to be costed in CapH Costing"/>
+  <drctorun drcname="Harness.Checks.ModularCheckObjectViolatesRelationships" severity="Error" title="Object that breaks module code relationships"/>
+  <drctorun drcname="Harness.Checks.ModularCheckObjectsWithNoFunctionalModuleCodes" severity="Error" title="Modular Objects With No Functional Module Codes"/>
+  <drctorun drcname="Harness.Checks.ModularCheckObjectsWithNoProductionModuleCodes" severity="Error" title="Modular Objects With No Production Module Codes"/>
+  <drctorun drcname="Harness.Checks.ModularCheckRelatedObjectsAssignedDifferentModuleCodes" severity="Error" title="Related objects assigned different module codes"/>
+  <drctorun drcname="Harness.Checks.RingTerminalPartInconsistencyCheck" severity="Error" title="Ring terminal with connector part number"/>
+  <drctorun drcname="CapitalTopology.Checks.CapTopoCheckEmptyBundle" severity="Error" title="Empty bundle"/>
+  <drctorun drcname="CapitalTopology.Checks.CapTopoCheckRuleMinSpliceSeparation" severity="Error" title="Minimum splice separation rule violation"/>
+  <drctorun drcname="CapitalTopology.Checks.CapTopoCheckRuleRouteByProperty" severity="Error" title="Wire that breaks routing rule"/>
+  <drctorun drcname="CapitalTopology.Checks.CapTopoCheckRuleSetAttributes" severity="Error" title="Object that breaks attribute/property rule"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckAttributePropertyMismatch" severity="Error" title="Attribute/property mismatch with wiring design"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckDanglingBundle" severity="Error" title="Unterminated bundle"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckDuplicateName" severity="Error" title="Duplicate names in the design"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckEmptySlots" severity="Error" title="Empty slot"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckFitsCavity" severity="Error" title="Wire fits cavity mismatch"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckHarnessDuplicateName" severity="Error" title="Duplicate names in a harness"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckLibraryConnectorNumCavities" severity="Error" title="Library connector cavity count mismatch"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckLibraryMateMismatch" severity="Error" title="Inline mate part mismatch"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckLibraryObjectRefExists" severity="Error" title="Reference to non-existent library object"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckLibraryPartNotCurrent" severity="Error" title="Status of library part is not current"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckLibraryPartRequiredForConnector" severity="Error" title="Library part required for connector"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckLibraryPartRequiredForSlot" severity="Error" title="Library part required for slot"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckMissingCustomConstraint" severity="Error" title="Missing custom constraint"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckOutOfDateCommentSymbol" severity="Error" title="Comment symbol requires update"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckPlacementRule" severity="Error" title="Placement conflict"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckRuleAssignConnector" severity="Error" title="Assign connector rule violation"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckRulePlaceByProperty" severity="Error" title="Slot that breaks placement rule"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckUnassociatedHarnessConnector" severity="Error" title="Unassociated harness connector"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckUnplacedHarnessConnector" severity="Error" title="Unplaced harness connector"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckUnplacedInlineConnector" severity="Error" title="Unplaced inline connector"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckUnroutedWires" severity="Error" title="Unrouted wires"/>
+  <drctorun drcname="CapitalTopology.Checks.CheckUnusedFunctionalSource" severity="Error" title="Unplaced device"/>
+  <drctorun drcname="CapitalTopology.Checks.InconsistentIncludeOnBOMStatusCheck" severity="Error" title="Include-on-BOM status changed"/>
+  <drctorun drcname="CapitalTopology.Checks.IntegratorObsoleteOptionsCheck" severity="Error" title="Obsolete option"/>
+  <drctorun drcname="CapitalTopology.Checks.IntegratorTextIsRenderableCheck" severity="Error" title="Text cannot be shown or printed in chosen font"/>
+  <drctorun drcname="CapitalTopology.Checks.IntegratorTextIsTranslatableCheck" severity="Error" title="No translation for text"/>
+  <drctorun drcname="CapitalTopology.Checks.LibraryPartRevisionStatusCheck" severity="Error" title="Library part not latest revision"/>
+  <drctorun drcname="CapitalTopology.Checks.MulticoreRouteCheck" severity="Error" title="Multicore wires follow different paths"/>
+  <drctorun drcname="CapitalTopology.Checks.TopoLibPartViolatesScopeDefnCheck" severity="Error" title="Out of scope component"/>
+  <drctorun drcname="SBOM.Checks.CompleteInsulationCheck" severity="Error" title="Incomplete insulation"/>
+  <drctorun drcname="SBOM.Checks.CompleteOverbraidCheck" severity="Error" title="Incomplete overbraid"/>
+  <drctorun drcname="SBOM.Checks.CompleteSpliceCheck" severity="Error" title="Incomplete splice"/>
+  <drctorun drcname="SBOM.Checks.ParentedStripCheck" severity="Error" title="Orphaned strip"/>
+  <drctorun drcname="SBOM.Checks.SubAssemblyNotCostedCheck" severity="Error" title="Sub-assembly not costed"/>
+  <drctorun drcname="SBOM.Checks.SubAssemblyPartAssignmentCheck" severity="Error" title="Sub-assembly with no part assigned"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckClusterInterfaceDuplicateName" severity="Error" title="Duplicate interface names in component"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckFunctionToClusterAllocation" severity="Error" title="Component that breaks allocation rule"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckIncompleteSignals" severity="Error" title="Incomplete Signal"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckMismatchCarrierSynthesizeValue" severity="Error" title="Mismatched carrier type and synthesize value"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckMismatchedSignalTypeOnCarrier" severity="Error" title="Mismatched signal and carrier types"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckMultiplexSignalOnCarrier" severity="Error" title="Multiplexed signal assigned to non-multiplexed carrier"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckPlatformDuplicateName" severity="Error" title="Duplicate names in the design"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckPlatformLibraryPartRevisionStatus" severity="Error" title="Library part not latest revision"/>
+  <drctorun drcname="ArtisanPlatform.Checks.CheckSignalToCarrierAllocation" severity="Error" title="Carrier that breaks allocation rule"/>
+  <drctorun drcname="ArtisanFunction.Checks.BitsizeNotDefinedCheck" severity="Error" title="Undefined bitsize for software or multiplexed signal"/>
+  <drctorun drcname="ArtisanFunction.Checks.BlockAssociationCheck" severity="Error" title="Invalid design association on hierarchical block"/>
+  <drctorun drcname="ArtisanFunction.Checks.DanglingFunctionConductorCheck" severity="Error" title="Signal not terminating at a port"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionBlockConsistencyCheck" severity="Error" title="Hierarchical block connectivity does not match with associated design"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionConnectivityCheck" severity="Error" title="Unconnected function"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionConnectivitySchematicCheck" severity="Error" title="Unplaced object"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionDesignDuplicatePortCheck" severity="Error" title="Multiple instances of port within the design"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionDesignInvalidNameCheck" severity="Error" title="Invalid name for component"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionInboundSignalBitsizeCheck" severity="Error" title="Mismatch of &apos;Out&apos; port bitsize"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionOutboundSignalBitsizeCheck" severity="Error" title="Mismatch of &apos;In&apos; port bitsize"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSegmentOverlapCheck" severity="Error" title="Overlapping signals"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSharedObjectDuplicateNameCheck" severity="Error" title="Duplicate Names for Shared Objects in Project"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSharedObjectUsageCheck" severity="Error" title="Invalid name for shared object"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSignalPortMismatchCheck" severity="Error" title="Mismatch of signal and port type"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSignalWithMultipleOutPortsCheck" severity="Error" title="Signal with multiple &apos;Out&apos; ports"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSignalWithNoOutPortCheck" severity="Error" title="Signal with no &apos;Out&apos; port"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSignalWithoutInPortCheck" severity="Error" title="Signal with no &apos;In&apos; ports"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionTextIsTranslatableCheck" severity="Error" title="No translation for text"/>
+  <drctorun drcname="ArtisanFunction.Checks.LogicDesignDuplicateNameCheck" severity="Error" title="Duplicate Names in Design"/>
+  <drctorun drcname="ArtisanFunction.Checks.LogicObsoleteOptionsCheck" severity="Error" title="Obsolete option"/>
+  <drctorun drcname="ArtisanFunction.Checks.OutOfDateCommentSymbolCheck" severity="Error" title="Comment symbol requires update"/>
+  <drctorun drcname="ArtisanFunction.Checks.ShortDescriptionOutOfSyncCheck" severity="Error" title="Invalid short description"/>
+  <drctorun drcname="ArtisanFunction.Checks.TypeNotDefinedCheck" severity="Error" title="Type not defined"/>
+  <drctorun drcname="ArtisanFunction.Checks.BuildListDuplicateNameCheck" severity="Error" title="Duplicate Names across Designs"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSharedObjectUsageCheck" severity="Error" title="Invalid name for shared object"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSharedSignalWithMultipleOutPortsCheck" severity="Error" title="Shared Signal with multiple &apos;Out&apos; ports across designs in buildlist"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSharedSignalWithNoOutPortCheck" severity="Error" title="Shared Signal with no &apos;Out&apos; ports across designs in buildlist"/>
+  <drctorun drcname="ArtisanFunction.Checks.FunctionSharedSignalWithoutInPortCheck" severity="Error" title="Shared Signal with no &apos;In&apos; ports across designs in buildlist"/>
+</drcsettings>

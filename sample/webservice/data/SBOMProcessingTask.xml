@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbomprocessingsettings>
+  <project projectname="Quick Start - Automotive Interactive"/>
+  <compositedesign designname="DOOR-DR" revision="A" partnumber="QSI-DOOR-DR-01_1">
+    <childdesign designname="DOOR-DR-LHD-SP" revision="1" partnumber="DOOR-DR-LHD-SP1"/>
+    <childdesign designname="DOOR-DR-RHD-BS" revision="1" partnumber="DOOR-DR-RHD-BS1"/>
+    <childdesign designname="DOOR-DR-_LHD-BS" revision="1" partnumber="DOOR-DR-_LHD-BS1"/>
+  </compositedesign>
+  <patterns>
+    <pattern patternname="SamplePattern"/>
+  </patterns>
+  <sbomprocessingservice scope="derivative">
+    <sbomgenerationservice overwriteexistingsbom="true" preservemanualchanges="true" preserveparentrevisionchanges="true"/>
+    <sbompartnumbergenerationservice reusepartnumbers="true"/>
+    <sbomcostgenerationservice/>
+  </sbomprocessingservice>
+</sbomprocessingsettings>

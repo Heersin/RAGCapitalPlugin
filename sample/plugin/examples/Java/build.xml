@@ -1,0 +1,226 @@
+<project name="Example Java Plugin Builder" default="build" basedir=".">
+    <property environment="env"/>
+    <condition property="capitalhome" value="${env.CAPITAL_HOME}">
+        <not>
+            <contains string="${env.CAPITAL_HOME}" substring="env."/>
+        </not>
+    </condition>
+    <condition property="capitalhome" value="${env.CHS_HOME}">
+        <not>
+            <contains string="${capitalhome}" substring="env."/>
+        </not>
+    </condition>
+
+    <property name="plugindir" value="${capitalhome}/plugins"/>
+    <property name="examples" value="${plugindir}/Examples"/>
+    <property name="loginexamples" value="${plugindir}/LoginExamples"/>
+    <property name="extras" value="${loginexamples}/extras"/>
+    <property name="srcdir" value="src"/>
+    <property name="destdir" value="build"/>
+    <property name="logindestdir" value="loginbuild"/>
+    <property name="debug" value="true"/>
+    <property name="Scoping" value="${plugindir}/Scoping"/>
+
+    <target name="init">
+        <mkdir dir="${destdir}"/>
+        <mkdir dir="${examples}"/>
+
+        <!-- Ensure that any properties are copied into the build directory -->
+        <copy todir="${destdir}">
+            <fileset dir="${srcdir}" includes="**/*.properties"/>
+        </copy>
+
+        <!-- Ensure that any images are copied into the build directory -->
+        <copy todir="${destdir}">
+            <fileset dir="${srcdir}" includes="**/*.gif"/>
+        </copy>
+
+    </target>
+
+    <target name="build" depends="init">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <javac srcdir="${srcdir}" destdir="${destdir}" excludes="**/login/**, **/autolink/**, **/bridge/**, **/LibraryDrivenScoping/**, **/LibraryAndDesignDrivenScoping/**"
+               debug="${debug}" includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+				<pathelement path="${capitalhome}/lib/xerces.jar"/>
+            </classpath>
+        </javac>
+        <copy todir="${destdir}">
+            <fileset dir="${srcdir}" includes="**/*.gif"/>
+            <fileset dir="${srcdir}" includes="**/*.jpg"/>
+            <fileset dir="${srcdir}" includes="**/*.png"/>
+        </copy>
+        <jar jarfile="${examples}/example.jar" basedir="${destdir}"/>
+
+    </target>
+
+    <target name="autolink" depends="init">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <javac srcdir="${srcdir}" destdir="${destdir}" includes="**/autolink/**" debug="${debug}"
+               includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="${capitalhome}/lib/capitalbridgessdk.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${examples}/example.jar" basedir="${destdir}"/>
+
+    </target>
+
+    <target name="bridge" depends="init">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <!-- Ensure that any properties are copied into the plugins/examples directory -->
+        <copy todir="${plugindir}">
+            <fileset dir="${srcdir}/com/example/plugin/bridge" includes="*.properties"/>
+        </copy>
+
+        <javac srcdir="${srcdir}" destdir="${destdir}" includes="**/bridge/**" debug="${debug}"
+               includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="${capitalhome}/lib/capitalbridgessdk.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${examples}/example.jar" basedir="${destdir}" excludes="**/bridge/*.properties"/>
+
+    </target>
+
+    <target name="queryonly" depends="init">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <javac srcdir="${srcdir}" destdir="${destdir}" includes="**/query/**" debug="${debug}"
+               includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${examples}/query.jar" basedir="${destdir}/com/example/plugin/query"/>
+
+    </target>
+    <target name="clean">
+        <delete dir="${destdir}"/>
+        <delete dir="${examples}"/>
+    </target>
+
+    <target name="logininit">
+        <mkdir dir="${logindestdir}"/>
+        <mkdir dir="${loginexamples}"/>
+        <mkdir dir="${extras}"/>
+
+    </target>
+    <!-- ======================================================== -->
+    <!--   Login (Pluggable Authentication) plugins               -->
+    <!-- ======================================================== -->
+
+    <target name="logintce" depends="logininit">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <javac srcdir="${srcdir}" destdir="${logindestdir}" includes="**/login/TCeLogin.java" debug="${debug}"
+               includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="./tcev10signon.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${loginexamples}/loginexample.jar" basedir="${logindestdir}"/>
+
+        <copy todir="${plugindir}" file="TCESignon.properties"/>
+        <copy todir="${extras}" file="tcev10signon.jar"/>
+
+    </target>
+
+    <target name="loginmemory" depends="logininit">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <javac srcdir="${srcdir}" destdir="${logindestdir}" includes="**/login/SampleMemoryBasedLogin.java"
+               debug="${debug}" includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${loginexamples}/loginexample.jar" basedir="${logindestdir}"/>
+
+    </target>
+
+    <target name="loginldap" depends="logininit">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+        <javac srcdir="${srcdir}" destdir="${logindestdir}" includes="**/login/SimpleLDAPLogin.java"
+               debug="${debug}" includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${loginexamples}/loginexample.jar" basedir="${logindestdir}"/>
+
+    </target>
+	  <target name="loginclientldap" depends="logininit">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+        <javac srcdir="${srcdir}" destdir="${logindestdir}" includes="**/login/SimpleLDAPClientAuthenticationLogin.java"
+               debug="${debug}" includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+                <pathelement path="${capitalhome}/lib/capitaljeda.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${loginexamples}/loginclientexample.jar" basedir="${logindestdir}"/>
+
+    </target>
+
+    <target name="loginclean">
+        <delete dir="${logindestdir}"/>
+        <delete dir="${loginexamples}"/>
+        <delete file="${plugindir}/TCESignon.properties"/>
+    </target>
+	
+    <!-- ======================================================== -->
+    <!--   Scoping (Pluggable Component Scoping) plugins          -->
+    <!-- ======================================================== -->
+	
+	<target name="LibraryDrivenScoping" depends="init">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <javac srcdir="${srcdir}" destdir="${destdir}" includes="**/LibraryDrivenScoping/**" debug="${debug}"
+               includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${examples}/example.jar" basedir="${destdir}"/>
+
+    </target>
+	
+	<target name="LibraryAndDesignDrivenScoping" depends="init">
+
+        <echo message="CAPITAL_HOME = ${capitalhome}"/>
+
+        <javac srcdir="${srcdir}" destdir="${destdir}" includes="**/LibraryAndDesignDrivenScoping/**" debug="${debug}"
+               includeantruntime="false">
+            <classpath>
+                <pathelement path="${capitalhome}/lib/capitalapi.jar"/>
+            </classpath>
+        </javac>
+        <jar jarfile="${examples}/example.jar" basedir="${destdir}"/>
+
+    </target>
+
+</project>

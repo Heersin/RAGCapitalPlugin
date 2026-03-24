@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FEMParameters>
+   <!-- this parameter defines the source system CIS user name -->
+   <Param name="SourceCISUserName" value="System"/>
+    <!-- this parameter defines the source system CIS password -->
+  <Param name="SourceCISUserPassword" value="manager"/>
+   <!-- this parameter defines the source system CIS IP address -->
+   <Param name="SourceCISAddress" value="127.0.0.1"/>
+     <!-- this parameter defines the source system CIS port -->
+    <Param name="SourceCISPort" value="49901"/>
+
+    <!-- this parameter defines if import should overwrite symbols which exist in the system already-->
+  <Param name="Overwrite" value="true"/>
+
+  <!-- this parameter defines the libraries which are intended for import.  Blank or absence means all the libraries sent by the corresponding export task are imported.  Multiple symbol library entries should be made by repeating Param entry.  Here is an example 
+  <Param name="SymbolLibraryToImport" value="Library1"/>
+  <Param name="SymbolLibraryToImport" value="Library2"/>
+  -->
+  <Param name="SymbolLibraryToImport" value=""/>
+
+  <!-- If the intended Import should be done in secured mode, please uncomment the following 2 params to set the keystore path and password.  CIS port number may have to be modified if this is enabled.  Please see client properties for details on this. -->
+  <!-- this parameter defines the source system keystore path -->
+	<!-- <Param name="KeyStore" value="${capital.home}/config/.keystore"/>  -->
+  <!-- this parameter defines the source system keystore password -->
+	<!--<Param name="KeyPassword" value="chsreporter"/>   -->
+
+    <!-- this parameter defines the way timestamp of an overwritten symbol is set.  The following are possible values and their meaning
+	   Target - Use timestamp of the existing symbol in the database
+	   Source - Use timestamp of the incoming symbol
+	   Current - Update the timestamp with the current timestamp
+	-->
+   <Param name="SymbolImportOverwriteTimestamp" value="Source"/>
+   
+    <!-- this parameter defines the way timestamp of an newly imported symbol is set.  The following are possible values and their meaning
+	   Source - Use timestamp of the incoming symbol
+	   Current - Update the timestamp with the current timestamp
+	-->
+   <Param name="SymbolImportMergeTimestamp" value="Source"/>
+   
+   <!--  this parameter defines whether the temporary symbol library zip files, generated in temporary area while importing symbol libraries, should be retained upon task completion.
+       -->
+   <Param name="KeepDataFile" value="false"/>
+  
+</FEMParameters>
+

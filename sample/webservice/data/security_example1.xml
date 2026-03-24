@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SecurityMgr>
+	<DomainMgr>
+		<domain description="" domainname="testdomain" id="_1"/>
+	</DomainMgr>
+	<RolesMgr>
+		<role id="_2" rolename="Project Administrator">
+			<permissionref permissionname="Project Info"/>
+			<permissionref permissionname="Release Levels"/>
+			<permissionref permissionname="Rules"/>
+			<permissionref permissionname="Preferences"/>
+			<permissionref permissionname="Preferred Components"/>
+			<permissionref permissionname="Naming"/>
+			<permissionref permissionname="Object Type Info"/>
+			<permissionref permissionname="Build Lists"/>
+			<permissionref permissionname="Option Maintenance"/>
+			<permissionref permissionname="Shared Objects"/>
+			<permissionref permissionname="Effectivity"/>
+			<permissionref permissionname="Usage"/>
+			<permissionref permissionname="Design Abstractions"/>
+			<permissionref permissionname="Analysis"/>
+			<functionalpermissionref name="Unfreeze Shared Objects"/>
+			<functionalpermissionref name="Design.ChangePolicies.Define"/>
+			<functionalpermissionref name="AuditTrail.Administrate"/>
+			<functionalpermissionref name="ManagePlanes"/> 
+			<functionalpermissionref name="StyleSets"/>
+			<functionalpermissionref name="ReleaseLevel.Draft"/>
+			<functionalpermissionref name="ReleaseLevel.Obsolete"/>
+			<functionalpermissionref name="ReleaseLevel.Pending"/>
+			<functionalpermissionref name="ReleaseLevel.Released"/>
+			<functionalpermissionref name="AdvanceNaming.RunAdvancedNaming"/>
+			<functionalpermissionref name="Reporting.EditNamedQueries"/>
+			<functionalpermissionref name="DeleteUnusedSharedObjects"/>
+			<functionalpermissionref name="ExportProject"/>
+			<functionalpermissionref name="ExportDesign"/>
+			<functionalpermissionref name="ImportProject"/>
+			<functionalpermissionref name="CreateProject"/>
+			<functionalpermissionref name="DeleteProject"/>
+			<functionalpermissionref name="ImportDesign"/>
+			<functionalpermissionref name="CopyDesign"/>
+			<functionalpermissionref name="CopyDesignAdvanced"/>
+			<functionalpermissionref name="RevisionDesign"/>
+			<functionalpermissionref name="EvaluateDesign"/>
+		</role>
+		<role id="_3" rolename="Designer">
+			<permissionref permissionname="Shared Objects"/>
+			<functionalpermissionref name="EditLogicDesign"/>
+			<functionalpermissionref name="EditIntegratorDesign"/>
+			<functionalpermissionref name="EditHarnessDesign"/>
+			<functionalpermissionref name="ReleaseLevel.Draft"/>
+			<functionalpermissionref name="ReleaseLevel.Pending"/>
+			<functionalpermissionref name="Reporting.EditNamedQueries"/>
+			<functionalpermissionref name="AdvanceNaming.RunAdvancedNaming"/>
+			<functionalpermissionref name="AutoviewImportProjectAndGenerateDiagrams"/>
+			<functionalpermissionref name="RevisionDesign"/>
+			<functionalpermissionref name="EvaluateDesign"/>
+		</role>
+		<role id="_4" rolename="User Administrator">
+			<permissionref permissionname="Security"/>
+			<functionalpermissionref name="ImportSecurityData"/>
+			<functionalpermissionref name="ExportSecurityData"/>
+		</role>
+		<role id="_5" rolename="Librarian">
+			<permissionref permissionname="Codes"/>
+			<permissionref permissionname="Companies"/>
+			<permissionref permissionname="Symbol Library"/>
+			<functionalpermissionref name="Library.Components.Assembly"/>
+			<functionalpermissionref name="Library.Components.Backshell"/>
+			<functionalpermissionref name="Library.Components.Backshell_Plug"/>
+			<functionalpermissionref name="Library.Components.Backshell_Seal"/>
+			<functionalpermissionref name="Library.Components.Cavity_Plug"/>
+			<functionalpermissionref name="Library.Components.Cavity_Seal"/>
+			<functionalpermissionref name="Library.Components.Clip"/>
+			<functionalpermissionref name="Library.Components.Connector"/>
+			<functionalpermissionref name="Library.Components.Connector_Seal"/>
+			<functionalpermissionref name="Library.Components.Grommet"/>
+			<functionalpermissionref name="Library.Components.Device"/>
+			<functionalpermissionref name="Library.Components.Heat_Shrink_Sleeve"/>
+			<functionalpermissionref name="Library.Components.IDC_Connector"/>
+			<functionalpermissionref name="Library.Components.In_House_Assembly"/>
+			<functionalpermissionref name="Library.Components.Multicore_Wire"/>
+			<functionalpermissionref name="Library.Components.Other"/>
+			<functionalpermissionref name="Library.Components.Solder_Sleeve"/>
+			<functionalpermissionref name="Library.Components.Splice"/>
+			<functionalpermissionref name="Library.Components.Tape"/>
+			<functionalpermissionref name="Library.Components.Terminal"/>
+			<functionalpermissionref name="Library.Components.Tube"/>
+			<functionalpermissionref name="Library.Components.Ultrasonic_Weld"/>
+			<functionalpermissionref name="Library.Components.Wire"/>
+			<functionalpermissionref name="setLibraryStatus.New"/>
+			<functionalpermissionref name="setLibraryStatus.Current"/>
+			<functionalpermissionref name="setLibraryStatus.Obsolete"/>
+			<functionalpermissionref name="Library.Components.ModifyCurrent"/>
+			<functionalpermissionref name="Reporting.EditNamedQueries"/>
+			<functionalpermissionref name="Library.ImportComponents"/>
+			<functionalpermissionref name="Library.ExportComponents"/>
+			<functionalpermissionref name="Library.DeleteComponents"/>
+			<functionalpermissionref name="ImportSymbolLibrary"/>
+			<functionalpermissionref name="ExportSymbolLibrary"/>
+			<functionalpermissionref name="Library.Components.Cavity_Group"/>
+		</role>
+	</RolesMgr>
+	<UserMgr>
+		<useraccount dept="dummy" fullname="superuser" id="_6" language="dummy" locale="dummy" lockstatus="0" noofinvalidpasswordattempts="3" password="5RgPALm7OdU94TcX4XZCWQ==" passwordchangefrequency="dummy" passwordexpirydate="dummy" sitenumber="1" sso="false" uiconfiguration="uiconfig_ihb" username="system">
+			<permissionref permissionname="Security"/>
+			<permissionref permissionname="Symbol Library"/>
+			<permissionref permissionname="Codes"/>
+			<permissionref permissionname="Project Info"/>
+			<permissionref permissionname="Release Levels"/>
+			<permissionref permissionname="Rules"/>
+			<permissionref permissionname="Preferences"/>
+			<permissionref permissionname="Preferred Components"/>
+			<permissionref permissionname="Naming"/>
+			<permissionref permissionname="Object Type Info"/>
+			<permissionref permissionname="Build Lists"/>
+			<permissionref permissionname="Option Maintenance"/>
+			<permissionref permissionname="Shared Objects"/>
+			<permissionref permissionname="Effectivity"/>
+			<permissionref permissionname="Companies"/>
+			<permissionref permissionname="Usage"/>
+			<permissionref permissionname="Design Abstractions"/>
+			<permissionref permissionname="Analysis"/>
+			<functionalpermissionref name="ReleaseLevel.Draft"/>
+			<functionalpermissionref name="ReleaseLevel.Obsolete"/>
+			<functionalpermissionref name="ReleaseLevel.Pending"/>
+			<functionalpermissionref name="ReleaseLevel.Released"/>
+			<functionalpermissionref name="AdvanceNaming.RunAdvancedNaming"/>
+			<functionalpermissionref name="setLibraryStatus.New"/>
+			<functionalpermissionref name="setLibraryStatus.Current"/>
+			<functionalpermissionref name="setLibraryStatus.Obsolete"/>
+			<functionalpermissionref name="Library.Components.ModifyCurrent"/>
+			<functionalpermissionref name="Reporting.EditNamedQueries"/>
+			<functionalpermissionref name="Unfreeze Shared Objects"/>
+			<functionalpermissionref name="Design.ChangePolicies.Define"/>
+			<functionalpermissionref name="AuditTrail.Administrate"/>
+			<functionalpermissionref name="ManagePlanes"/>
+			<functionalpermissionref name="StyleSets"/>
+			<functionalpermissionref name="DeleteUnusedSharedObjects"/>
+			<functionalpermissionref name="ExportProject"/>
+			<functionalpermissionref name="ExportDesign"/>
+			<functionalpermissionref name="ImportProject"/>
+			<functionalpermissionref name="CreateProject"/>
+			<functionalpermissionref name="DeleteProject"/>
+			<functionalpermissionref name="ImportDesign"/>
+			<functionalpermissionref name="CopyDesign"/>
+			<functionalpermissionref name="CopyDesignAdvanced"/>
+			<functionalpermissionref name="RevisionDesign"/>
+			<functionalpermissionref name="EvaluateDesign"/>
+			<functionalpermissionref name="ExportSymbolLibrary"/>
+			<functionalpermissionref name="ImportSymbolLibrary"/>
+			<functionalpermissionref name="AutoviewImportProjectAndGenerateDiagrams"/>
+			<functionalpermissionref name="ImportSecurityData"/>
+			<functionalpermissionref name="ExportSecurityData"/>
+			<functionalpermissionref name="EditLogicDesign"/>
+			<functionalpermissionref name="EditIntegratorDesign"/>
+			<functionalpermissionref name="EditHarnessDesign"/>
+			<functionalpermissionref name="Library.Components.Assembly"/>
+			<functionalpermissionref name="Library.Components.Backshell"/>
+			<functionalpermissionref name="Library.Components.Backshell_Plug"/>
+			<functionalpermissionref name="Library.Components.Backshell_Seal"/>
+			<functionalpermissionref name="Library.Components.Cavity_Plug"/>
+			<functionalpermissionref name="Library.Components.Cavity_Seal"/>
+			<functionalpermissionref name="Library.Components.Clip"/>
+			<functionalpermissionref name="Library.Components.Connector"/>
+			<functionalpermissionref name="Library.Components.Connector_Seal"/>
+			<functionalpermissionref name="Library.Components.Grommet"/>
+			<functionalpermissionref name="Library.Components.Device"/>
+			<functionalpermissionref name="Library.Components.Heat_Shrink_Sleeve"/>
+			<functionalpermissionref name="Library.Components.IDC_Connector"/>
+			<functionalpermissionref name="Library.Components.In_House_Assembly"/>
+			<functionalpermissionref name="Library.Components.Multicore_Wire"/>
+			<functionalpermissionref name="Library.Components.Other"/>
+			<functionalpermissionref name="Library.Components.Solder_Sleeve"/>
+			<functionalpermissionref name="Library.Components.Splice"/>
+			<functionalpermissionref name="Library.Components.Tape"/>
+			<functionalpermissionref name="Library.Components.Terminal"/>
+			<functionalpermissionref name="Library.Components.Tube"/>
+			<functionalpermissionref name="Library.Components.Ultrasonic_Weld"/>
+			<functionalpermissionref name="Library.Components.Wire"/>
+			<functionalpermissionref name="Library.ImportComponents"/>
+			<functionalpermissionref name="Library.ExportComponents"/>
+			<functionalpermissionref name="Library.DeleteComponents"/>
+			<functionalpermissionref name="Library.Components.Cavity_Group"/>
+			<domainref domainname="testdomain"/>
+		</useraccount>
+		<useraccount dept="All" fullname="Capital Capture" id="_7" language="English" locale="UK" lockstatus="0" noofinvalidpasswordattempts="3" password="/b17N+Sa18m0ixfv/77RJw==" passwordchangefrequency="none" passwordexpirydate="nodate" sitenumber="1" sso="false" uiconfiguration="uiconfig_ihb" username="capture">
+			<permissionref permissionname="Security"/>
+			<permissionref permissionname="Symbol Library"/>
+			<permissionref permissionname="Codes"/>
+			<permissionref permissionname="Project Info"/>
+			<permissionref permissionname="Release Levels"/>
+			<permissionref permissionname="Rules"/>
+			<permissionref permissionname="Preferences"/>
+			<permissionref permissionname="Naming"/>
+			<permissionref permissionname="Object Type Info"/>
+			<permissionref permissionname="Build Lists"/>
+			<permissionref permissionname="Option Maintenance"/>
+			<permissionref permissionname="Shared Objects"/>
+			<permissionref permissionname="Effectivity"/>
+			<permissionref permissionname="Companies"/>
+			<permissionref permissionname="Usage"/>
+			<permissionref permissionname="Design Abstractions"/>
+			<permissionref permissionname="Analysis"/>
+			<permissionref permissionname="Preferred Components"/>
+			<functionalpermissionref name="ReleaseLevel.Draft"/>
+			<functionalpermissionref name="ReleaseLevel.Obsolete"/>
+			<functionalpermissionref name="ReleaseLevel.Pending"/>
+			<functionalpermissionref name="ReleaseLevel.Released"/>
+			<functionalpermissionref name="Unfreeze Shared Objects"/>
+			<functionalpermissionref name="Design.ChangePolicies.Define"/>
+			<functionalpermissionref name="AuditTrail.Administrate"/>
+			<functionalpermissionref name="Library.Components.Assembly"/>
+			<functionalpermissionref name="Library.Components.Backshell"/>
+			<functionalpermissionref name="Library.Components.Backshell_Plug"/>
+			<functionalpermissionref name="Library.Components.Backshell_Seal"/>
+			<functionalpermissionref name="Library.Components.Cavity_Plug"/>
+			<functionalpermissionref name="Library.Components.Cavity_Seal"/>
+			<functionalpermissionref name="Library.Components.Clip"/>
+			<functionalpermissionref name="Library.Components.Connector"/>
+			<functionalpermissionref name="Library.Components.Connector_Seal"/>
+			<functionalpermissionref name="Library.Components.Grommet"/>
+			<functionalpermissionref name="Library.Components.Device"/>
+			<functionalpermissionref name="Library.Components.Heat_Shrink_Sleeve"/>
+			<functionalpermissionref name="Library.Components.IDC_Connector"/>
+			<functionalpermissionref name="Library.Components.In_House_Assembly"/>
+			<functionalpermissionref name="Library.Components.Multicore_Wire"/>
+			<functionalpermissionref name="Library.Components.Other"/>
+			<functionalpermissionref name="Library.Components.Solder_Sleeve"/>
+			<functionalpermissionref name="Library.Components.Splice"/>
+			<functionalpermissionref name="Library.Components.Tape"/>
+			<functionalpermissionref name="Library.Components.Terminal"/>
+			<functionalpermissionref name="Library.Components.Tube"/>
+			<functionalpermissionref name="Library.Components.Ultrasonic_Weld"/>
+			<functionalpermissionref name="Library.Components.Wire"/>
+			<functionalpermissionref name="DeleteUnusedSharedObjects"/>
+			<functionalpermissionref name="ExportProject"/>
+			<functionalpermissionref name="ExportDesign"/>
+			<functionalpermissionref name="ImportProject"/>
+			<functionalpermissionref name="CreateProject"/>
+			<functionalpermissionref name="DeleteProject"/>
+			<functionalpermissionref name="ImportDesign"/>
+			<functionalpermissionref name="CopyDesign"/>
+			<functionalpermissionref name="CopyDesignAdvanced"/>
+			<functionalpermissionref name="RevisionDesign"/>
+			<functionalpermissionref name="EvaluateDesign"/>
+			<functionalpermissionref name="ExportSymbolLibrary"/>
+			<functionalpermissionref name="ImportSymbolLibrary"/>
+			<functionalpermissionref name="AutoviewImportProjectAndGenerateDiagrams"/>
+			<functionalpermissionref name="ImportSecurityData"/>
+			<functionalpermissionref name="ExportSecurityData"/>
+			<functionalpermissionref name="EditLogicDesign"/>
+			<functionalpermissionref name="EditIntegratorDesign"/>
+			<functionalpermissionref name="EditHarnessDesign"/> 
+			<functionalpermissionref name="Library.Components.Cavity_Group"/>
+			<functionalpermissionref name="Library.ImportComponents"/>
+			<functionalpermissionref name="Library.ExportComponents"/>
+			<functionalpermissionref name="Library.DeleteComponents"/>
+		</useraccount>
+		<useraccount dept="dummy" fullname="test user" id="_8" language="dummy" locale="dummy" lockstatus="0" noofinvalidpasswordattempts="3" password="uZvX0CnjFN2AWLw6HJk+AlslPbQWnZSp" passwordchangefrequency="dummy" passwordexpirydate="dummy" sitenumber="1" sso="false" uiconfiguration="uiconfig_ihb" username="testuser">
+			<permissionref permissionname="Shared Objects"/>
+			<functionalpermissionref name="ReleaseLevel.Draft"/> 
+			<functionalpermissionref name="ReleaseLevel.Pending"/>
+			<functionalpermissionref name="Reporting.EditNamedQueries"/>
+			<functionalpermissionref name="AdvanceNaming.RunAdvancedNaming"/>
+			<functionalpermissionref name="RevisionDesign"/>
+			<functionalpermissionref name="EvaluateDesign"/>
+			<functionalpermissionref name="AutoviewImportProjectAndGenerateDiagrams"/>
+			<functionalpermissionref name="EditLogicDesign"/>
+			<functionalpermissionref name="EditIntegratorDesign"/>
+			<functionalpermissionref name="EditHarnessDesign"/>
+			<roleref rolename="Designer"/>
+		</useraccount>
+	</UserMgr>
+	<UserGroupMgr>
+		<usergroup id="_9" usergroupname="testgroup">
+			<useraccountref username="system"/>
+			<useraccountref username="testuser"/>
+		</usergroup>
+	</UserGroupMgr>
+</SecurityMgr>

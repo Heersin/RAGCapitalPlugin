@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<CustomTaskParameters> 
+<Param name="projectname" value="Quick Start - Automotive Interactive"/> 
+<Param name="imagewidth" value="21.0"/> 
+<Param name="imageheight" value="29.7"/> 
+<Param name="orientation" value="LANDSCAPE"/> 
+<Param name="color" value="BLACK_AND_WHITE"/>
+</CustomTaskParameters>

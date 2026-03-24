@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project id="UID4a045c-133b6e95637-0ccf12edafedf30717990c6b7fe0c1bc" name="example3" modified="5" description="Test Project for Engineering Change Order examples" baseid="UID4a045c-133b6e95637-0ccf12edafedf30717990c6b7fe0c1bc" domainref="">
+  <engineeringchangeordermgr id="UID4a045c-133b6e9568a-0ccf12edafedf30717990c6b7fe0c1bc" modified="11" baseid="UID4a045c-133b6e9568a-0ccf12edafedf30717990c6b7fe0c1bc">
+    <engineeringchangeorder id="UID4a045c-133b6e95690-0ccf12edafedf30717990c6b7fe0c1bc" name="ECO1" modified="6" baseid="UID4a045c-133b6e95690-0ccf12edafedf30717990c6b7fe0c1bc" category="TestCategory1" releaselevelref="UID4a045c-133b6e956ca-0ccf12edafedf30717990c6b7fe0c1bc" created="1321624668393" author="superuser" modificationuser="superuser" modificationtimestamp="1321624969062" shortdescription="imported successfully">
+      <engineeringchangeorderassociation associatedid="UID4a045c-133b6e956a4-0ccf12edafedf30717990c6b7fe0c1bc" completionstatus="inprogress" associationtype="Logical"/>
+    </engineeringchangeorder>
+    <engineeringchangeorder id="UID4a045c-133b6e95695-0ccf12edafedf30717990c6b7fe0c1bc" name="ECO2" modified="6" baseid="UID4a045c-133b6e95695-0ccf12edafedf30717990c6b7fe0c1bc" category="TestCategory1" releaselevelref="UID4a045c-133b6e9564a-0ccf12edafedf30717990c6b7fe0c1bc" created="1321624676083" author="superuser" modificationuser="superuser" modificationtimestamp="1321624919345" shortdescription="imported successfully">
+      <engineeringchangeorderassociation associatedid="UID4a045c-133b6e956b0-0ccf12edafedf30717990c6b7fe0c1bc" completionstatus="notstarted" associationtype="Integrator"/>
+    </engineeringchangeorder>
+  </engineeringchangeordermgr>
+</project>

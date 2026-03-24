@@ -1,0 +1,18 @@
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Capital Web Services Demo</display-name>
+	<description>Demo for deployment of external web services in CIS</description>
+
+	<servlet>
+		<servlet-name>ExampleServlet</servlet-name>
+		<servlet-class>com.example.webservice.server.ExampleServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+        <servlet-name>ExampleServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+</web-app>
+
+

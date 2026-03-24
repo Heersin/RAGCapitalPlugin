@@ -1,0 +1,1679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project PUBLIC "-//Mentor Graphics Corporation//Project 1.49//EN" "h:/chs_home/dtd/project.dtd">
+<project id="UIDabf9e6-1152dc8e716-f528764d624db129b32c21fbca0cb8d6" name="example1" modified="20" description="Web Services documentation \nProject example 1" baseid="UIDabf9e6-1152dc8e716-f528764d624db129b32c21fbca0cb8d6" domainref="">
+  <designabstractionmgr id="UIDabf9e6-1152dc8e718-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDabf9e6-1152dc8e718-f528764d624db129b32c21fbca0cb8d6"/>
+  <sharedpinmgr id="UIDabf9e6-1152dc8e719-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDabf9e6-1152dc8e719-f528764d624db129b32c21fbca0cb8d6"/>
+  <sharedconductormgr id="UIDabf9e6-1152dc8e71a-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDabf9e6-1152dc8e71a-f528764d624db129b32c21fbca0cb8d6"/>
+  <rulemgr id="UIDabf9e6-1152dc8e71b-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDabf9e6-1152dc8e71b-f528764d624db129b32c21fbca0cb8d6"/>
+  <optionmgr id="UIDabf9e6-1152dc8e71c-f528764d624db129b32c21fbca0cb8d6" type="options" modified="19" baseid="UIDabf9e6-1152dc8e71c-f528764d624db129b32c21fbca0cb8d6">
+    <option id="UID4969b1-11621672ddc-f528764d624db129b32c21fbca0cb8d6" name="opt1" isvariant="false" description="option 1"/>
+    <option id="UID4969b1-11621672ddd-f528764d624db129b32c21fbca0cb8d6" name="opt2" isvariant="false" description="option 2"/>
+    <option id="UID4969b1-11621672dde-f528764d624db129b32c21fbca0cb8d6" name="opt3" isvariant="true" description="option 3"/>
+    <option id="UID4969b1-11621672ddf-f528764d624db129b32c21fbca0cb8d6" name="opt4" isvariant="false" description="option 4"/>
+    <inclusiveoptions optionref="UID4969b1-11621672ddf-f528764d624db129b32c21fbca0cb8d6">
+      <refedoption optionref="UID4969b1-11621672ddc-f528764d624db129b32c21fbca0cb8d6"/>
+      <refedoption optionref="UID4969b1-11621672ddd-f528764d624db129b32c21fbca0cb8d6"/>
+    </inclusiveoptions>
+    <optionconfiguration id="UID4969b1-11621672de0-f528764d624db129b32c21fbca0cb8d6" name="conf1" description="configuration 1" baseid="UID4969b1-11621672de0-f528764d624db129b32c21fbca0cb8d6">
+      <refedoption optionref="UID4969b1-11621672ddc-f528764d624db129b32c21fbca0cb8d6"/>
+      <refedoption optionref="UID4969b1-11621672ddd-f528764d624db129b32c21fbca0cb8d6"/>
+    </optionconfiguration>
+    <optionconfiguration id="UID4969b1-11621672de1-f528764d624db129b32c21fbca0cb8d6" name="conf2" description="configuration 2" baseid="UID4969b1-11621672de1-f528764d624db129b32c21fbca0cb8d6">
+      <refedoption optionref="UID4969b1-11621672dde-f528764d624db129b32c21fbca0cb8d6"/>
+      <refedoptionconfiguration optionconfigurationref="UID4969b1-11621672de0-f528764d624db129b32c21fbca0cb8d6"/>
+    </optionconfiguration>
+    <optionfamily id="UID4969b1-11621672de9-f528764d624db129b32c21fbca0cb8d6" name="family1" baseid="UID4969b1-11621672de9-f528764d624db129b32c21fbca0cb8d6">
+      <refedoption optionref="UID4969b1-11621672ddc-f528764d624db129b32c21fbca0cb8d6"/>
+      <refedoption optionref="UID4969b1-11621672ddd-f528764d624db129b32c21fbca0cb8d6"/>
+      <optionset id="UID4969b1-11621672df1-f528764d624db129b32c21fbca0cb8d6" name="set1" baseid="UID4969b1-11621672df1-f528764d624db129b32c21fbca0cb8d6">
+        <refedoption optionref="UID4969b1-11621672ddc-f528764d624db129b32c21fbca0cb8d6"/>
+        <refedoption optionref="UID4969b1-11621672ddd-f528764d624db129b32c21fbca0cb8d6"/>
+      </optionset>
+    </optionfamily>
+  </optionmgr>
+  <projectnamemgr id="UIDabf9e6-1152dc8e71d-f528764d624db129b32c21fbca0cb8d6" baseid="UIDabf9e6-1152dc8e71d-f528764d624db129b32c21fbca0cb8d6" modified="14">
+    <defaultname typename="CONNECTOR" defaultprefix="CONN"/>
+    <defaultname typename="DEVICE" defaultprefix="DEV"/>
+    <defaultname typename="NETCONDUCTOR" defaultprefix="COND"/>
+    <defaultname typename="PIN" defaultprefix="PIN"/>
+    <defaultname typename="MULTICORE" defaultprefix="MC"/>
+    <defaultname typename="SHIELDBODY" defaultprefix="IND"/>
+    <defaultname typename="SPLICE" defaultprefix="SP"/>
+    <defaultname typename="SHIELDCONDUCTOR" defaultprefix="SHIELD"/>
+    <defaultname typename="WIRECONDUCTOR" defaultprefix="WIRE"/>
+    <defaultname typename="BUNDLE" defaultprefix="BUN"/>
+    <defaultname typename="CAVITY" defaultprefix="CAV"/>
+    <defaultname typename="HARNESS" defaultprefix="H"/>
+    <defaultname typename="INLINE" defaultprefix="INLINE"/>
+    <defaultname typename="IFCONN" defaultprefix="IFC"/>
+    <defaultname typename="NODE" defaultprefix="N"/>
+    <defaultname typename="SLOT" defaultprefix="SLOT"/>
+    <defaultname typename="VIRTUALCONNECTOR" defaultprefix="VCONN"/>
+    <defaultname typename="VIRTUALHARNESS" defaultprefix="VHARN"/>
+    <defaultname typename="SIGNAL" defaultprefix="SIG"/>
+    <defaultname typename="ZONE" defaultprefix="ZONE"/>
+    <defaultname typename="ASSEMBLY" defaultprefix="ASSEMBLY"/>
+    <defaultname typename="PLUG" defaultprefix="P"/>
+    <defaultname typename="RECEPTACLE" defaultprefix="J"/>
+    <defaultname typename="GROUND" defaultprefix="GND"/>
+    <defaultname typename="DEVICE_CONNECTOR" defaultprefix="DC"/>
+    <defaultname typename="BACKSHELL" defaultprefix="BS"/>
+    <defaultname typename="TERMINATION" defaultprefix="BK"/>
+    <defaultname typename="BUNDLE_INS" defaultprefix="INS"/>
+    <defaultname typename="INSULATION_RUN" defaultprefix="INSRUN"/>
+    <defaultname typename="MLC" defaultprefix="MLC"/>
+    <defaultname typename="BUNDLEREGION" defaultprefix="BUNREG"/>
+    <defaultname typename="INTERCONNECTCONDUCTOR" defaultprefix="INT"/>
+    <defaultname typename="CLIP" defaultprefix="CLIP"/>
+    <defaultname typename="GROMMET" defaultprefix="GROM"/>
+    <defaultname typename="SPOT_TAPE" defaultprefix="STP"/>
+    <defaultname typename="BREAKOUT_TAPE" defaultprefix="BTP"/>
+    <defaultname typename="HARNESS-DIAGRAM" defaultprefix="HD"/>
+    <defaultname typename="OVERBRAID" defaultprefix="OB"/>
+    <defaultname typename="OTHERCOMPONENT" defaultprefix="OTH"/>
+    <defaultname typename="HOLE" defaultprefix="HOLE"/>
+    <defaultname typename="DATUM" defaultprefix="D"/>
+    <defaultname typename="CONNECTOR_DATUM" defaultprefix="CONN"/>
+    <defaultname typename="SPLICE_DATUM" defaultprefix="SP"/>
+    <defaultname typename="CONNECTOR_CAVITY_DATUM" defaultprefix="CAV"/>
+    <defaultname typename="CAVITY_WIRE_DATUM" defaultprefix="WIRE"/>
+    <defaultname typename="NOTUSED" defaultprefix="UNUSED"/>
+    <defaultname typename="NOTUSED" defaultprefix="UNUSED"/>
+    <defaultname typename="JUNKSPACE" defaultprefix=""/>
+  </projectnamemgr>
+  <releaselevelmgr id="UIDabf9e6-1152dc8e77e-f528764d624db129b32c21fbca0cb8d6" modified="25" baseid="UIDabf9e6-1152dc8e77e-f528764d624db129b32c21fbca0cb8d6">
+    <releaselevel id="UID935829-11629ac3009-8c27f6b5dc0e9e5a536aa0371648fb4a" name="Complete" designchangespermitted="true" designattributechangespermitted="false" allowprinting="true" allowsvgservice="true" allowexport="true" allowcopy="true" allowbridge="true" allowevaluate="true" allowrevision="true" allowbranch="true" allowdeletion="true" frozensharedobjectsrequired="false" associatederivatives="true" harnessprocessing="true" chsreleaselevel="released" baseid="UID935829-11629ac3009-8c27f6b5dc0e9e5a536aa0371648fb4a">
+      <refedreleaselevel ref="UID935829-11629ac300a-8c27f6b5dc0e9e5a536aa0371648fb4a"/>
+    </releaselevel>
+    <releaselevel id="UIDabf9e6-1152dc8e77f-f528764d624db129b32c21fbca0cb8d6" name="Draft" designchangespermitted="true" designattributechangespermitted="true" allowprinting="true" allowsvgservice="false" allowexport="true" allowcopy="true" allowbridge="true" allowevaluate="true" allowrevision="true" allowbranch="true" allowdeletion="true" frozensharedobjectsrequired="false" associatederivatives="true" harnessprocessing="true" chsreleaselevel="draft" baseid="UIDabf9e6-1152dc8e77f-f528764d624db129b32c21fbca0cb8d6">
+      <refedreleaselevel ref="UID935829-11629ac300a-8c27f6b5dc0e9e5a536aa0371648fb4a"/>
+    </releaselevel>
+    <releaselevel id="UID935829-11629ac300a-8c27f6b5dc0e9e5a536aa0371648fb4a" name="Intermediate" designchangespermitted="true" designattributechangespermitted="true" allowprinting="true" allowsvgservice="true" allowexport="true" allowcopy="true" allowbridge="true" allowevaluate="true" allowrevision="true" allowbranch="true" allowdeletion="true" frozensharedobjectsrequired="false" associatederivatives="true" harnessprocessing="true" chsreleaselevel="pending" baseid="UID935829-11629ac300a-8c27f6b5dc0e9e5a536aa0371648fb4a">
+      <refedreleaselevel ref="UID935829-11629ac3009-8c27f6b5dc0e9e5a536aa0371648fb4a"/>
+      <refedreleaselevel ref="UIDabf9e6-1152dc8e77f-f528764d624db129b32c21fbca0cb8d6"/>
+    </releaselevel>
+  </releaselevelmgr>
+  <objecttypeinfomgr id="UIDabf9e6-1152dc8e780-f528764d624db129b32c21fbca0cb8d6" modified="2">
+    <objecttypeinfo id="UIDabf9e6-1152dc8e781-f528764d624db129b32c21fbca0cb8d6" name="BACKSHELL" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e789-f528764d624db129b32c21fbca0cb8d6" name="GROUND" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e782-f528764d624db129b32c21fbca0cb8d6" name="TERMINATION" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e783-f528764d624db129b32c21fbca0cb8d6" name="GENERAL" type="general"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e784-f528764d624db129b32c21fbca0cb8d6" name="NETCONDUCTOR" type="normal">
+      <nametemplate id="UID8f606b-11633a82631-f07a5839dcbf9e609596bd40e7930890" name="net1" description="net 1" shortdescription="net 1"/>
+      <nametemplate id="UID8f606b-11633a82632-f07a5839dcbf9e609596bd40e7930890" name="net2" description="net 2" shortdescription="net 2"/>
+    </objecttypeinfo>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e785-f528764d624db129b32c21fbca0cb8d6" name="WIRECONDUCTOR" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e786-f528764d624db129b32c21fbca0cb8d6" name="SHIELDCONDUCTOR" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e787-f528764d624db129b32c21fbca0cb8d6" name="CONNECTOR" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e788-f528764d624db129b32c21fbca0cb8d6" name="PIN" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e78a-f528764d624db129b32c21fbca0cb8d6" name="DEVICE" type="normal">
+      <propertytemplate id="UID66ae42-116217a0fc9-f528764d624db129b32c21fbca0cb8d6" name="prop1" type="String"/>
+      <propertytemplate id="UID66ae42-116217a0fca-f528764d624db129b32c21fbca0cb8d6" name="prop2" type="Integer">
+        <range id="UID66ae42-116217a0fcc-f528764d624db129b32c21fbca0cb8d6" baseid="UID66ae42-116217a0fcc-f528764d624db129b32c21fbca0cb8d6" startvalue="1" type="Integer"/>
+        <range id="UID66ae42-116217a0fcd-f528764d624db129b32c21fbca0cb8d6" baseid="UID66ae42-116217a0fcd-f528764d624db129b32c21fbca0cb8d6" startvalue="2" type="Integer"/>
+        <range id="UID66ae42-116217a0fce-f528764d624db129b32c21fbca0cb8d6" baseid="UID66ae42-116217a0fce-f528764d624db129b32c21fbca0cb8d6" startvalue="3" type="Integer"/>
+      </propertytemplate>
+      <propertytemplate id="UID66ae42-116217a0fcb-f528764d624db129b32c21fbca0cb8d6" name="prop3" type="String">
+        <range id="UID66ae42-116217a0fcf-f528764d624db129b32c21fbca0cb8d6" baseid="UID66ae42-116217a0fcf-f528764d624db129b32c21fbca0cb8d6" startvalue="a" type="String"/>
+        <range id="UID66ae42-116217a0fd0-f528764d624db129b32c21fbca0cb8d6" baseid="UID66ae42-116217a0fd0-f528764d624db129b32c21fbca0cb8d6" startvalue="b" type="String"/>
+      </propertytemplate>
+      <nametemplate id="UID66ae42-116217a0fc7-f528764d624db129b32c21fbca0cb8d6" name="DEV1" description="device 1" shortdescription="dev 1"/>
+      <nametemplate id="UID66ae42-116217a0fc8-f528764d624db129b32c21fbca0cb8d6" name="DEV2" description="device 2" shortdescription="dev 2"/>
+    </objecttypeinfo>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e78b-f528764d624db129b32c21fbca0cb8d6" name="MULTICORE" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e78c-f528764d624db129b32c21fbca0cb8d6" name="SPLICE" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e78d-f528764d624db129b32c21fbca0cb8d6" name="ASSEMBLY" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e78e-f528764d624db129b32c21fbca0cb8d6" name="PROJECT" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e78f-f528764d624db129b32c21fbca0cb8d6" name="LOGIC-DESIGN" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e790-f528764d624db129b32c21fbca0cb8d6" name="INTEGRATOR-DESIGN" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e791-f528764d624db129b32c21fbca0cb8d6" name="LOGIC-DIAGRAM" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e792-f528764d624db129b32c21fbca0cb8d6" name="PLANE-DESIGN" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e793-f528764d624db129b32c21fbca0cb8d6" name="HARNESS-DIAGRAM" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e794-f528764d624db129b32c21fbca0cb8d6" name="HARNESS-DESIGN" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e795-f528764d624db129b32c21fbca0cb8d6" name="BUNDLE" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e796-f528764d624db129b32c21fbca0cb8d6" name="CLIP" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e797-f528764d624db129b32c21fbca0cb8d6" name="GROMMET" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e798-f528764d624db129b32c21fbca0cb8d6" name="BUNDLE_INS" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e799-f528764d624db129b32c21fbca0cb8d6" name="INSULATION_RUN" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e79a-f528764d624db129b32c21fbca0cb8d6" name="BREAKOUT_TAPE" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e79b-f528764d624db129b32c21fbca0cb8d6" name="SPOT_TAPE" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e79c-f528764d624db129b32c21fbca0cb8d6" name="INTERCONNECTCONDUCTOR" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e79d-f528764d624db129b32c21fbca0cb8d6" name="MLC" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e79e-f528764d624db129b32c21fbca0cb8d6" name="OTHERCOMPONENT" type="normal"/>
+    <objecttypeinfo id="UIDabf9e6-1152dc8e79f-f528764d624db129b32c21fbca0cb8d6" name="NODE" type="normal"/>
+  </objecttypeinfomgr>
+  <usagemgr id="UIDabf9e6-1152dc8e7a0-f528764d624db129b32c21fbca0cb8d6" modified="2" baseid="UIDabf9e6-1152dc8e7a0-f528764d624db129b32c21fbca0cb8d6">
+    <usagedef id="UID8f606b-11633a82637-f07a5839dcbf9e609596bd40e7930890" modified="8" name="dev1" libraryref="UIDcf427b-11633b4abfa-f07a5839dcbf9e609596bd40e7930890" baseid="UID8f606b-11633a82637-f07a5839dcbf9e609596bd40e7930890">
+      <deviceusage id="UID8f606b-11633a82638-f07a5839dcbf9e609596bd40e7930890" name="DEV1" baseid="UID8f606b-11633a8263a-f07a5839dcbf9e609596bd40e7930890">
+        <pinusage id="UID8f606b-11633a82639-f07a5839dcbf9e609596bd40e7930890" name="1" baseid="UID8f606b-11633a82639-f07a5839dcbf9e609596bd40e7930890">
+          <pinusagenetname netname="net1"/>
+        </pinusage>
+        <pinusage id="UID8f606b-11633a8263a-f07a5839dcbf9e609596bd40e7930890" name="2" baseid="UID8f606b-11633a8263a-f07a5839dcbf9e609596bd40e7930890">
+          <pinusagenetname netname="net2"/>
+        </pinusage>
+      </deviceusage>
+    </usagedef>
+    <usagedef id="UID8f606b-11633a8263f-f07a5839dcbf9e609596bd40e7930890" modified="8" name="dev2" libraryref="UID8c73a4-1163411d615-f07a5839dcbf9e609596bd40e7930890" baseid="UID8f606b-11633a8263f-f07a5839dcbf9e609596bd40e7930890">
+      <deviceusage id="UID8f606b-11633a82640-f07a5839dcbf9e609596bd40e7930890" name="DEV2" baseid="UID8f606b-11633a82642-f07a5839dcbf9e609596bd40e7930890">
+        <pinusage id="UID8f606b-11633a82641-f07a5839dcbf9e609596bd40e7930890" name="1" baseid="UID8f606b-11633a82641-f07a5839dcbf9e609596bd40e7930890">
+          <pinusagenetname netname="net1"/>
+        </pinusage>
+        <pinusage id="UID8f606b-11633a82642-f07a5839dcbf9e609596bd40e7930890" name="2" baseid="UID8f606b-11633a82642-f07a5839dcbf9e609596bd40e7930890">
+          <pinusagenetname netname="net2"/>
+        </pinusage>
+      </deviceusage>
+    </usagedef>
+  </usagemgr>
+  <preferencemgr id="UIDabf9e6-1152dc8e7a1-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDabf9e6-1152dc8e7a1-f528764d624db129b32c21fbca0cb8d6">
+    <prefentry path="Logic.Checks.BuildListDuplicateNameAndOptionExpressionCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.BuildListDuplicateNameAndOptionExpressionCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.BuildListDuplicateNameAndOptionExpressionCheck" key="Show" value="true"/>
+    <prefentry path="Check" key="DRCAnnotateVerifiedFormat" value="Verified by {USER} on {DATE}"/>
+    <prefentry path="Check" key="DRCAnnotateVerifiedDefault" value="false"/>
+    <prefentry path="Logic.Diagram" key="PinGridUnit" value="2"/>
+    <prefentry path="Logic.Diagram" key="DrawGridSpacing" value="10"/>
+    <prefentry path="Logic.Diagram" key="MajorGridInterval" value="5"/>
+    <prefentry path="Logic.Diagram" key="PinGridSpacing" value="0.25"/>
+    <prefentry path="Logic.Checks.OutOfDateCommentSymbolCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.OutOfDateCommentSymbolCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.OutOfDateCommentSymbolCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckModuleCode" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckModuleCode" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckModuleCode" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.DanglingNetCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.DanglingNetCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.DanglingNetCheck" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="IncluePlugTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueGrommetTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueTerminalTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueOtherTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueClipTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueWireTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueNodeTapeTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueSealTotalsInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM" key="InclueConnectorTotalsInTable" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckDanglingBundle" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnCheckDanglingBundle" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckDanglingBundle" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.ConnectorConnectivityCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.ConnectorConnectivityCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ConnectorConnectivityCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Bundle" key="LineStyle" value="1"/>
+    <prefentry path="Integrator.Bundle" key="LineThickness" value="1"/>
+    <prefentry path="Logic.Checks.DeviceConnectivityCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.DeviceConnectivityCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.DeviceConnectivityCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckDeadWiring" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckDeadWiring" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckDeadWiring" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckWireAndCavityTerminalMismatch" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckWireAndCavityTerminalMismatch" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckWireAndCavityTerminalMismatch" key="Show" value="true"/>
+    <prefentry path="Integrator.Connector" key="LineStyle" value="1"/>
+    <prefentry path="Integrator.Connector" key="LineThickness" value="1"/>
+    <prefentry path="Logic.Checks.OutOfDateSymbolCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.OutOfDateSymbolCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.OutOfDateSymbolCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleBackshellUsage" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleBackshellUsage" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleBackshellUsage" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMaxWiresPerMultiterm" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleMaxWiresPerMultiterm" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMaxWiresPerMultiterm" key="Show" value="true"/>
+    <prefentry path="Integrator.Plane" key="PinGridUnit" value="2"/>
+    <prefentry path="Integrator.Plane" key="DrawGridSpacing" value="10"/>
+    <prefentry path="Integrator.Plane" key="PinGridSpacing" value="0.25"/>
+    <prefentry path="Harness.Checks.HarnCheckTrueWireDoubleTermination" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckTrueWireDoubleTermination" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckTrueWireDoubleTermination" key="Show" value="true"/>
+    <prefentry path="Integrator.BundleRegion" key="LineStyle" value="1"/>
+    <prefentry path="Integrator.BundleRegion" key="LineThickness" value="2"/>
+    <prefentry path="Logic.Checks.DeviceConnectorsOnlyCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.DeviceConnectorsOnlyCheck" key="RunByDefault" value="false"/>
+    <prefentry path="Logic.Checks.DeviceConnectorsOnlyCheck" key="Show" value="false"/>
+    <prefentry path="Logic.Net" key="JoinType" value="1"/>
+    <prefentry path="Logic.Net" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Net" key="LineThickness" value="1"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="Delimiter" value=" "/>
+    <prefentry path="Logic.Pin.XRef.Text" key="LinesPerBlock" value="0"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="FontStyle" value="0"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="Show" value="false"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="Template" value="/{design.name}:{diagram.name}[ {zone.name}]"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="Height" value="0.1875"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="LineMax" value="1"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Logic.Pin.XRef.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Logic.Checks.ValidLibrarySymbolCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.ValidLibrarySymbolCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ValidLibrarySymbolCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleWirePartSpecification" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleWirePartSpecification" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleWirePartSpecification" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMinSpliceSeparation" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleMinSpliceSeparation" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMinSpliceSeparation" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryObjectRefExists" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckLibraryObjectRefExists" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryObjectRefExists" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.NodeTapeBOMID" key="Prefix" value="TA"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.NodeTapeBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.NodeTapeBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.NodeTapeBOMID" key="Increment" value="1"/>
+    <prefentry path="Integrator.Checks.CheckRedundantWiring" key="Severity" value="1"/>
+    <prefentry path="Integrator.Checks.CheckRedundantWiring" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRedundantWiring" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMulticoreSpecification" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleMulticoreSpecification" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMulticoreSpecification" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleSetAttributes" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleSetAttributes" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleSetAttributes" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.ShortDescriptionOutOfSyncCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.ShortDescriptionOutOfSyncCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ShortDescriptionOutOfSyncCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleAssignConnector" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleAssignConnector" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleAssignConnector" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnMultiEntryConnectorNonRoutedWire" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnMultiEntryConnectorNonRoutedWire" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnMultiEntryConnectorNonRoutedWire" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavitySealBOMID" key="Prefix" value="CS"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavitySealBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavitySealBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavitySealBOMID" key="Increment" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForGrommet" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForGrommet" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForGrommet" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavitySealParts" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavitySealParts" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavitySealParts" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavityPlugParts" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavityPlugParts" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavityPlugParts" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckFunctionalMulticore" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckFunctionalMulticore" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckFunctionalMulticore" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.MatedCavityMatchCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.MatedCavityMatchCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.MatedCavityMatchCheck" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForBundleInsulation" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForBundleInsulation" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForBundleInsulation" key="Show" value="true"/>
+    <prefentry path="Logic.Shield" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Shield" key="LineThickness" value="1"/>
+    <prefentry path="Harness.Checks.LogicDesignInvalidNameCheck" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.LogicDesignInvalidNameCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.LogicDesignInvalidNameCheck" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForNodeInsulation" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForNodeInsulation" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForNodeInsulation" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckInefficientSplicing" key="Severity" value="1"/>
+    <prefentry path="Integrator.Checks.CheckInefficientSplicing" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckInefficientSplicing" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckInappropriateTerminalMaterialOrType" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckInappropriateTerminalMaterialOrType" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckInappropriateTerminalMaterialOrType" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.LibraryFootprintMatchesCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.LibraryFootprintMatchesCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.LibraryFootprintMatchesCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleRouteByProperty" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleRouteByProperty" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleRouteByProperty" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartRequiredForConnector" key="Severity" value="1"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartRequiredForConnector" key="RunByDefault" value="false"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartRequiredForConnector" key="Show" value="false"/>
+    <prefentry path="Integrator.Checks.CheckRulePigtailUsage" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRulePigtailUsage" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRulePigtailUsage" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnMultiEntryConnectorWireRouteConsistency" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnMultiEntryConnectorWireRouteConsistency" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnMultiEntryConnectorWireRouteConsistency" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleSpliceSpecification" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleSpliceSpecification" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleSpliceSpecification" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.FitsCavityCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.FitsCavityCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.FitsCavityCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckFitsCavity" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckFitsCavity" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckFitsCavity" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckGroundPlacementConstraints" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckGroundPlacementConstraints" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckGroundPlacementConstraints" key="Show" value="true"/>
+    <prefentry path="Logic.Overbraid" key="AllowDivideIndicator" value="false"/>
+    <prefentry path="Harness.Checks.HarnCheckVariantPositionConnectorConsistency" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckVariantPositionConnectorConsistency" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckVariantPositionConnectorConsistency" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.ConnectorCavityMatchCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.ConnectorCavityMatchCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ConnectorCavityMatchCheck" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavityPlugBOMID" key="Prefix" value="CP"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavityPlugBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavityPlugBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.CavityPlugBOMID" key="Increment" value="1"/>
+    <prefentry path="Logic.Checks.LogicDesignSharedObjectUsageCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.LogicDesignSharedObjectUsageCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignSharedObjectUsageCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Multicore.Indicator" key="Width" value="0.33"/>
+    <prefentry path="Logic.Multicore.Indicator" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Multicore.Indicator" key="LineThickness" value="1"/>
+    <prefentry path="Integrator.Checks.CheckLibraryMateMismatch" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckLibraryMateMismatch" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryMateMismatch" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ClipBOMID" key="Prefix" value="CL"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ClipBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ClipBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ClipBOMID" key="Increment" value="1"/>
+    <prefentry path="Integrator.Checks.CheckOptionVariance" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckOptionVariance" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckOptionVariance" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.TerminalBOMID" key="Prefix" value="T"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.TerminalBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.TerminalBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.TerminalBOMID" key="Increment" value="1"/>
+    <prefentry path="Logic.Checks.ValidLibraryReferenceCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.ValidLibraryReferenceCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ValidLibraryReferenceCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Wire" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Wire" key="LineThickness" value="1"/>
+    <prefentry path="Logic.Wire" key="PokeHomeArrowStyleRight" value="arrowRightOpen"/>
+    <prefentry path="Logic.Wire" key="PokeHomeArrowStyleLeft" value="arrowLeftOpen"/>
+    <prefentry path="Integrator.Property.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Integrator.Property.Text" key="FontStyle" value="0"/>
+    <prefentry path="Integrator.Property.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Integrator.Property.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Integrator.Property.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Integrator.Property.Text" key="Height" value="0.1875"/>
+    <prefentry path="Integrator.Checks.CheckRuleMapSameCavBySignal" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleMapSameCavBySignal" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMapSameCavBySignal" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignDuplicateNameAndOptionExpressionCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.LogicDesignDuplicateNameAndOptionExpressionCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignDuplicateNameAndOptionExpressionCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.BuildListDuplicateNameCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.BuildListDuplicateNameCheck" key="RunByDefault" value="false"/>
+    <prefentry path="Logic.Checks.BuildListDuplicateNameCheck" key="Show" value="false"/>
+    <prefentry path="Integrator.Checks.CheckDuplicateName" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckDuplicateName" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckDuplicateName" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.DanglingShieldCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.DanglingShieldCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.DanglingShieldCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckIncompleteRoutingConfig" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckIncompleteRoutingConfig" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckIncompleteRoutingConfig" key="Show" value="true"/>
+    <prefentry path="Integrator.Slot" key="LineStyle" value="1"/>
+    <prefentry path="Integrator.Slot" key="LineThickness" value="1"/>
+    <prefentry path="Logic.Checks.SharedObjectDuplicateNameCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.SharedObjectDuplicateNameCheck" key="RunByDefault" value="false"/>
+    <prefentry path="Logic.Checks.SharedObjectDuplicateNameCheck" key="Show" value="false"/>
+    <prefentry path="Logic.Checks.SymbolRequiredForDeviceCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.SymbolRequiredForDeviceCheck" key="RunByDefault" value="false"/>
+    <prefentry path="Logic.Checks.SymbolRequiredForDeviceCheck" key="Show" value="false"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ConnectorBOMID" key="Prefix" value="C"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ConnectorBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ConnectorBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.ConnectorBOMID" key="Increment" value="1"/>
+    <prefentry path="Integrator.Checks.CheckOutOfDateCommentSymbol" key="Severity" value="1"/>
+    <prefentry path="Integrator.Checks.CheckOutOfDateCommentSymbol" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckOutOfDateCommentSymbol" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.LibraryMulticoreMatchCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.LibraryMulticoreMatchCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.LibraryMulticoreMatchCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Comment.Graphic" key="LineStyle" value="1"/>
+    <prefentry path="Integrator.Comment.Graphic" key="LineThickness" value="1"/>
+    <prefentry path="Integrator.Checks.CheckLibraryConnectorNumCavities" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckLibraryConnectorNumCavities" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryConnectorNumCavities" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckInlineHalfMismatch" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckInlineHalfMismatch" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckInlineHalfMismatch" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartRequiredForSlot" key="Severity" value="1"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartRequiredForSlot" key="RunByDefault" value="false"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartRequiredForSlot" key="Show" value="false"/>
+    <prefentry path="Harness.Checks.HarnCheckValidBOMIDValues" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckValidBOMIDValues" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckValidBOMIDValues" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.SharedUsagesValidityCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.SharedUsagesValidityCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.SharedUsagesValidityCheck" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForSplice" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForSplice" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForSplice" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignReusablePinCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.LogicDesignReusablePinCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignReusablePinCheck" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.OtherBOMID" key="Prefix" value="OT"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.OtherBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.OtherBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.OtherBOMID" key="Increment" value="1"/>
+    <prefentry path="Logic.Checks.LibraryPartRequiredForDeviceCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.LibraryPartRequiredForDeviceCheck" key="RunByDefault" value="false"/>
+    <prefentry path="Logic.Checks.LibraryPartRequiredForDeviceCheck" key="Show" value="false"/>
+    <prefentry path="Harness.Checks.HarnCheckDuplicateVariantPositionConnector" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnCheckDuplicateVariantPositionConnector" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckDuplicateVariantPositionConnector" key="Show" value="true"/>
+    <prefentry path="Logic.Device" key="DeviceConnectorWidth" value="2"/>
+    <prefentry path="Logic.Device" key="DisplayDevicePinName" value="1"/>
+    <prefentry path="Logic.Device" key="LineThickness" value="1"/>
+    <prefentry path="Logic.Device" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Checks.InterconnectMateMatchCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.InterconnectMateMatchCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.InterconnectMateMatchCheck" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForWire" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForWire" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForWire" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckValidWireDefinition" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnCheckValidWireDefinition" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckValidWireDefinition" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.SchematicRefersToValidConnectivityCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.SchematicRefersToValidConnectivityCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.SchematicRefersToValidConnectivityCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="Delimiter" value=" "/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="LinesPerBlock" value="0"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="FontStyle" value="0"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="Show" value="true"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="Template" value="/{design.name}:{diagram.name}:{pin.name}[ {zone.name}][ :{equiv.name}]"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="Height" value="0.1875"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="LineMax" value="1"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Logic.Conductor.XRef.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavityTerminalParts" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavityTerminalParts" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckAlternativeValidCavityTerminalParts" key="Show" value="true"/>
+    <prefentry path="Logic.Name.Text" key="VerticalJustification" value="1"/>
+    <prefentry path="Logic.Name.Text" key="FontStyle" value="0"/>
+    <prefentry path="Logic.Name.Text" key="HorizontalJustification" value="1"/>
+    <prefentry path="Logic.Name.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Logic.Name.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Logic.Name.Text" key="Height" value="0.1875"/>
+    <prefentry path="Integrator.Checks.CheckRuleTerminalSpecification" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleTerminalSpecification" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleTerminalSpecification" key="Show" value="true"/>
+    <prefentry path="Integrator.Comment.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Integrator.Comment.Text" key="FontStyle" value="0"/>
+    <prefentry path="Integrator.Comment.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Integrator.Comment.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Integrator.Comment.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Integrator.Comment.Text" key="Height" value="0.1875"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartNotCurrent" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartNotCurrent" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryPartNotCurrent" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.MulticoreMembersAreProperCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.MulticoreMembersAreProperCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.MulticoreMembersAreProperCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.CheckRuleLogicSetAttributes" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.CheckRuleLogicSetAttributes" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.CheckRuleLogicSetAttributes" key="Show" value="true"/>
+    <prefentry path="Logic.Property.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Logic.Property.Text" key="FontStyle" value="0"/>
+    <prefentry path="Logic.Property.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Logic.Property.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Logic.Property.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Logic.Property.Text" key="Height" value="0.1875"/>
+    <prefentry path="Logic.Checks.LibraryPartNotCurrentCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.LibraryPartNotCurrentCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.LibraryPartNotCurrentCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Comment.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Logic.Comment.Text" key="FontStyle" value="0"/>
+    <prefentry path="Logic.Comment.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Logic.Comment.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Logic.Comment.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Logic.Comment.Text" key="Height" value="0.1875"/>
+    <prefentry path="Integrator.Checks.CheckConstrainedPlacements" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckConstrainedPlacements" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckConstrainedPlacements" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.ValidLibraryPinsCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.ValidLibraryPinsCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ValidLibraryPinsCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Comment.Graphic" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Comment.Graphic" key="LineThickness" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForConnector" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForConnector" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForConnector" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckUnconnectedWires" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnCheckUnconnectedWires" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckUnconnectedWires" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.DanglingWireCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.DanglingWireCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.DanglingWireCheck" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForClip" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForClip" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForClip" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForMulticore" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForMulticore" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForMulticore" key="Show" value="true"/>
+    <prefentry path="Logic.Attribute.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Logic.Attribute.Text" key="FontStyle" value="0"/>
+    <prefentry path="Logic.Attribute.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Logic.Attribute.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Logic.Attribute.Text" key="FontName" value="Lucida Sans"/>
+    <prefentry path="Logic.Attribute.Text" key="Height" value="0.26"/>
+    <prefentry path="Logic.Checks.SpliceConnectivityCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.SpliceConnectivityCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.SpliceConnectivityCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckEmptyBundle" key="Severity" value="1"/>
+    <prefentry path="Integrator.Checks.CheckEmptyBundle" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckEmptyBundle" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.SharedPinsObeyReservationsCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.SharedPinsObeyReservationsCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.SharedPinsObeyReservationsCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckDanglingBundle" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckDanglingBundle" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckDanglingBundle" key="Show" value="true"/>
+    <prefentry path="Logic.Interconnect" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Interconnect" key="LineThickness" value="3"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForMLC" key="Severity" value="1"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForMLC" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckLibraryPartRequiredForMLC" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMaxWiresPerSplice" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRuleMaxWiresPerSplice" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRuleMaxWiresPerSplice" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.BuildListReusablePinCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.BuildListReusablePinCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.BuildListReusablePinCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignInvalidNameCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.LogicDesignInvalidNameCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignInvalidNameCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.InterconnectAllocationCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.InterconnectAllocationCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.InterconnectAllocationCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.LogicDesignDuplicateNameCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.LogicDesignDuplicateNameCheck" key="RunByDefault" value="false"/>
+    <prefentry path="Logic.Checks.LogicDesignDuplicateNameCheck" key="Show" value="false"/>
+    <prefentry path="Logic.Checks.ConductorSegmentsHasNonZeroLengthCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.ConductorSegmentsHasNonZeroLengthCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ConductorSegmentsHasNonZeroLengthCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.SharedObjectDuplicateNameAndOptionExpressionCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.SharedObjectDuplicateNameAndOptionExpressionCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.SharedObjectDuplicateNameAndOptionExpressionCheck" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.WireNotAllowedCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.WireNotAllowedCheck" key="RunByDefault" value="false"/>
+    <prefentry path="Logic.Checks.WireNotAllowedCheck" key="Show" value="false"/>
+    <prefentry path="Logic.Checks.SegmentOverlapCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.SegmentOverlapCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.SegmentOverlapCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Name.Text" key="VerticalJustification" value="1"/>
+    <prefentry path="Integrator.Name.Text" key="FontStyle" value="0"/>
+    <prefentry path="Integrator.Name.Text" key="HorizontalJustification" value="1"/>
+    <prefentry path="Integrator.Name.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Integrator.Name.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Integrator.Name.Text" key="Height" value="0.1875"/>
+    <prefentry path="Logic.Connector" key="GeneratedConnectorWidth" value="2"/>
+    <prefentry path="Logic.Connector" key="LineThickness" value="1"/>
+    <prefentry path="Logic.Connector" key="LineStyle" value="1"/>
+    <prefentry path="Logic.Multicore" key="AllowDivideIndicator" value="true"/>
+    <prefentry path="Logic.Checks.DanglingInterconnectCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.DanglingInterconnectCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.DanglingInterconnectCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckUnpromotedOptions" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckUnpromotedOptions" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckUnpromotedOptions" key="Show" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.GrommetBOMID" key="Prefix" value="G"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.GrommetBOMID" key="InclueInTable" value="true"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.GrommetBOMID" key="Start" value="1"/>
+    <prefentry path="Harness.CompositeBOM.BOMID.GrommetBOMID" key="Increment" value="1"/>
+    <prefentry path="Logic.Checks.ConnectivitySchematicCheck" key="Severity" value="2"/>
+    <prefentry path="Logic.Checks.ConnectivitySchematicCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.ConnectivitySchematicCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRefinedConnCavityMatch" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRefinedConnCavityMatch" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRefinedConnCavityMatch" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRulePlaceByProperty" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckRulePlaceByProperty" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckRulePlaceByProperty" key="Show" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckDuplicateBundle" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnCheckDuplicateBundle" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckDuplicateBundle" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckUnmappedDevicePins" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckUnmappedDevicePins" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckUnmappedDevicePins" key="Show" value="true"/>
+    <prefentry path="General" key="UseCurrentOnly" value="false"/>
+    <prefentry path="General" key="UseEffectivity" value="false"/>
+    <prefentry path="General" key="PokeHomePrefix" value=""/>
+    <prefentry path="General" key="EvaluateNonOptioned" value="true"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="Delimiter" value=" "/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="LinesPerBlock" value="0"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="FontStyle" value="0"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="HeightUnit" value="2"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="Show" value="true"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="Template" value="/{design.name}:{diagram.name}[ {zone.name}]"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="Height" value="0.1875"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="LineMax" value="1"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="VerticalJustification" value="2"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="FontName" value="Stroke"/>
+    <prefentry path="Logic.Pinlist.XRef.Text" key="HorizontalJustification" value="0"/>
+    <prefentry path="Integrator.Checks.CheckMissingCustomConstraint" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckMissingCustomConstraint" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckMissingCustomConstraint" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckUnconnectedWires" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckUnconnectedWires" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckUnconnectedWires" key="Show" value="true"/>
+    <prefentry path="Logic.Checks.SharedObjectUsageCheck" key="Severity" value="1"/>
+    <prefentry path="Logic.Checks.SharedObjectUsageCheck" key="RunByDefault" value="true"/>
+    <prefentry path="Logic.Checks.SharedObjectUsageCheck" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckEmptyMulticore" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckEmptyMulticore" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckEmptyMulticore" key="Show" value="true"/>
+    <prefentry path="Logic.Overbraid.Indicator" key="LineStyle" value="2"/>
+    <prefentry path="Logic.Overbraid.Indicator" key="LineThickness" value="1"/>
+    <prefentry path="Integrator.Checks.CheckTerminalBarConsistency" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckTerminalBarConsistency" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckTerminalBarConsistency" key="Show" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryMulticoreContents" key="Severity" value="2"/>
+    <prefentry path="Integrator.Checks.CheckLibraryMulticoreContents" key="RunByDefault" value="true"/>
+    <prefentry path="Integrator.Checks.CheckLibraryMulticoreContents" key="Show" value="true"/>
+    <prefentry path="Integrator.BundleCalc" key="BundleWireGapCoef" value="1.154"/>
+    <prefentry path="Integrator.BundleCalc" key="BundleInsulationThick" value="0.0"/>
+    <prefentry path="Harness.Checks.HarnCheckEmptyMulticore" key="Severity" value="2"/>
+    <prefentry path="Harness.Checks.HarnCheckEmptyMulticore" key="RunByDefault" value="true"/>
+    <prefentry path="Harness.Checks.HarnCheckEmptyMulticore" key="Show" value="true"/>
+  </preferencemgr>
+  <designmgr id="UIDabf9e6-1152dc8e7a2-f528764d624db129b32c21fbca0cb8d6" modified="60" baseid="UIDabf9e6-1152dc8e7a2-f528764d624db129b32c21fbca0cb8d6">
+    <logicaldesign id="UIDe69c0a-1152dcc7554-f528764d624db129b32c21fbca0cb8d6" name="Design1" description="Web Services documentation\nLogic design example 1" version="1" designabstraction="" releaselevelref="UIDabf9e6-1152dc8e77f-f528764d624db129b32c21fbca0cb8d6" created="1190474365546" modified="31" generated="false" baseid="UIDe69c0a-1152dcc7554-f528764d624db129b32c21fbca0cb8d6" shortdescription="Logic design example 1" optionexpression="opt1 &amp;&amp; opt2" preferencesetname="Default" domainref="" allowschemlessconnectivity="false">
+      <rule id="UID619367-1165ef439ac-8c27f6b5dc0e9e5a536aa0371648fb4a" name="Object Rule" baseid="UID619367-1165ef439ac-8c27f6b5dc0e9e5a536aa0371648fb4a"/>
+      <property id="UID619367-1165ef439ab-8c27f6b5dc0e9e5a536aa0371648fb4a" name="prop1" val="value1" type="String" stability="editable"/>
+      <designoptions>
+        <refedoption optionref="UID4969b1-11621672ddc-f528764d624db129b32c21fbca0cb8d6"/>
+        <refedoption optionref="UID4969b1-11621672ddd-f528764d624db129b32c21fbca0cb8d6"/>
+      </designoptions>
+      <designnamemgr id="UIDe69c0a-1152dcc75b7-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc75b7-f528764d624db129b32c21fbca0cb8d6" modified="1">
+        <hwmnamespace key="chs.cof.logical.cable.IDevice" entitytype="1" curindex="4" highindex="100"/>
+        <hwmnamespace key="chs.cof.logical.cable.IWireConductor" entitytype="9" curindex="6" highindex="100"/>
+        <hwmnamespace key="chs.cof.logical.cable.IPlugConnector" entitytype="20" curindex="2" highindex="100"/>
+        <namespace key="UIDe69c0a-1152dcc76d0-f528764d624db129b32c21fbca0cb8d6" entitytype="3" curindex="3"/>
+        <namespace key="UIDd03176-1152e6e40c4-f528764d624db129b32c21fbca0cb8d6" entitytype="3" curindex="4"/>
+        <namespace key="UIDe69c0a-1152dcc76ab-f528764d624db129b32c21fbca0cb8d6" entitytype="3" curindex="3"/>
+        <namespace key="UIDd03176-1152e6e40c7-f528764d624db129b32c21fbca0cb8d6" entitytype="3" curindex="4"/>
+      </designnamemgr>
+      <connectivity id="UIDe69c0a-1152dcc7678-f528764d624db129b32c21fbca0cb8d6" modified="19" baseid="UIDe69c0a-1152dcc7678-f528764d624db129b32c21fbca0cb8d6">
+        <device id="UIDe69c0a-1152dcc76ab-f528764d624db129b32c21fbca0cb8d6" name="DEV1" nameindex="1" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" baseid="UIDe69c0a-1152dcc76ab-f528764d624db129b32c21fbca0cb8d6">
+          <pin id="UIDe69c0a-1152dcc76d7-f528764d624db129b32c21fbca0cb8d6" name="PIN1" nameindex="1" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDe69c0a-1152dcc76d7-f528764d624db129b32c21fbca0cb8d6"/>
+          <pin id="UIDe69c0a-1152dcc76e3-f528764d624db129b32c21fbca0cb8d6" name="PIN2" nameindex="2" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDe69c0a-1152dcc76e3-f528764d624db129b32c21fbca0cb8d6"/>
+        </device>
+        <device id="UIDe69c0a-1152dcc76d0-f528764d624db129b32c21fbca0cb8d6" name="DEV2" nameindex="2" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" baseid="UIDe69c0a-1152dcc76d0-f528764d624db129b32c21fbca0cb8d6">
+          <pin id="UIDe69c0a-1152dcc76db-f528764d624db129b32c21fbca0cb8d6" name="PIN1" nameindex="1" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDe69c0a-1152dcc76db-f528764d624db129b32c21fbca0cb8d6"/>
+          <pin id="UIDe69c0a-1152dcc76e7-f528764d624db129b32c21fbca0cb8d6" name="PIN2" nameindex="2" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDe69c0a-1152dcc76e7-f528764d624db129b32c21fbca0cb8d6"/>
+        </device>
+        <device id="UIDd03176-1152e6e40c4-f528764d624db129b32c21fbca0cb8d6" name="DEV3" nameindex="3" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" baseid="UIDd03176-1152e6e40c4-f528764d624db129b32c21fbca0cb8d6">
+          <pin id="UIDd03176-1152e6e40cf-f528764d624db129b32c21fbca0cb8d6" name="PIN1" nameindex="1" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDd03176-1152e6e40cf-f528764d624db129b32c21fbca0cb8d6"/>
+          <pin id="UIDd03176-1152e6e40d7-f528764d624db129b32c21fbca0cb8d6" name="PIN2" nameindex="2" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDd03176-1152e6e40d7-f528764d624db129b32c21fbca0cb8d6"/>
+          <pin id="UIDd03176-1152e6e40df-f528764d624db129b32c21fbca0cb8d6" name="PIN3" nameindex="3" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDd03176-1152e6e40df-f528764d624db129b32c21fbca0cb8d6"/>
+        </device>
+        <connector id="UIDd03176-1152e6e40c7-f528764d624db129b32c21fbca0cb8d6" name="P1" nameindex="1" type="plug" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" baseid="UIDd03176-1152e6e40c7-f528764d624db129b32c21fbca0cb8d6" issealed="false" isplugged="false" isgreased="false" isbackshellplugged="false" datum="Front" quantity="1.0">
+          <pin id="UID6b8b73-116458f1d66-6f65e91667cf98dd13464deaf2739fde" name="PIN1" nameindex="1" pingraphic="" pintype="U" sealed="false" plugged="false" baseid="UID6b8b73-116458f1d66-6f65e91667cf98dd13464deaf2739fde"/>
+          <pin id="UID6b8b73-116458f1d6b-6f65e91667cf98dd13464deaf2739fde" name="PIN2" nameindex="2" pingraphic="" pintype="U" sealed="false" plugged="false" baseid="UID6b8b73-116458f1d6b-6f65e91667cf98dd13464deaf2739fde"/>
+          <pin id="UID6b8b73-116458f1d6f-6f65e91667cf98dd13464deaf2739fde" name="PIN3" nameindex="3" pingraphic="" pintype="U" sealed="false" plugged="false" baseid="UID6b8b73-116458f1d6f-6f65e91667cf98dd13464deaf2739fde"/>
+        </connector>
+        <wire id="UIDe69c0a-1152dcc76d3-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc76d3-f528764d624db129b32c21fbca0cb8d6" name="WIRE1" nameindex="1" isport="false" startpinref="UIDe69c0a-1152dcc76d7-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" inccut="1" lenchtyp="Neither" lengthch="0.0" lengthu="0.0" lengthm="0.0" wirelength="0.0" isbypass="false" isvariantposition="false">
+          <connection pinref="UIDe69c0a-1152dcc76d7-f528764d624db129b32c21fbca0cb8d6"/>
+          <connection pinref="UIDe69c0a-1152dcc76db-f528764d624db129b32c21fbca0cb8d6"/>
+        </wire>
+        <wire id="UIDe69c0a-1152dcc76df-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc76df-f528764d624db129b32c21fbca0cb8d6" name="WIRE2" nameindex="2" isport="false" startpinref="UIDe69c0a-1152dcc76e3-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" inccut="1" lenchtyp="Neither" lengthch="0.0" lengthu="0.0" lengthm="0.0" wirelength="0.0" isbypass="false" isvariantposition="false">
+          <connection pinref="UIDe69c0a-1152dcc76e3-f528764d624db129b32c21fbca0cb8d6"/>
+          <connection pinref="UIDe69c0a-1152dcc76e7-f528764d624db129b32c21fbca0cb8d6"/>
+        </wire>
+        <wire id="UIDd03176-1152e6e40cb-f528764d624db129b32c21fbca0cb8d6" baseid="UIDd03176-1152e6e40cb-f528764d624db129b32c21fbca0cb8d6" name="WIRE3" nameindex="3" isport="false" startpinref="UIDd03176-1152e6e40cf-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" inccut="1" lenchtyp="Neither" lengthch="0.0" lengthu="0.0" lengthm="0.0" wirelength="0.0" isbypass="false" isvariantposition="false">
+          <connection pinref="UIDd03176-1152e6e40cf-f528764d624db129b32c21fbca0cb8d6"/>
+          <connection pinref="UID6b8b73-116458f1d66-6f65e91667cf98dd13464deaf2739fde"/>
+        </wire>
+        <wire id="UIDd03176-1152e6e40d3-f528764d624db129b32c21fbca0cb8d6" baseid="UIDd03176-1152e6e40d3-f528764d624db129b32c21fbca0cb8d6" name="WIRE4" nameindex="4" isport="false" startpinref="UIDd03176-1152e6e40d7-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" inccut="1" lenchtyp="Neither" lengthch="0.0" lengthu="0.0" lengthm="0.0" wirelength="0.0" isbypass="false" isvariantposition="false">
+          <connection pinref="UIDd03176-1152e6e40d7-f528764d624db129b32c21fbca0cb8d6"/>
+          <connection pinref="UID6b8b73-116458f1d6b-6f65e91667cf98dd13464deaf2739fde"/>
+        </wire>
+        <wire id="UIDd03176-1152e6e40db-f528764d624db129b32c21fbca0cb8d6" baseid="UIDd03176-1152e6e40db-f528764d624db129b32c21fbca0cb8d6" name="WIRE5" nameindex="5" isport="false" startpinref="UIDd03176-1152e6e40df-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" inccut="1" lenchtyp="Neither" lengthch="0.0" lengthu="0.0" lengthm="0.0" wirelength="0.0" isbypass="false" isvariantposition="false">
+          <connection pinref="UIDd03176-1152e6e40df-f528764d624db129b32c21fbca0cb8d6"/>
+          <connection pinref="UID6b8b73-116458f1d6f-6f65e91667cf98dd13464deaf2739fde"/>
+        </wire>
+      </connectivity>
+      <diagram id="UIDd03176-1152e6e4096-f528764d624db129b32c21fbca0cb8d6" name="Diagram2" type="schematic" modified="16" spacing="1920" baseid="UIDd03176-1152e6e4096-f528764d624db129b32c21fbca0cb8d6">
+        <grid realmapping="0.25" realmappingunits="inch"/>
+        <schemconnector id="UIDd03176-1152e6e40c8-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40c7-f528764d624db129b32c21fbca0cb8d6" transform="-1.0 0.0 0.0 1.0 0.0 0.0" x="13440.0" y="3840.0" visibility="true" ishome="true">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <parameters>
+            <paramextent x="0.0" y="0.0" width="7680.0" height="9600.0"/>
+            <parameter type="top">
+              <glyph type="corner-TL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-TR" name="rounded"/>
+            </parameter>
+            <parameter type="bottom">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="rounded"/>
+            </parameter>
+            <parameter type="bottom-broken">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hbroken"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="pin">
+              <glyph type="decoration" name="vline"/>
+              <glyph type="decoration" name="blank"/>
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="nopin">
+              <glyph type="decoration" name="vline"/>
+              <glyph type="decoration" name="blank"/>
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="contact" name="male">
+              <glyph type="contact" name="male"/>
+            </parameter>
+            <parameter type="contact" name="male-coax">
+              <glyph type="contact" name="male-coax"/>
+            </parameter>
+            <parameter type="contact" name="female">
+              <glyph type="contact" name="female"/>
+            </parameter>
+            <parameter type="contact" name="female-coax">
+              <glyph type="contact" name="female-coax"/>
+            </parameter>
+          </parameters>
+          <attributetext id="UIDd03176-1152e6e40ca-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="3840.0" y="-1920.0" rotation="0" height="1440.0" hjust="right" vjust="top" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5d4-598d1b32b4be14899bdef6657c940c92" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+              <color red="0" green="0" blue="0"/>
+            </attribute>
+          </attributetext>
+          <line x1="7680.0" y1="10560.0" x2="7680.0" y2="8640.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="10560.0" x2="0.0" y2="8640.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="8640.0" x2="7680.0" y2="6720.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="8640.0" x2="0.0" y2="6720.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="6720.0" x2="7680.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="6720.0" x2="0.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="4800.0" x2="7680.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="4800.0" x2="0.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="2880.0" x2="7680.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="2880.0" x2="0.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="960.0" x2="7680.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="960.0" x2="0.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <arc x="6720.0" y="-960.0" radius="960.0" startangle="270" travelangle="90" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </arc>
+          <line x1="960.0" y1="-1920.0" x2="6720.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-1920.0" x2="960.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-960.0" x2="0.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <arc x="6720.0" y="10560.0" radius="960.0" startangle="0" travelangle="90" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </arc>
+          <line x1="960.0" y1="11520.0" x2="6720.0" y2="11520.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="11520.0" x2="960.0" y2="11520.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="10560.0" x2="0.0" y2="11520.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <schempin id="UID6b8b73-116458f1d67-6f65e91667cf98dd13464deaf2739fde" connref="UID6b8b73-116458f1d66-6f65e91667cf98dd13464deaf2739fde" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="7680.0" y="9600.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UID6b8b73-116458f1d68-6f65e91667cf98dd13464deaf2739fde" nameref="Name" x="0.0" y="192.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" decorationid="UID00b610-115acb12fbb-69e09d9a9a5b2afbe167959e473fb311" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+            </attributetext>
+          </schempin>
+          <schempin id="UID6b8b73-116458f1d6c-6f65e91667cf98dd13464deaf2739fde" connref="UID6b8b73-116458f1d6b-6f65e91667cf98dd13464deaf2739fde" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="7680.0" y="5760.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UID6b8b73-116458f1d6d-6f65e91667cf98dd13464deaf2739fde" nameref="Name" x="0.0" y="192.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" decorationid="UID00b610-115acb12fbb-69e09d9a9a5b2afbe167959e473fb311" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+            </attributetext>
+          </schempin>
+          <schempin id="UID6b8b73-116458f1d70-6f65e91667cf98dd13464deaf2739fde" connref="UID6b8b73-116458f1d6f-6f65e91667cf98dd13464deaf2739fde" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="7680.0" y="1920.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UID6b8b73-116458f1d71-6f65e91667cf98dd13464deaf2739fde" nameref="Name" x="0.0" y="192.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" decorationid="UID00b610-115acb12fbb-69e09d9a9a5b2afbe167959e473fb311" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+            </attributetext>
+          </schempin>
+        </schemconnector>
+        <schemdevice id="UIDd03176-1152e6e40c5-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40c4-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-19200.0" y="1920.0" visibility="true" ishome="true">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <parameters>
+            <paramextent x="0.0" y="0.0" width="9600.0" height="11520.0"/>
+            <parameter type="border" name="1.0"/>
+            <parameter type="top">
+              <glyph type="corner-TL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="bottom">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="bottom-broken">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hbroken"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="pin">
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="pin-TL">
+              <glyph type="corner-TL" name="square"/>
+            </parameter>
+            <parameter type="pin-TR">
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="pin-BL">
+              <glyph type="corner-BL" name="square"/>
+            </parameter>
+            <parameter type="pin-BR">
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="nopin">
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="nopin-TL">
+              <glyph type="corner-TL" name="square"/>
+            </parameter>
+            <parameter type="nopin-TR">
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="nopin-BL">
+              <glyph type="corner-BL" name="square"/>
+            </parameter>
+            <parameter type="nopin-BR">
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="contact" name="male">
+              <glyph type="contact" name="male"/>
+            </parameter>
+            <parameter type="contact" name="male-coax">
+              <glyph type="contact" name="male-coax"/>
+            </parameter>
+            <parameter type="contact" name="female">
+              <glyph type="contact" name="female"/>
+            </parameter>
+            <parameter type="contact" name="female-coax">
+              <glyph type="contact" name="female-coax"/>
+            </parameter>
+          </parameters>
+          <attributetext id="UIDd03176-1152e6e40c6-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="4800.0" y="-1920.0" rotation="0" height="1440.0" hjust="middle" vjust="top" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5da-598d1b32b4be14899bdef6657c940c92" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+              <color red="0" green="0" blue="204"/>
+            </attribute>
+          </attributetext>
+          <line x1="0.0" y1="960.0" x2="0.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="2880.0" x2="0.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="4800.0" x2="0.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="6720.0" x2="0.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="8640.0" x2="0.0" y2="6720.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="10560.0" x2="0.0" y2="8640.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="12480.0" x2="0.0" y2="10560.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="960.0" x2="9600.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="2880.0" x2="9600.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="6720.0" x2="9600.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="10560.0" x2="9600.0" y2="8640.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="4800.0" x2="9600.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="8640.0" x2="9600.0" y2="6720.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="12480.0" x2="9600.0" y2="10560.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="-1920.0" x2="9600.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="8640.0" y1="-1920.0" x2="9600.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="5760.0" y1="-1920.0" x2="8640.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="960.0" y1="-1920.0" x2="3840.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="3840.0" y1="-1920.0" x2="5760.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-1920.0" x2="960.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-960.0" x2="0.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="9600.0" y1="13440.0" x2="9600.0" y2="12480.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="8640.0" y1="13440.0" x2="9600.0" y2="13440.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="5760.0" y1="13440.0" x2="8640.0" y2="13440.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="960.0" y1="13440.0" x2="3840.0" y2="13440.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="3840.0" y1="13440.0" x2="5760.0" y2="13440.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="13440.0" x2="960.0" y2="13440.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="12480.0" x2="0.0" y2="13440.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <schempin id="UIDd03176-1152e6e40d0-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40cf-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="9600.0" y="11520.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDd03176-1152e6e40d1-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="-192.0" y="192.0" rotation="0" height="1440.0" hjust="right" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5c2-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schempin>
+          <schempin id="UIDd03176-1152e6e40d8-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40d7-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="9600.0" y="7680.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDd03176-1152e6e40d9-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="-192.0" y="192.0" rotation="0" height="1440.0" hjust="right" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5c2-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schempin>
+          <schempin id="UIDd03176-1152e6e40e0-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40df-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="9600.0" y="3840.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDd03176-1152e6e40e1-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="-192.0" y="192.0" rotation="0" height="1440.0" hjust="right" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5c2-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schempin>
+        </schemdevice>
+        <schemwire id="UIDd03176-1152e6e40cc-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40cb-f528764d624db129b32c21fbca0cb8d6" visibility="true" ishome="false">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <color red="51" green="51" blue="204"/>
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <schemsegment id="UIDd03176-1152e6e40cd-f528764d624db129b32c21fbca0cb8d6" x1="-9600.0" y1="13440.0" x2="5760.0" y2="13440.0" visibility="true">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <color red="51" green="51" blue="204"/>
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDd03176-1152e6e40ce-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="7680.0" y="192.0" rotation="0" height="1440.0" hjust="middle" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5e4-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schemsegment>
+        </schemwire>
+        <schemwire id="UIDd03176-1152e6e40d4-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40d3-f528764d624db129b32c21fbca0cb8d6" visibility="true" ishome="false">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <color red="51" green="51" blue="204"/>
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <schemsegment id="UIDd03176-1152e6e40d5-f528764d624db129b32c21fbca0cb8d6" x1="-9600.0" y1="9600.0" x2="5760.0" y2="9600.0" visibility="true">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <color red="51" green="51" blue="204"/>
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDd03176-1152e6e40d6-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="7680.0" y="192.0" rotation="0" height="1440.0" hjust="middle" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5e4-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schemsegment>
+        </schemwire>
+        <schemwire id="UIDd03176-1152e6e40dc-f528764d624db129b32c21fbca0cb8d6" connref="UIDd03176-1152e6e40db-f528764d624db129b32c21fbca0cb8d6" visibility="true" ishome="false">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <color red="51" green="51" blue="204"/>
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <schemsegment id="UIDd03176-1152e6e40dd-f528764d624db129b32c21fbca0cb8d6" x1="-9600.0" y1="5760.0" x2="5760.0" y2="5760.0" visibility="true">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <color red="51" green="51" blue="204"/>
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDd03176-1152e6e40de-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="7680.0" y="192.0" rotation="0" height="1440.0" hjust="middle" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5e4-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schemsegment>
+        </schemwire>
+      </diagram>
+      <diagram id="UIDe69c0a-1152dcc767d-f528764d624db129b32c21fbca0cb8d6" name="Diagram1" type="schematic" modified="16" spacing="1920" baseid="UIDe69c0a-1152dcc767d-f528764d624db129b32c21fbca0cb8d6">
+        <grid realmapping="0.25" realmappingunits="inch"/>
+        <schemdevice id="UIDe69c0a-1152dcc76ac-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76ab-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-21120.0" y="3840.0" visibility="true" ishome="true">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <parameters>
+            <paramextent x="0.0" y="0.0" width="7680.0" height="5760.0"/>
+            <parameter type="border" name="1.0"/>
+            <parameter type="top">
+              <glyph type="corner-TL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="bottom">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="bottom-broken">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hbroken"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="pin">
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="pin-TL">
+              <glyph type="corner-TL" name="square"/>
+            </parameter>
+            <parameter type="pin-TR">
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="pin-BL">
+              <glyph type="corner-BL" name="square"/>
+            </parameter>
+            <parameter type="pin-BR">
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="nopin">
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="nopin-TL">
+              <glyph type="corner-TL" name="square"/>
+            </parameter>
+            <parameter type="nopin-TR">
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="nopin-BL">
+              <glyph type="corner-BL" name="square"/>
+            </parameter>
+            <parameter type="nopin-BR">
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="contact" name="male">
+              <glyph type="contact" name="male"/>
+            </parameter>
+            <parameter type="contact" name="male-coax">
+              <glyph type="contact" name="male-coax"/>
+            </parameter>
+            <parameter type="contact" name="female">
+              <glyph type="contact" name="female"/>
+            </parameter>
+            <parameter type="contact" name="female-coax">
+              <glyph type="contact" name="female-coax"/>
+            </parameter>
+          </parameters>
+          <attributetext id="UIDe69c0a-1152dcc76ad-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="3840.0" y="-1920.0" rotation="0" height="1440.0" hjust="middle" vjust="top" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5da-598d1b32b4be14899bdef6657c940c92" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+              <color red="0" green="0" blue="204"/>
+            </attribute>
+          </attributetext>
+          <line x1="0.0" y1="960.0" x2="0.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="2880.0" x2="0.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="4800.0" x2="0.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="6720.0" x2="0.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="2880.0" x2="7680.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="4800.0" x2="7680.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="960.0" x2="7680.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="6720.0" x2="7680.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="-1920.0" x2="7680.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="6720.0" y1="-1920.0" x2="7680.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="4800.0" y1="-1920.0" x2="6720.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="960.0" y1="-1920.0" x2="2880.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="2880.0" y1="-1920.0" x2="4800.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-1920.0" x2="960.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-960.0" x2="0.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="7680.0" y1="7680.0" x2="7680.0" y2="6720.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="6720.0" y1="7680.0" x2="7680.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="4800.0" y1="7680.0" x2="6720.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="960.0" y1="7680.0" x2="2880.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="2880.0" y1="7680.0" x2="4800.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="7680.0" x2="960.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="6720.0" x2="0.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <schempin id="UIDe69c0a-1152dcc76d8-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76d7-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="7680.0" y="5760.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDe69c0a-1152dcc76d9-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="-192.0" y="192.0" rotation="0" height="1440.0" hjust="right" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5c2-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schempin>
+          <schempin id="UIDe69c0a-1152dcc76e4-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76e3-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="7680.0" y="0.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDe69c0a-1152dcc76e5-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="-192.0" y="192.0" rotation="0" height="1440.0" hjust="right" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5c2-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schempin>
+        </schemdevice>
+        <schemdevice id="UIDe69c0a-1152dcc76d1-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76d0-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="0.0" y="3840.0" visibility="true" ishome="true">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <parameters>
+            <paramextent x="0.0" y="0.0" width="19200.0" height="5760.0"/>
+            <parameter type="border" name="1.0"/>
+            <parameter type="top">
+              <glyph type="corner-TL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="bottom">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="bottom-broken">
+              <glyph type="corner-BL" name="square"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="decoration" name="hbroken"/>
+              <glyph type="decoration" name="hline"/>
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="pin">
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="pin-TL">
+              <glyph type="corner-TL" name="square"/>
+            </parameter>
+            <parameter type="pin-TR">
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="pin-BL">
+              <glyph type="corner-BL" name="square"/>
+            </parameter>
+            <parameter type="pin-BR">
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="nopin">
+              <glyph type="decoration" name="vline"/>
+            </parameter>
+            <parameter type="nopin-TL">
+              <glyph type="corner-TL" name="square"/>
+            </parameter>
+            <parameter type="nopin-TR">
+              <glyph type="corner-TR" name="square"/>
+            </parameter>
+            <parameter type="nopin-BL">
+              <glyph type="corner-BL" name="square"/>
+            </parameter>
+            <parameter type="nopin-BR">
+              <glyph type="corner-BR" name="square"/>
+            </parameter>
+            <parameter type="contact" name="male">
+              <glyph type="contact" name="male"/>
+            </parameter>
+            <parameter type="contact" name="male-coax">
+              <glyph type="contact" name="male-coax"/>
+            </parameter>
+            <parameter type="contact" name="female">
+              <glyph type="contact" name="female"/>
+            </parameter>
+            <parameter type="contact" name="female-coax">
+              <glyph type="contact" name="female-coax"/>
+            </parameter>
+          </parameters>
+          <attributetext id="UIDe69c0a-1152dcc76d2-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="9600.0" y="-1920.0" rotation="0" height="1440.0" hjust="middle" vjust="top" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5da-598d1b32b4be14899bdef6657c940c92" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+              <color red="0" green="0" blue="204"/>
+            </attribute>
+          </attributetext>
+          <line x1="0.0" y1="2880.0" x2="0.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="4800.0" x2="0.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="19200.0" y1="960.0" x2="19200.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="19200.0" y1="2880.0" x2="19200.0" y2="960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="19200.0" y1="4800.0" x2="19200.0" y2="2880.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="19200.0" y1="6720.0" x2="19200.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="960.0" x2="0.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="6720.0" x2="0.0" y2="4800.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="19200.0" y1="-1920.0" x2="19200.0" y2="-960.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="18240.0" y1="-1920.0" x2="19200.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="10560.0" y1="-1920.0" x2="18240.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="960.0" y1="-1920.0" x2="8640.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="8640.0" y1="-1920.0" x2="10560.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-1920.0" x2="960.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="-960.0" x2="0.0" y2="-1920.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="19200.0" y1="7680.0" x2="19200.0" y2="6720.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="18240.0" y1="7680.0" x2="19200.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="10560.0" y1="7680.0" x2="18240.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="960.0" y1="7680.0" x2="8640.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="8640.0" y1="7680.0" x2="10560.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="7680.0" x2="960.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <line x1="0.0" y1="6720.0" x2="0.0" y2="7680.0" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false"/>
+          </line>
+          <schempin id="UIDe69c0a-1152dcc76dc-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76db-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="0.0" y="5760.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDe69c0a-1152dcc76dd-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="192.0" y="192.0" rotation="0" height="1440.0" hjust="left" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5c2-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schempin>
+          <schempin id="UIDe69c0a-1152dcc76e8-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76e7-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="0.0" y="0.0" visibility="true" reference="false" ishome="false">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDe69c0a-1152dcc76e9-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="192.0" y="192.0" rotation="0" height="1440.0" hjust="left" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5c2-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schempin>
+        </schemdevice>
+        <schemwire id="UIDe69c0a-1152dcc76d4-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76d3-f528764d624db129b32c21fbca0cb8d6" visibility="true" ishome="false">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <color red="51" green="51" blue="204"/>
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <schemsegment id="UIDe69c0a-1152dcc76d5-f528764d624db129b32c21fbca0cb8d6" x1="-13440.0" y1="9600.0" x2="0.0" y2="9600.0" visibility="true">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <color red="51" green="51" blue="204"/>
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDe69c0a-1152dcc76d6-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="6720.0" y="192.0" rotation="0" height="1440.0" hjust="middle" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5e4-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schemsegment>
+        </schemwire>
+        <schemwire id="UIDe69c0a-1152dcc76e0-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc76df-f528764d624db129b32c21fbca0cb8d6" visibility="true" ishome="false">
+          <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+            <color red="51" green="51" blue="204"/>
+            <fillcolor red="255" green="255" blue="255"/>
+            <fillforegroundcolor red="0" green="0" blue="0"/>
+          </attribute>
+          <schemsegment id="UIDe69c0a-1152dcc76e1-f528764d624db129b32c21fbca0cb8d6" x1="-13440.0" y1="3840.0" x2="0.0" y2="3840.0" visibility="true">
+            <attribute thickness="1" linestyle="solid" fillpattern="inherit" opaque="false">
+              <color red="51" green="51" blue="204"/>
+              <fillcolor red="255" green="255" blue="255"/>
+              <fillforegroundcolor red="0" green="0" blue="0"/>
+            </attribute>
+            <attributetext id="UIDe69c0a-1152dcc76e2-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="6720.0" y="192.0" rotation="0" height="1440.0" hjust="middle" vjust="center" font="Arial" style="plain" decorationid="UID38d0f1-115286fe5e4-598d1b32b4be14899bdef6657c940c92" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true">
+                <color red="0" green="0" blue="0"/>
+              </attribute>
+            </attributetext>
+          </schemsegment>
+        </schemwire>
+      </diagram>
+      <designsharedusagemgr id="UIDe69c0a-1152dcc7679-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7679-f528764d624db129b32c21fbca0cb8d6"/>
+    </logicaldesign>
+    <harnessdesign id="UIDe69c0a-1152dcc7876-f528764d624db129b32c21fbca0cb8d6" name="HarnessDesign1" version="1" created="1190474541750" modified="19" baseid="UIDe69c0a-1152dcc7876-f528764d624db129b32c21fbca0cb8d6" shortdescription="Harness design example 1" description="Web Services documentation\nHarness design example 1" releaselevelref="UIDabf9e6-1152dc8e77f-f528764d624db129b32c21fbca0cb8d6" issealed="false" isplugged="false" isspliceinsulated="false" domainref="">
+      <designnamemgr id="UID619367-1165ef43b09-8c27f6b5dc0e9e5a536aa0371648fb4a" baseid="UID619367-1165ef43b09-8c27f6b5dc0e9e5a536aa0371648fb4a" modified="1"/>
+      <designbomids/>
+      <harnesscontainer id="UIDe69c0a-1152dcc78da-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc78da-f528764d624db129b32c21fbca0cb8d6">
+        <harnessregister id="UIDe69c0a-1152dcc78dd-f528764d624db129b32c21fbca0cb8d6" datum="Front" inteharn="Harness1" inteiss="1" custharn="Harness1" custiss="1" customername="cust1" intedate="09.22.07" custdate="09.22.07" simcharn=" " simciss=" " simiharn=" " simiiss=" " copyharn=" " copyiss=" " source="Inputted" relstat="Draft" arcstat="0" harntype="Harness" sitename="Default site" manustat=" " modrange=" " drawtitl=" " lrhand="None" engsize=" " trimlev=" " compstat="Single" userf1=" " datumnod=" " datumrou=" " datumlen="0.0" datumang="0.0" manual_term="0" manual_seal="0" tubefactor="0" tubefactort="P" parent_harnnum="0.0" module_code="M1" core_module="0" change_type="Normal" weight="0.0" alpha_code=" " scopedlib="0" scopedoper="1" isdirty="true"/>
+        <connectivity id="UIDe69c0a-1152dcc78dc-f528764d624db129b32c21fbca0cb8d6" modified="17" baseid="UIDe69c0a-1152dcc78dc-f528764d624db129b32c21fbca0cb8d6">
+          <connector id="UIDe69c0a-1152dcc792d-f528764d624db129b32c21fbca0cb8d6" name="Connector1" nameindex="-1" type="generic" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="0" harness="H-1" baseid="UIDe69c0a-1152dcc792d-f528764d624db129b32c21fbca0cb8d6" issealed="false" isplugged="false" isgreased="false" isbackshellplugged="false" backshellorientation="0" datum="Front" quantity="1.0">
+            <pin id="UIDe69c0a-1152dcc7935-f528764d624db129b32c21fbca0cb8d6" name="PIN1" nameindex="1" pingraphic="" pintype="U" sealed="false" plugged="false" baseid="UIDe69c0a-1152dcc7935-f528764d624db129b32c21fbca0cb8d6"/>
+            <pin id="UIDe69c0a-1152dcc7936-f528764d624db129b32c21fbca0cb8d6" name="PIN2" nameindex="2" pingraphic="" pintype="U" sealed="false" plugged="false" baseid="UIDe69c0a-1152dcc7936-f528764d624db129b32c21fbca0cb8d6"/>
+            <pin id="UIDe69c0a-1152dcc7937-f528764d624db129b32c21fbca0cb8d6" name="PIN3" nameindex="3" pingraphic="" pintype="U" sealed="false" plugged="false" baseid="UIDe69c0a-1152dcc7937-f528764d624db129b32c21fbca0cb8d6"/>
+          </connector>
+        </connectivity>
+        <phd id="UIDe69c0a-1152dcc78db-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc78db-f528764d624db129b32c21fbca0cb8d6">
+          <node id="UIDe69c0a-1152dcc7914-f528764d624db129b32c21fbca0cb8d6" name="N1" nameindex="-1" connector_id="UIDe69c0a-1152dcc792d-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7914-f528764d624db129b32c21fbca0cb8d6" isreference="0" ismarker="0"/>
+          <node id="UIDe69c0a-1152dcc7919-f528764d624db129b32c21fbca0cb8d6" name="N2" nameindex="-1" baseid="UIDe69c0a-1152dcc7919-f528764d624db129b32c21fbca0cb8d6" isreference="0" ismarker="0"/>
+          <bundle id="UIDe69c0a-1152dcc791d-f528764d624db129b32c21fbca0cb8d6" name="BUN1" nameindex="1" startnoderef="UIDe69c0a-1152dcc7914-f528764d624db129b32c21fbca0cb8d6" endnoderef="UIDe69c0a-1152dcc7919-f528764d624db129b32c21fbca0cb8d6" length="95.0" brlength="95.0" grlength="95.0" grang="339.44395478041656" startnode="N1" endnode="N2" startroute="" lengthuserdefined="true" baseid="UIDe69c0a-1152dcc791d-f528764d624db129b32c21fbca0cb8d6" variantindex="0"/>
+        </phd>
+      </harnesscontainer>
+      <harnessdiagram id="UIDe69c0a-1152dcc78e2-f528764d624db129b32c21fbca0cb8d6" name="Diagram1" type="harnessdesign" modified="16" spacing="1920" physicalmapping="5.0" physicalmappingunits="mm" preferencesetname="Default">
+        <grid realmapping="5.0" realmappingunits="mm"/>
+        <structurediagramnode id="UIDe69c0a-1152dcc7915-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc7914-f528764d624db129b32c21fbca0cb8d6" x="-17280.0" y="13440.0" visibility="true">
+          <harnessdiagramnodegfx id="UIDe69c0a-1152dcc7916-f528764d624db129b32c21fbca0cb8d6" noderef="UIDe69c0a-1152dcc7915-f528764d624db129b32c21fbca0cb8d6" shapestylename="XC_DEFAULT_nodeShapeStyle1" visibility="true" x="0.0" y="0.0"/>
+        </structurediagramnode>
+        <structurediagramnode id="UIDe69c0a-1152dcc791a-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc7919-f528764d624db129b32c21fbca0cb8d6" x="13440.0" y="1920.0" visibility="true">
+          <attributetext id="UIDe69c0a-1152dcc791c-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="384.0" y="384.0" rotation="0" height="1536.0" hjust="left" vjust="bottom" font="Arial" style="bold" decorationid="UIDf9334c-10e75074d9c-1e7eb854660b51cd6376baa30cc6738f" editable="true" visibility="true">
+            <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+              <color red="51" green="0" blue="153"/>
+            </attribute>
+          </attributetext>
+          <harnessdiagramnodegfx id="UIDe69c0a-1152dcc791b-f528764d624db129b32c21fbca0cb8d6" noderef="UIDe69c0a-1152dcc791a-f528764d624db129b32c21fbca0cb8d6" shapestylename="XC_DEFAULT_nodeShapeStyle1" visibility="true" x="0.0" y="0.0"/>
+        </structurediagramnode>
+        <harnessdiagrambundle id="UIDe69c0a-1152dcc791e-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc791d-f528764d624db129b32c21fbca0cb8d6" visibility="true">
+          <variantbundletabledata id="UIDe69c0a-1152dcc7926-f528764d624db129b32c21fbca0cb8d6"/>
+          <harnessdiagramjoint id="UIDe69c0a-1152dcc7920-f528764d624db129b32c21fbca0cb8d6" x="-3840.0" y="13440.0"/>
+          <harnessdiagramjoint id="UIDe69c0a-1152dcc7922-f528764d624db129b32c21fbca0cb8d6" x="1920.0" y="1920.0"/>
+          <harnessdiagramsegment id="UIDe69c0a-1152dcc7921-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7921-f528764d624db129b32c21fbca0cb8d6" startjoint="UIDe69c0a-1152dcc7915-f528764d624db129b32c21fbca0cb8d6" endjoint="UIDe69c0a-1152dcc7920-f528764d624db129b32c21fbca0cb8d6" visibility="true"/>
+          <harnessdiagramsegment id="UIDe69c0a-1152dcc7923-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7923-f528764d624db129b32c21fbca0cb8d6" startjoint="UIDe69c0a-1152dcc7920-f528764d624db129b32c21fbca0cb8d6" endjoint="UIDe69c0a-1152dcc7922-f528764d624db129b32c21fbca0cb8d6" visibility="true">
+            <attributetext id="UIDe69c0a-1152dcc7927-f528764d624db129b32c21fbca0cb8d6" nameref="Length" x="2880.0" y="8064.0" rotation="63" height="1536.0" hjust="middle" vjust="center" font="Arial" style="bold" decorationid="UIDf9334c-10e75074dba-1e7eb854660b51cd6376baa30cc6738f" editable="true" visibility="true">
+              <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="false">
+                <color red="51" green="0" blue="153"/>
+              </attribute>
+            </attributetext>
+          </harnessdiagramsegment>
+          <harnessdiagramsegment id="UIDe69c0a-1152dcc7925-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7925-f528764d624db129b32c21fbca0cb8d6" startjoint="UIDe69c0a-1152dcc7922-f528764d624db129b32c21fbca0cb8d6" endjoint="UIDe69c0a-1152dcc791a-f528764d624db129b32c21fbca0cb8d6" visibility="true"/>
+        </harnessdiagrambundle>
+        <harnessdiagramconnector id="UIDe69c0a-1152dcc792e-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc792d-f528764d624db129b32c21fbca0cb8d6" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-17280.0" y="13440.0" visibility="true" verticalFlip="false" horizontalFlip="false">
+          <cavitytabledata id="UIDe69c0a-1152dcc792f-f528764d624db129b32c21fbca0cb8d6"/>
+          <additionalcomponenttabledata id="UIDe69c0a-1152dcc7930-f528764d624db129b32c21fbca0cb8d6"/>
+          <positiontabledata id="UIDe69c0a-1152dcc7931-f528764d624db129b32c21fbca0cb8d6"/>
+          <rectangle x="-3840.0" y="-3840.0" width="3840.0" height="7680.0" visibility="true"/>
+        </harnessdiagramconnector>
+      </harnessdiagram>
+      <designoptions/>
+    </harnessdesign>
+    <topologydesign id="UIDe69c0a-1152dcc76eb-f528764d624db129b32c21fbca0cb8d6" name="IntegratorDesign1" version="1" created="1190474470562" modified="16" baseid="UIDe69c0a-1152dcc76eb-f528764d624db129b32c21fbca0cb8d6" shortdescription="Integrator design example 1" description="Web Services documentation\nIntegrator design example 1" designabstraction="" releaselevelref="UIDabf9e6-1152dc8e77f-f528764d624db129b32c21fbca0cb8d6" domainref="">
+      <topologymgr id="UIDe69c0a-1152dcc774e-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDe69c0a-1152dcc774e-f528764d624db129b32c21fbca0cb8d6" buildlistref=""/>
+      <planedesign id="UIDe69c0a-1152dcc7751-f528764d624db129b32c21fbca0cb8d6" name="Plane1" created="1190474479109" baseid="UIDe69c0a-1152dcc7751-f528764d624db129b32c21fbca0cb8d6" modified="15">
+        <designoptions/>
+        <designnamemgr id="UIDe69c0a-1152dcc7753-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7753-f528764d624db129b32c21fbca0cb8d6" modified="1">
+          <hwmnamespace key="chs.cof.logical.cable.IDevice" entitytype="1" curindex="3" highindex="100"/>
+          <hwmnamespace key="chs.cof.topology.physical.ISlot" entitytype="15" curindex="3" highindex="100"/>
+          <hwmnamespace key="chs.cof.topology.physical.IVirtualConnector" entitytype="16" curindex="3" highindex="100"/>
+          <hwmnamespace key="chs.cof.topology.physical.IBundle" entitytype="10" curindex="2" highindex="100"/>
+          <hwmnamespace key="chs.cof.topology.physical.INode" entitytype="14" curindex="5" highindex="100"/>
+          <hwmnamespace key="chs.cof.logical.cable.IDeviceConnector" entitytype="23" curindex="3" highindex="100"/>
+          <hwmnamespace key="chs.cof.harness.shared.IHarnessBase" entitytype="12" curindex="4" highindex="100"/>
+          <hwmnamespace key="chs.cof.logical.cable.IPlugConnector" entitytype="20" curindex="3" highindex="100"/>
+          <namespace key="UIDe69c0a-1152dcc77e0-f528764d624db129b32c21fbca0cb8d6" entitytype="23" curindex="2"/>
+          <namespace key="UIDe69c0a-1152dcc77e7-f528764d624db129b32c21fbca0cb8d6" entitytype="23" curindex="2"/>
+        </designnamemgr>
+        <connectivity id="UIDe69c0a-1152dcc77b4-f528764d624db129b32c21fbca0cb8d6" modified="15" baseid="UIDe69c0a-1152dcc77b4-f528764d624db129b32c21fbca0cb8d6"/>
+        <topoplane id="UIDe69c0a-1152dcc77b5-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc77b5-f528764d624db129b32c21fbca0cb8d6">
+          <rule id="UIDe69c0a-1152dcc77b8-f528764d624db129b32c21fbca0cb8d6" name="Object Rule" baseid="UIDe69c0a-1152dcc77b8-f528764d624db129b32c21fbca0cb8d6">
+            <constraint id="UIDe69c0a-1152dcc77b9-f528764d624db129b32c21fbca0cb8d6" templateref="UID92c8d9-f1e68ea1f3-a9403629ae3d7dec7cb1da67b5fd7c61" baseid="UIDe69c0a-1152dcc77b9-f528764d624db129b32c21fbca0cb8d6">
+              <constraintdefinedvalue id="UIDe69c0a-1152dcc77bd-f528764d624db129b32c21fbca0cb8d6" elementref="UID03c8d9-f1e68eaf25-910704D8BF237dec7cb1da67b5fd7c61" value="Slot Name" isobjectattributebased="true" isslotname="true"/>
+              <constraintdefinedvalue id="UIDe69c0a-1152dcc77bb-f528764d624db129b32c21fbca0cb8d6" elementref="UID03c8d9-f1e68eaf23-910704D8BF237dec7cb1da67b5fd7c61" value="Name" isobjectattributebased="true"/>
+              <constraintchoicevalue id="UIDe69c0a-1152dcc77bc-f528764d624db129b32c21fbca0cb8d6" elementref="UIDa2da17-102eb35911f-3babef187e6c79a58363307da7742f8a" value="0"/>
+              <constraintbooleanchoicevalue id="UIDe69c0a-1152dcc77ba-f528764d624db129b32c21fbca0cb8d6" elementref="UID03c8d9-f1e68eaf22-910704D8BF237dec7cb1da67b5fd7c61" value="true"/>
+            </constraint>
+          </rule>
+          <signalmgr id="UIDe69c0a-1152dcc77b6-f528764d624db129b32c21fbca0cb8d6"/>
+          <virtualharness id="UIDe69c0a-1152dcc77ff-f528764d624db129b32c21fbca0cb8d6" name="H2" nameindex="2" domainref="" modified="14" baseid="UIDe69c0a-1152dcc77ff-f528764d624db129b32c21fbca0cb8d6">
+            <connectivity id="UIDe69c0a-1152dcc7801-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDe69c0a-1152dcc7801-f528764d624db129b32c21fbca0cb8d6">
+              <connector id="UIDe69c0a-1152dcc7802-f528764d624db129b32c21fbca0cb8d6" name="P1" nameindex="1" type="plug" owner="UIDe69c0a-1152dcc77e0-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" harness="H2" baseid="UIDe69c0a-1152dcc7802-f528764d624db129b32c21fbca0cb8d6" issealed="false" isplugged="false" isgreased="false" isbackshellplugged="false" datum="Front" quantity="1.0"/>
+              <connector id="UIDe69c0a-1152dcc780e-f528764d624db129b32c21fbca0cb8d6" name="P2" nameindex="2" type="plug" owner="UIDe69c0a-1152dcc77e7-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" harness="H2" baseid="UIDe69c0a-1152dcc780e-f528764d624db129b32c21fbca0cb8d6" issealed="false" isplugged="false" isgreased="false" isbackshellplugged="false" datum="Front" quantity="1.0"/>
+            </connectivity>
+            <phd id="UIDe69c0a-1152dcc7800-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7800-f528764d624db129b32c21fbca0cb8d6">
+              <node id="UIDe69c0a-1152dcc7805-f528764d624db129b32c21fbca0cb8d6" name="N3" nameindex="3" connector_id="UIDe69c0a-1152dcc7802-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7805-f528764d624db129b32c21fbca0cb8d6" isreference="0" ismarker="0"/>
+              <node id="UIDe69c0a-1152dcc7811-f528764d624db129b32c21fbca0cb8d6" name="N4" nameindex="4" connector_id="UIDe69c0a-1152dcc780e-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc7811-f528764d624db129b32c21fbca0cb8d6" isreference="0" ismarker="0"/>
+              <bundle id="UIDe69c0a-1152dcc77f9-f528764d624db129b32c21fbca0cb8d6" name="BUN1" nameindex="1" startnoderef="UIDe69c0a-1152dcc7805-f528764d624db129b32c21fbca0cb8d6" endnoderef="UIDe69c0a-1152dcc7811-f528764d624db129b32c21fbca0cb8d6" length="4.75" brlength="4.75" grlength="4.75" grang="0.0" startnode="N3" endnode="N4" baseid="UIDe69c0a-1152dcc77f9-f528764d624db129b32c21fbca0cb8d6" variantindex="0"/>
+            </phd>
+            <topoharness id="UIDe69c0a-1152dcc77fe-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc77ff-f528764d624db129b32c21fbca0cb8d6" spacing="1920" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="0.0" y="0.0">
+              <toponode id="UIDe69c0a-1152dcc7804-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc7805-f528764d624db129b32c21fbca0cb8d6" x="-9600.0" y="13440.0"/>
+              <toponode id="UIDe69c0a-1152dcc7810-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc7811-f528764d624db129b32c21fbca0cb8d6" x="9600.0" y="-3840.0"/>
+              <topobundle id="UIDe69c0a-1152dcc77e9-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc77f9-f528764d624db129b32c21fbca0cb8d6">
+                <topojoint id="UIDe69c0a-1152dcc77f1-f528764d624db129b32c21fbca0cb8d6" x="-1920.0" y="13440.0"/>
+                <topojoint id="UIDe69c0a-1152dcc77f3-f528764d624db129b32c21fbca0cb8d6" x="-1920.0" y="-3840.0"/>
+                <toposegment id="UIDe69c0a-1152dcc77f2-f528764d624db129b32c21fbca0cb8d6" start="UIDe69c0a-1152dcc7804-f528764d624db129b32c21fbca0cb8d6" end="UIDe69c0a-1152dcc77f1-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc77f2-f528764d624db129b32c21fbca0cb8d6"/>
+                <toposegment id="UIDe69c0a-1152dcc77f4-f528764d624db129b32c21fbca0cb8d6" start="UIDe69c0a-1152dcc77f1-f528764d624db129b32c21fbca0cb8d6" end="UIDe69c0a-1152dcc77f3-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc77f4-f528764d624db129b32c21fbca0cb8d6"/>
+                <toposegment id="UIDe69c0a-1152dcc77f6-f528764d624db129b32c21fbca0cb8d6" start="UIDe69c0a-1152dcc77f3-f528764d624db129b32c21fbca0cb8d6" end="UIDe69c0a-1152dcc7810-f528764d624db129b32c21fbca0cb8d6" baseid="UIDe69c0a-1152dcc77f6-f528764d624db129b32c21fbca0cb8d6"/>
+              </topobundle>
+            </topoharness>
+          </virtualharness>
+          <slot id="UIDe69c0a-1152dcc77dc-f528764d624db129b32c21fbca0cb8d6" name="DEV1" nameindex="1" slottype="normal" physicaltargetref="UIDe69c0a-1152dcc77e0-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDe69c0a-1152dcc77dc-f528764d624db129b32c21fbca0cb8d6">
+            <rule id="UIDe69c0a-1152dcc77dd-f528764d624db129b32c21fbca0cb8d6" name="Object Rule" baseid="UIDe69c0a-1152dcc77dd-f528764d624db129b32c21fbca0cb8d6"/>
+            <connectivity id="UIDe69c0a-1152dcc77df-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDe69c0a-1152dcc77df-f528764d624db129b32c21fbca0cb8d6">
+              <device id="UIDe69c0a-1152dcc77e0-f528764d624db129b32c21fbca0cb8d6" name="DEV1" nameindex="1" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" baseid="UIDe69c0a-1152dcc77e0-f528764d624db129b32c21fbca0cb8d6">
+                <deviceconnector id="UIDe69c0a-1152dcc77fd-f528764d624db129b32c21fbca0cb8d6" name="DC1" nameindex="1" owner="UIDe69c0a-1152dcc77e0-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" baseid="UIDe69c0a-1152dcc77fd-f528764d624db129b32c21fbca0cb8d6"/>
+              </device>
+            </connectivity>
+            <virtualconnector id="UIDe69c0a-1152dcc77fb-f528764d624db129b32c21fbca0cb8d6" name="P1" nameindex="1" noderef="UIDe69c0a-1152dcc7805-f528764d624db129b32c21fbca0cb8d6" deviceconnectorref="UIDe69c0a-1152dcc77fd-f528764d624db129b32c21fbca0cb8d6" harnessconnectorref="UIDe69c0a-1152dcc7802-f528764d624db129b32c21fbca0cb8d6" integral="false" baseid="UIDe69c0a-1152dcc77fb-f528764d624db129b32c21fbca0cb8d6"/>
+            <toposlot id="UIDe69c0a-1152dcc77db-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc77dc-f528764d624db129b32c21fbca0cb8d6" spacing="1920" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-19200.0" y="7680.0">
+              <attributetext id="UIDe69c0a-1152dcc77de-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="4800.0" y="1440.0" rotation="0" height="1440.0" hjust="middle" vjust="center" font="Stroke" style="plain" visibility="true">
+                <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true"/>
+              </attributetext>
+              <topovirtualconnector id="UIDe69c0a-1152dcc77fa-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc77fb-f528764d624db129b32c21fbca0cb8d6" x="9600.0" y="5760.0">
+                <attributetext id="UIDe69c0a-1152dcc77fc-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="-480.0" y="0.0" rotation="0" height="1440.0" hjust="right" vjust="center" font="Stroke" style="plain" visibility="true">
+                  <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true"/>
+                </attributetext>
+              </topovirtualconnector>
+              <rectangle x="0.0" y="0.0" width="9600.0" height="7680.0" visibility="true"/>
+            </toposlot>
+          </slot>
+          <slot id="UIDe69c0a-1152dcc77e3-f528764d624db129b32c21fbca0cb8d6" name="DEV2" nameindex="2" slottype="normal" physicaltargetref="UIDe69c0a-1152dcc77e7-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDe69c0a-1152dcc77e3-f528764d624db129b32c21fbca0cb8d6">
+            <rule id="UIDe69c0a-1152dcc77e4-f528764d624db129b32c21fbca0cb8d6" name="Object Rule" baseid="UIDe69c0a-1152dcc77e4-f528764d624db129b32c21fbca0cb8d6"/>
+            <connectivity id="UIDe69c0a-1152dcc77e6-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDe69c0a-1152dcc77e6-f528764d624db129b32c21fbca0cb8d6">
+              <device id="UIDe69c0a-1152dcc77e7-f528764d624db129b32c21fbca0cb8d6" name="DEV2" nameindex="2" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" baseid="UIDe69c0a-1152dcc77e7-f528764d624db129b32c21fbca0cb8d6">
+                <deviceconnector id="UIDe69c0a-1152dcc7809-f528764d624db129b32c21fbca0cb8d6" name="DC1" nameindex="1" owner="UIDe69c0a-1152dcc77e7-f528764d624db129b32c21fbca0cb8d6" libraryref="" partnumber="" customerpartnumber="" customername="" supplierpartnumber="" suppliername="" incbom="1" baseid="UIDe69c0a-1152dcc7809-f528764d624db129b32c21fbca0cb8d6"/>
+              </device>
+            </connectivity>
+            <virtualconnector id="UIDe69c0a-1152dcc7807-f528764d624db129b32c21fbca0cb8d6" name="P2" nameindex="2" noderef="UIDe69c0a-1152dcc7811-f528764d624db129b32c21fbca0cb8d6" deviceconnectorref="UIDe69c0a-1152dcc7809-f528764d624db129b32c21fbca0cb8d6" harnessconnectorref="UIDe69c0a-1152dcc780e-f528764d624db129b32c21fbca0cb8d6" integral="false" baseid="UIDe69c0a-1152dcc7807-f528764d624db129b32c21fbca0cb8d6"/>
+            <toposlot id="UIDe69c0a-1152dcc77e2-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc77e3-f528764d624db129b32c21fbca0cb8d6" spacing="1920" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="9600.0" y="-7680.0">
+              <attributetext id="UIDe69c0a-1152dcc77e5-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="4800.0" y="1440.0" rotation="0" height="1440.0" hjust="middle" vjust="center" font="Stroke" style="plain" visibility="true">
+                <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true"/>
+              </attributetext>
+              <topovirtualconnector id="UIDe69c0a-1152dcc7806-f528764d624db129b32c21fbca0cb8d6" connref="UIDe69c0a-1152dcc7807-f528764d624db129b32c21fbca0cb8d6" x="0.0" y="3840.0">
+                <attributetext id="UIDe69c0a-1152dcc7808-f528764d624db129b32c21fbca0cb8d6" nameref="Name" x="480.0" y="0.0" rotation="0" height="1440.0" hjust="left" vjust="center" font="Stroke" style="plain" visibility="true">
+                  <attribute thickness="inherit" linestyle="inherit" fillpattern="inherit" opaque="true"/>
+                </attributetext>
+              </topovirtualconnector>
+              <rectangle x="0.0" y="0.0" width="9600.0" height="23040.0" visibility="true"/>
+            </toposlot>
+          </slot>
+          <vehicleconfigmgr id="UIDe69c0a-1152dcc77b7-f528764d624db129b32c21fbca0cb8d6"/>
+        </topoplane>
+        <topodiagram id="UIDe69c0a-1152dcc77be-f528764d624db129b32c21fbca0cb8d6" name="IntegratorDiagram" type="topology" spacing="1920" physicalmapping="0.25" physicalmappingunits="inch">
+          <grid realmapping="0.25" realmappingunits="inch"/>
+        </topodiagram>
+      </planedesign>
+    </topologydesign>
+  </designmgr>
+  <buildlistmgr id="UIDabf9e6-1152dc8e7a3-f528764d624db129b32c21fbca0cb8d6" modified="14" haschildren="false"/>
+  <foldermgr id="UIDabf9e6-1152dc8e7a4-f528764d624db129b32c21fbca0cb8d6" modified="19" baseid="UIDabf9e6-1152dc8e7a4-f528764d624db129b32c21fbca0cb8d6">
+    <designfolder id="UIDe69c0a-1152dcc767c-f528764d624db129b32c21fbca0cb8d6" name="Design1" static_base_id="UIDe69c0a-1152dcc7554-f528764d624db129b32c21fbca0cb8d6">
+      <revisionnode id="UIDe69c0a-1152dcc767b-f528764d624db129b32c21fbca0cb8d6" revision_id="UIDe69c0a-1152dcc7554-f528764d624db129b32c21fbca0cb8d6" revision_type="logicdesign"/>
+    </designfolder>
+    <designfolder id="UIDe69c0a-1152dcc78e0-f528764d624db129b32c21fbca0cb8d6" name="HarnessDesign1" static_base_id="UIDe69c0a-1152dcc7876-f528764d624db129b32c21fbca0cb8d6">
+      <revisionnode id="UIDe69c0a-1152dcc78df-f528764d624db129b32c21fbca0cb8d6" revision_id="UIDe69c0a-1152dcc7876-f528764d624db129b32c21fbca0cb8d6" revision_type="harnessdesign"/>
+    </designfolder>
+    <designfolder id="UIDe69c0a-1152dcc7750-f528764d624db129b32c21fbca0cb8d6" name="IntegratorDesign1" static_base_id="UIDe69c0a-1152dcc76eb-f528764d624db129b32c21fbca0cb8d6">
+      <revisionnode id="UIDe69c0a-1152dcc774f-f528764d624db129b32c21fbca0cb8d6" revision_id="UIDe69c0a-1152dcc76eb-f528764d624db129b32c21fbca0cb8d6" revision_type="topologydesign"/>
+    </designfolder>
+  </foldermgr>
+  <effectivitymgr id="UIDabf9e6-1152dc8e7a5-f528764d624db129b32c21fbca0cb8d6" modified="14" baseid="UIDabf9e6-1152dc8e7a5-f528764d624db129b32c21fbca0cb8d6">
+    <effectivitymodel id="UIDabf9e6-1152dc8e7a6-f528764d624db129b32c21fbca0cb8d6" name="Default Model" modified="14" baseid="UIDabf9e6-1152dc8e7a6-f528764d624db129b32c21fbca0cb8d6"/>
+  </effectivitymgr>
+  <advnamecompmgr id="UIDabf9e6-1152dc8e7a7-f528764d624db129b32c21fbca0cb8d6" baseid="UIDabf9e6-1152dc8e7a7-f528764d624db129b32c21fbca0cb8d6" modified="14"/>
+  <advnamecountermgr id="UIDabf9e6-1152dc8e7a8-f528764d624db129b32c21fbca0cb8d6" baseid="UIDabf9e6-1152dc8e7a8-f528764d624db129b32c21fbca0cb8d6" modified="14"/>
+  <projectanalysismgr id="UIDabf9e6-1152dc8e7a9-f528764d624db129b32c21fbca0cb8d6" analysissubsystemid="-1" modified="14"/>
+  <codemappingmgr id="UIDabf9e6-1152dc8e7aa-f528764d624db129b32c21fbca0cb8d6" modified="15">
+    <codemappingtype id="UIDabf9e6-1152dc8e7ab-f528764d624db129b32c21fbca0cb8d6" type="COMPONENT_TYPE_CODE"/>
+    <codemappingtype id="UIDabf9e6-1152dc8e7ac-f528764d624db129b32c21fbca0cb8d6" type="WIRE_SPECIFICATION"/>
+    <codemappingtype id="UIDabf9e6-1152dc8e7ad-f528764d624db129b32c21fbca0cb8d6" type="COMPONENT_COLOR"/>
+    <codemappingtype id="UIDabf9e6-1152dc8e7ae-f528764d624db129b32c21fbca0cb8d6" type="MATERIAL_CODE"/>
+  </codemappingmgr>
+  <designchangepolicymgr id="UIDabf9e6-1152dc8e7af-f528764d624db129b32c21fbca0cb8d6" modified="14"/>
+</project>

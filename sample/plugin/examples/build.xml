@@ -1,0 +1,11 @@
+<project name="PluginExamples" default="exports" basedir=".">
+	<property file="../../../../../build.properties"/>
+	<import file="${chsbuildtools_taskdef}"/>
+	<target name="exports">
+		<ant dir="Java" />
+	</target>
+  
+	<target name="clean">
+		<ant dir="Java" target="clean" />
+	</target>
+ </project>

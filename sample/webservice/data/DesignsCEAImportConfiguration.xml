@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FEMParameters>
+	<!-- this parameter defines the source system CIS user name -->
+	<Param name="SourceCISUserName" value="System"/>
+	
+    <!-- this parameter defines the source system CIS password -->
+	<Param name="SourceCISUserPassword" value="manager"/>
+	
+    <!-- this parameter defines the source system CIS IP address -->
+    <Param name="SourceCISAddress" value="127.0.0.1"/>
+	
+    <!-- this parameter defines the source system CIS port -->
+    <Param name="SourceCISPort" value="49901"/>
+
+    <!-- this parameter defines if import should overwrite designs  which exist in the system already-->
+	<Param name="Overwrite" value="true"/>
+
+    <!-- this parameter defines the way timestamp of an overwritten design is set.  The following are possible values and their meaning
+	   Source - Use timestamp of the incoming design
+	   Current - Update the timestamp with the current timestamp
+	  Target - Update the timestamp with the target design timestamp
+	-->
+   <Param name="DesignImportOverwriteTimestamp" value="Source"/>
+    <!-- this parameter defines the way import will overwrite a design if it's existing.  It has two probable values true or false
+	   false - if the target design has been modified after last design transfer then don't overwrite the design
+	   true - even if the target design is modified after last transfer then also overwrite it
+	-->
+	<Param name="OverwriteOnModification" value="true"/>
+	 
+	 <!-- this parameter defines the way import time stamp of a design is set.  The following are possible values and their meaning
+	   true - Use timestamp of the incoming design
+	   false - Update the timestamp with the current timestamp
+	 
+	-->
+	<Param name="PreserveSourceDesignImportTimeStamp" value="false"/>
+	
+
+   <!--  this parameter defines whether the temporary designs zip files, generated in temporary area while importing designs, should be retained upon task completion.  -->
+   <Param name="KeepDataFile" value="false"/>
+
+     <!-- If the intended Import should be done in secured mode, please uncomment the following 2 params to set the keystore path and password.  CIS port number may have to be modified if this is enabled.  Please see client properties for details on this. -->
+	 <!-- this parameter defines the source system keystore path -->
+	 <!-- <Param name="KeyStore" value="${capital.home}/config/.keystore"/>  -->
+     <!-- this parameter defines the source system keystore password -->
+	 <!--<Param name="KeyPassword" value="chsreporter"/>   -->
+
+	 <!--  User can filter out designs to import from the incoming data by specifying design import level filters. User can specify project name filter to import only the projects user is interested in. Within project name filter	we can also specify the specific designs we are interested by design name filter (say import only design with name Design1 ) and also control import of specific design types to import using design type filter ( say import only logical designs) .  Apart from project level filter user can specify design type filter outside of any  ProjectToImport tag. This is a global setting and any other projects which are not specified in ProjectToImport tag will be controlled through those Global design type filters.  In case we specify a ProjectToImport filter without any deign name and design type filter then that project will be excluded in import -->
+	 
+  <ImportFilterGroup>
+	<!-- For project P1 do import all Logical designs and all versions of a specific design, e.g. an Integrator Plane "IntDesName".  -->
+	<ProjectToImport name="P1" >
+		<Design name="IntDesName"/>
+		<DesignType type="Logical"/>
+	</ProjectToImport>
+	
+	<!-- For project P2 do import only all Harness designs.  -->
+	<ProjectToImport name="P2" >
+		<DesignType type="Harness"/>
+	</ProjectToImport>
+	<!-- For project P3 do import only all designs from design folder path start with Folder1\Floder2. -->
+	<ProjectToImport name="P3" >
+		<FolderPath name="Folder1\Folder2"/>
+	</ProjectToImport>
+	
+	<!-- For project P-Restricted do not import any design -->
+	<ProjectToImport name="P-Restricted" />
+	
+	<!-- For project P-All do import all design types -->
+	<ProjectToImport name="P-All" >
+		<DesignType type="Logical"/>
+		<DesignType type="Integrator"/>
+		<DesignType type="Harness"/>
+		<DesignType type="Topology"/>
+		<DesignType type="Functions"/>
+		<DesignType type="Platforms"/>
+	</ProjectToImport>
+ <!-- Global setting: For all other projects do import all design types or just specific types, define using DesignType.
+	  Logical 		-> Logic Design.
+	  Integrator 	-> Integrator Design.
+	  Harness 		-> Harness Design.
+	  Topology 		-> Topology Design.
+	  Functions 	-> Functional Design.
+	  Platforms 	-> Platform Design.
+	  -->
+	<DesignType type="Logical"/>
+	<DesignType type="Integrator"/>
+	<DesignType type="Harness"/>
+	<DesignType type="Topology"/>
+	<DesignType type="Functions"/>
+	<DesignType type="Platforms"/>
+<!-- Global setting: In case for all other projects no import should happen, just leave the global section blank -->
+</ImportFilterGroup>
+
+</FEMParameters>
+

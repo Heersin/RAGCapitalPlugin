@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BridgesConfiguration>
+<!-- This document represents various possible settings that are needed to configure a BatchBridgeInTask -->
+<!-- To change the settings, edit a copy this file and use it as an attachment to the BatchBridgeInTask for submission -->
+<!-- To avoid any manual errors in editing, a required configuration file may be "generated" using the custom action "ExportBridgeConfigurationsAction" -->
+<!-- See "WebServiceDevelopment.pdf" for more details -->
+  <BridgesOptionSetter>
+    <entry TransPartStatus="false"/>
+    <entry TransOptExpStatus="false"/>
+    <entry TransCodeStatus="false"/>
+    <entry XMLPartNumberStatus="INTERNAL_PART"/>
+    <entry XMLProcessModeStatus="TYPE_COMPLETE"/>
+    <entry SyncHarnessDesignAttributesStatus="true"/>
+    <entry SyncWithCustomerPartNumberStatus="false"/>
+    <entry SyncCavityComponentsStatus="true"/>
+    <entry SyncMandatoryCompStatus="true"/>
+    <entry EnableHarnUserPropDeleteStatus="false"/>
+    <entry SyncHarnessModuleCodeStatus="false"/>
+    <entry ChangeManagerModeStatus="DefaultMode"/>
+  </BridgesOptionSetter>
+  <CHSAdaptorFactory>
+    <entry curFlatMode="3"/>
+  </CHSAdaptorFactory>
+  <AutoLinkCriteriaSetter>
+    <entry Name="true"/>
+    <entry ElectricalId="false"/>
+    <entry PartNumber="false"/>
+    <entry TopoMatcher="true"/>
+    <entry AutolinkHarnessOnImport="false"/>
+    <entry InsTopoMatcher="false"/>
+  </AutoLinkCriteriaSetter>
+  <CHSImportHarnessOptions>
+    <entry mergeNodes="false"/>
+    <entry removeLoops="false"/>
+    <entry minbunlen="0.02"/>
+    <entry mergeprot="false"/>
+    <entry validate="false"/>
+  </CHSImportHarnessOptions>
+  <CHSOrthogonalFlattener>
+    <entry backbone="2"/>
+    <entry minlenon="true"/>
+    <entry interpol="0"/>
+    <entry scaley="1.0"/>
+    <entry maxlenon="true"/>
+    <entry maxlen="0.0070"/>
+    <entry scalex="1.0"/>
+    <entry minlen="0.0020"/>
+  </CHSOrthogonalFlattener>
+  <CHS3DFlattener>
+    <entry plnType="1"/>
+    <entry tilt="false"/>
+    <entry tilttol="0.0010"/>
+    <entry plncx="0.0"/>
+    <entry plncy="0.0"/>
+    <entry plncz="0.0"/>
+    <entry plnnx="0.0"/>
+    <entry plnny="0.0"/>
+    <entry plnnz="1.0"/>
+    <entry plndx="1.0"/>
+    <entry plndy="0.0"/>
+    <entry plndz="0.0"/>
+    <entry plnorient="false"/>
+  </CHS3DFlattener>
+  <CHSUnfoldingFlattener>
+    <entry pushDown="1"/>
+    <entry mainBundle="W72653-R17_CPLM_TEST"/>
+    <entry mainTakeout="W72653-R21_CPLM_TEST"/>
+    <entry angleSnapping="true"/>
+    <entry snapAngle="10.0"/>
+  </CHSUnfoldingFlattener>
+  <CHSExternalFlattener/>
+  <KBLFormat>
+    <entry KBLFormat.kbl.stretch.factor="2.0"/>
+    <entry KBLFormat.module.code.type="production"/>
+  </KBLFormat>
+  <DSIFormat>
+    <entry ModuleCodeType="1"/>
+    <entry FieldDelimiter="::"/>
+    <entry CommentMarker="!!"/>
+    <entry SectionSeparator="%%"/>
+    <entry Unit="2"/>
+  </DSIFormat>
+</BridgesConfiguration>

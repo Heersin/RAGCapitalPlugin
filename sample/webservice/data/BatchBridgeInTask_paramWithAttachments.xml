@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FEMParameters>
+  <Param name="ProjectName" value="BatchBridgeInProject"/>
+  <Param name="RevisionName" value="1x"/>
+  <Param name="DesignName" value="HarnessDesign1x"/>  
+  <Param name="PartNumber" value="MentorGraphics"/>
+  <Param name="ShortDescription" value="TestDesign"/>
+  <Param name="Adaptor" value="HX2ML"/>
+  <!-- "DiagramName", "StyleSetName", "BundleLengthFullScaleParameter", "BundleWidthFullScaleParameter" and "ModifyFirstSegment" are applicable only
+       if the design does not already exist and gets created as a part of this task! -->
+  <Param name="DiagramName" value="testDiagram"/>
+  <Param name="StyleSetName" value="Set1"/>
+  <Param name="BundleLengthFullScaleParameter" value="false"/>
+  <Param name="BundleWidthFullScaleParameter" value="false"/>
+  <Param name="ModifyFirstSegment" value="false"/>
+</FEMParameters>

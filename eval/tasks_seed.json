@@ -1,0 +1,102 @@
+{
+  "tasks": [
+    {
+      "id": "action-01",
+      "plugin_type": "action",
+      "requirement": "生成一个只读的Logic Action，在输出窗口打印当前执行信息。",
+      "expected_symbols": ["IXLogicAction", "IXApplicationContext", "IXOutputWindow"],
+      "forbidden_symbols": ["IXLogicDRCheck"],
+      "checklist": ["execute", "isReadOnly", "getName", "getDescription", "getVersion"]
+    },
+    {
+      "id": "action-02",
+      "plugin_type": "action",
+      "requirement": "实现一个可在主菜单和右键菜单触发的Action模板。",
+      "expected_symbols": ["IXLogicAction", "IXAction", "IXApplicationContext"],
+      "forbidden_symbols": ["IXSetAttributeConstraint"],
+      "checklist": ["getTriggers", "Trigger", "execute", "getName"]
+    },
+    {
+      "id": "action-03",
+      "plugin_type": "action",
+      "requirement": "给出一个Action骨架，保留TODO扩展点。",
+      "expected_symbols": ["IXLogicAction", "IXPlugin"],
+      "forbidden_symbols": ["IXDRCViolationReporter"],
+      "checklist": ["TODO", "execute", "getDescription"]
+    },
+    {
+      "id": "action-04",
+      "plugin_type": "action",
+      "requirement": "输出一个只读Action，包含长描述、图标、助记键默认实现。",
+      "expected_symbols": ["IXLogicAction", "IXBaseAction"],
+      "forbidden_symbols": ["IXConstraint"],
+      "checklist": ["getLongDescription", "getSmallIcon", "getMnemonicKey", "isReadOnly"]
+    },
+
+    {
+      "id": "drc-01",
+      "plugin_type": "drc",
+      "requirement": "实现一个DRC检查模板，包含begin/check/end三个阶段。",
+      "expected_symbols": ["IXLogicDRCheck", "IXDRCViolationReporter", "IXObject"],
+      "forbidden_symbols": ["IXLogicAction"],
+      "checklist": ["begin", "check", "end", "getDefaultSeverity"]
+    },
+    {
+      "id": "drc-02",
+      "plugin_type": "drc",
+      "requirement": "生成一个默认Severity为Warning的DRC插件。",
+      "expected_symbols": ["IXLogicDRCheck", "IXDRCheck", "IXDRCViolationReporter"],
+      "forbidden_symbols": ["IXSetAttributeConstraint"],
+      "checklist": ["getDefaultSeverity", "Warning", "check"]
+    },
+    {
+      "id": "drc-03",
+      "plugin_type": "drc",
+      "requirement": "创建DRC核心类，预留对象过滤和违规上报的扩展点。",
+      "expected_symbols": ["IXLogicDRCheck", "IXObject", "IXDRCViolationReporter"],
+      "forbidden_symbols": ["IXOutputWindow"],
+      "checklist": ["TODO", "check", "getDefaultAvailability"]
+    },
+    {
+      "id": "drc-04",
+      "plugin_type": "drc",
+      "requirement": "输出一个最小可运行的DRC实现并附上版本信息。",
+      "expected_symbols": ["IXLogicDRCheck", "IXPlugin"],
+      "forbidden_symbols": ["IXConstraint"],
+      "checklist": ["getVersion", "getName", "begin", "end"]
+    },
+
+    {
+      "id": "constraint-01",
+      "plugin_type": "constraint",
+      "requirement": "给出一个Constraint插件模板，强调可扩展的业务规则入口。",
+      "expected_symbols": ["IXConstraint", "IXSetAttributeConstraint"],
+      "forbidden_symbols": ["IXLogicDRCheck"],
+      "checklist": ["implements", "Constraint", "getName", "getDescription"]
+    },
+    {
+      "id": "constraint-02",
+      "plugin_type": "constraint",
+      "requirement": "实现一个设置属性的Constraint骨架，返回结果对象由调用方处理。",
+      "expected_symbols": ["IXSetAttributeConstraint", "IXAttributesResult"],
+      "forbidden_symbols": ["IXLogicAction"],
+      "checklist": ["Constraint", "TODO", "getVersion"]
+    },
+    {
+      "id": "constraint-03",
+      "plugin_type": "constraint",
+      "requirement": "创建一个Do/Don't风格的Constraint模板。",
+      "expected_symbols": ["IXConstraint", "IXDoDontResult"],
+      "forbidden_symbols": ["IXDRCViolationReporter"],
+      "checklist": ["Do", "Dont", "Constraint"]
+    },
+    {
+      "id": "constraint-04",
+      "plugin_type": "constraint",
+      "requirement": "输出Constraint最小核心类，包含插件元信息与扩展注释。",
+      "expected_symbols": ["IXConstraint", "IXPlugin"],
+      "forbidden_symbols": ["IXOutputWindow"],
+      "checklist": ["getName", "getDescription", "getVersion", "TODO"]
+    }
+  ]
+}

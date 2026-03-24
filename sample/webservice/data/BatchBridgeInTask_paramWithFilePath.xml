@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FEMParameters>
+  <Param name="ProjectName" value="BatchBridgeInProject"/>
+  <Param name="RevisionName" value="2x"/>
+  <Param name="DesignName" value="HarnessDesign2x"/>  
+  <Param name="PartNumber" value="MentorGraphics2"/>
+  <Param name="ShortDescription" value="TestDesign"/>
+  <!-- "FilePath" is not recommended. Source file should rather be added as an attachment -->
+  <Param name="FilePath" value="C:\demo\Original.kbl"/>
+  <Param name="Adaptor" value="KBL"/>
+  <!-- "DiagramName", "StyleSetName", "BundleLengthFullScaleParameter", "BundleWidthFullScaleParameter" and "ModifyFirstSegment" are applicable only
+       if the design does not already exist and gets created as a part of this task! -->
+  <Param name="DiagramName" value="testDiagram"/>
+  <Param name="StyleSetName" value="Set1"/>
+  <Param name="BundleLengthFullScaleParameter" value="false"/>
+  <Param name="BundleWidthFullScaleParameter" value="false"/>
+  <Param name="ModifyFirstSegment" value="false"/>
+</FEMParameters>

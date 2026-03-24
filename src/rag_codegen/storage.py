@@ -1,0 +1,234 @@
+from __future__ import annotations
+
+import json
+import re
+import sqlite3
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional
+
+
+class Storage:
+    def __init__(self, db_path: Path):
+        self.db_path = db_path
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._init_db()
+
+    def _conn(self) -> sqlite3.Connection:
+        conn = sqlite3.connect(str(self.db_path))
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    def _init_db(self) -> None:
+        with self._conn() as conn:
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS chunks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    chunk_id TEXT UNIQUE,
+                    source_path TEXT,
+                    source_type TEXT,
+                    plugin_type TEXT,
+                    package_name TEXT,
+                    class_name TEXT,
+                    method_name TEXT,
+                    signature TEXT,
+                    text TEXT,
+                    symbols_json TEXT,
+                    title TEXT,
+                    meta_json TEXT
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts
+                USING fts5(chunk_id, plugin_type, text)
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS symbols (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    symbol TEXT,
+                    plugin_type TEXT,
+                    kind TEXT,
+                    source_chunk_id TEXT
+                )
+                """
+            )
+
+    def clear_all(self) -> None:
+        with self._conn() as conn:
+            conn.execute("DELETE FROM chunks")
+            conn.execute("DELETE FROM chunks_fts")
+            conn.execute("DELETE FROM symbols")
+
+    def insert_chunks(self, chunks: List[Dict[str, Any]]) -> None:
+        with self._conn() as conn:
+            for c in chunks:
+                conn.execute(
+                    """
+                    INSERT OR REPLACE INTO chunks (
+                        chunk_id, source_path, source_type, plugin_type,
+                        package_name, class_name, method_name, signature,
+                        text, symbols_json, title, meta_json
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        c["chunk_id"],
+                        c["source_path"],
+                        c["source_type"],
+                        c["plugin_type"],
+                        c.get("package_name", ""),
+                        c.get("class_name", ""),
+                        c.get("method_name", ""),
+                        c.get("signature", ""),
+                        c["text"],
+                        json.dumps(c.get("symbols", []), ensure_ascii=True),
+                        c.get("title", ""),
+                        json.dumps(c.get("meta", {}), ensure_ascii=True),
+                    ),
+                )
+            conn.execute("DELETE FROM chunks_fts")
+            fts_rows = conn.execute("SELECT chunk_id, plugin_type, text FROM chunks").fetchall()
+            for row in fts_rows:
+                conn.execute(
+                    "INSERT INTO chunks_fts (chunk_id, plugin_type, text) VALUES (?, ?, ?)",
+                    (row["chunk_id"], row["plugin_type"], row["text"]),
+                )
+
+            conn.execute("DELETE FROM symbols")
+            symbol_rows = conn.execute("SELECT chunk_id, plugin_type, symbols_json FROM chunks").fetchall()
+            for row in symbol_rows:
+                for s in json.loads(row["symbols_json"] or "[]"):
+                    conn.execute(
+                        "INSERT INTO symbols (symbol, plugin_type, kind, source_chunk_id) VALUES (?, ?, ?, ?)",
+                        (s, row["plugin_type"], "symbol", row["chunk_id"]),
+                    )
+
+    def get_chunk_count(self) -> int:
+        with self._conn() as conn:
+            row = conn.execute("SELECT COUNT(1) AS cnt FROM chunks").fetchone()
+        return int(row["cnt"])
+
+    def get_symbol_count(self) -> int:
+        with self._conn() as conn:
+            row = conn.execute("SELECT COUNT(DISTINCT symbol) AS cnt FROM symbols").fetchone()
+        return int(row["cnt"])
+
+    def fetch_all_chunks(self) -> List[Dict[str, Any]]:
+        with self._conn() as conn:
+            rows = conn.execute("SELECT * FROM chunks").fetchall()
+        out: List[Dict[str, Any]] = []
+        for r in rows:
+            out.append(
+                {
+                    "chunk_id": r["chunk_id"],
+                    "source_path": r["source_path"],
+                    "source_type": r["source_type"],
+                    "plugin_type": r["plugin_type"],
+                    "package_name": r["package_name"],
+                    "class_name": r["class_name"],
+                    "method_name": r["method_name"],
+                    "signature": r["signature"],
+                    "text": r["text"],
+                    "symbols": json.loads(r["symbols_json"] or "[]"),
+                    "title": r["title"],
+                    "meta": json.loads(r["meta_json"] or "{}"),
+                }
+            )
+        return out
+
+    def get_chunks_by_ids(self, chunk_ids: Iterable[str]) -> Dict[str, Dict[str, Any]]:
+        ids = list(chunk_ids)
+        if not ids:
+            return {}
+        placeholders = ",".join(["?"] * len(ids))
+        query = f"SELECT * FROM chunks WHERE chunk_id IN ({placeholders})"
+        with self._conn() as conn:
+            rows = conn.execute(query, ids).fetchall()
+        out: Dict[str, Dict[str, Any]] = {}
+        for r in rows:
+            out[r["chunk_id"]] = {
+                "chunk_id": r["chunk_id"],
+                "source_path": r["source_path"],
+                "source_type": r["source_type"],
+                "plugin_type": r["plugin_type"],
+                "text": r["text"],
+                "symbols": json.loads(r["symbols_json"] or "[]"),
+                "title": r["title"],
+                "package_name": r["package_name"],
+                "class_name": r["class_name"],
+                "method_name": r["method_name"],
+                "signature": r["signature"],
+                "meta": json.loads(r["meta_json"] or "{}"),
+            }
+        return out
+
+    def search_bm25(self, query: str, plugin_types: List[str], limit: int = 40) -> List[Dict[str, Any]]:
+        safe = self._fts_query(query)
+        if not safe:
+            return []
+
+        clauses = []
+        params: List[Any] = [safe]
+        if plugin_types:
+            placeholders = ",".join(["?"] * len(plugin_types))
+            clauses.append(f"plugin_type IN ({placeholders})")
+            params.extend(plugin_types)
+
+        where = " AND ".join(["chunks_fts MATCH ?"] + clauses)
+        sql = (
+            "SELECT chunk_id, plugin_type, bm25(chunks_fts) AS score "
+            f"FROM chunks_fts WHERE {where} ORDER BY score ASC LIMIT ?"
+        )
+        params.append(limit)
+
+        with self._conn() as conn:
+            try:
+                rows = conn.execute(sql, params).fetchall()
+            except sqlite3.OperationalError:
+                return []
+
+        out = []
+        for rank, r in enumerate(rows, start=1):
+            out.append(
+                {
+                    "chunk_id": r["chunk_id"],
+                    "plugin_type": r["plugin_type"],
+                    "score": float(r["score"]),
+                    "rank": rank,
+                }
+            )
+        return out
+
+    def _fts_query(self, query: str) -> str:
+        terms = []
+        seen = set()
+        for t in re.findall(r"[A-Za-z_][A-Za-z0-9_\.]{0,80}", query):
+            clean = "".join(ch for ch in t if ch.isalnum() or ch in "._")
+            if not clean:
+                continue
+            key = clean.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            terms.append('"' + clean.replace('"', '""') + '"')
+        if not terms:
+            return ""
+        return " OR ".join(terms[:12])
+
+    def list_symbols(self, plugin_types: Optional[List[str]] = None) -> List[str]:
+        params: List[Any] = []
+        where = ""
+        if plugin_types:
+            placeholders = ",".join(["?"] * len(plugin_types))
+            where = f"WHERE plugin_type IN ({placeholders})"
+            params.extend(plugin_types)
+
+        with self._conn() as conn:
+            rows = conn.execute(
+                f"SELECT DISTINCT symbol FROM symbols {where}",
+                params,
+            ).fetchall()
+        return sorted([str(r["symbol"]) for r in rows])

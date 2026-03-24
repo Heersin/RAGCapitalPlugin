@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE symbollib PUBLIC "-//Mentor Graphics Corporation//Symbol Library 1.5//EN" "h:/chs_home/dtd/symbollib.dtd">
+<symbollib id="UIDfe54b4-1161fd78283-f07a5839dcbf9e609596bd40e7930890" name="symbollib" baseid="UIDfe54b4-1161fd78283-f07a5839dcbf9e609596bd40e7930890" type="symbol">
+  <symbol id="UIDfe54b4-1161fd7830b-f07a5839dcbf9e609596bd40e7930890" name="symb2" timestamp="1194535444127" baseid="UIDfe54b4-1161fd7830b-f07a5839dcbf9e609596bd40e7930890" type="device" pincount="6">
+    <interface id="UIDfe54b4-1161fd7830c-f07a5839dcbf9e609596bd40e7930890">
+      <symbolnamemgr id="UIDfe54b4-1161fd7830e-f07a5839dcbf9e609596bd40e7930890" baseid="UIDfe54b4-1161fd7830e-f07a5839dcbf9e609596bd40e7930890" modified="1">
+        <hwmnamespace key="chs.cof.logical.cable.IDevice" entitytype="1" curindex="1" highindex="-1"/>
+        <namespace key="UIDfe54b4-1161fd7830c-f07a5839dcbf9e609596bd40e7930890" entitytype="3" curindex="7"/>
+      </symbolnamemgr>
+      <pin id="UIDfe54b4-1161fd7838d-f07a5839dcbf9e609596bd40e7930890" name="PIN1" nameindex="1" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd7838d-f07a5839dcbf9e609596bd40e7930890"/>
+      <pin id="UIDfe54b4-1161fd78390-f07a5839dcbf9e609596bd40e7930890" name="PIN2" nameindex="2" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd78390-f07a5839dcbf9e609596bd40e7930890"/>
+      <pin id="UIDfe54b4-1161fd78393-f07a5839dcbf9e609596bd40e7930890" name="PIN3" nameindex="3" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd78393-f07a5839dcbf9e609596bd40e7930890"/>
+      <pin id="UIDfe54b4-1161fd78396-f07a5839dcbf9e609596bd40e7930890" name="PIN4" nameindex="4" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd78396-f07a5839dcbf9e609596bd40e7930890"/>
+      <pin id="UIDfe54b4-1161fd78399-f07a5839dcbf9e609596bd40e7930890" name="PIN5" nameindex="5" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd78399-f07a5839dcbf9e609596bd40e7930890"/>
+      <pin id="UIDfe54b4-1161fd7839c-f07a5839dcbf9e609596bd40e7930890" name="PIN6" nameindex="6" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd7839c-f07a5839dcbf9e609596bd40e7930890"/>
+    </interface>
+    <gfx id="UIDfe54b4-1161fd7830d-f07a5839dcbf9e609596bd40e7930890" visibility="true">
+      <rectangle id="UIDfe54b4-1161fd7837f-f07a5839dcbf9e609596bd40e7930890" x="-19200.0" y="-17856.0" width="9984.0" height="33408.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd78381-f07a5839dcbf9e609596bd40e7930890" x1="-18240.0" y1="12864.0" x2="-11712.0" y2="12864.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd78383-f07a5839dcbf9e609596bd40e7930890" x1="-17856.0" y1="9408.0" x2="-11712.0" y2="9408.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd78385-f07a5839dcbf9e609596bd40e7930890" x1="-17856.0" y1="-1536.0" x2="-11712.0" y2="-1536.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd78387-f07a5839dcbf9e609596bd40e7930890" x1="-17664.0" y1="-4032.0" x2="-11712.0" y2="-4032.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd78389-f07a5839dcbf9e609596bd40e7930890" x1="-17472.0" y1="-13632.0" x2="-11520.0" y2="-13632.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd7838b-f07a5839dcbf9e609596bd40e7930890" x1="-17280.0" y1="-15552.0" x2="-11328.0" y2="-15552.0" visibility="true"/>
+      <schempin id="UIDfe54b4-1161fd7838e-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd7838d-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-9600.0" y="13440.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd7838f-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+      <schempin id="UIDfe54b4-1161fd78391-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd78390-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-9600.0" y="9600.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd78392-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+      <schempin id="UIDfe54b4-1161fd78394-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd78393-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-9600.0" y="-1920.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd78395-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+      <schempin id="UIDfe54b4-1161fd78397-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd78396-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-9600.0" y="-3840.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd78398-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+      <schempin id="UIDfe54b4-1161fd7839a-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd78399-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-9600.0" y="-13440.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd7839b-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+      <schempin id="UIDfe54b4-1161fd7839d-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd7839c-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-9600.0" y="-15360.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd7839e-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+    </gfx>
+  </symbol>
+  <symbol id="UIDfe54b4-1161fd78285-f07a5839dcbf9e609596bd40e7930890" name="symb1" timestamp="1194535370890" baseid="UIDfe54b4-1161fd78285-f07a5839dcbf9e609596bd40e7930890" type="device" pincount="2">
+    <interface id="UIDfe54b4-1161fd78286-f07a5839dcbf9e609596bd40e7930890">
+      <symbolnamemgr id="UIDfe54b4-1161fd78288-f07a5839dcbf9e609596bd40e7930890" baseid="UIDfe54b4-1161fd78288-f07a5839dcbf9e609596bd40e7930890" modified="1">
+        <hwmnamespace key="chs.cof.logical.cable.IDevice" entitytype="1" curindex="1" highindex="-1"/>
+        <namespace key="UIDfe54b4-1161fd78286-f07a5839dcbf9e609596bd40e7930890" entitytype="3" curindex="3"/>
+      </symbolnamemgr>
+      <pin id="UIDfe54b4-1161fd78305-f07a5839dcbf9e609596bd40e7930890" name="PIN1" nameindex="1" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd78305-f07a5839dcbf9e609596bd40e7930890"/>
+      <pin id="UIDfe54b4-1161fd78308-f07a5839dcbf9e609596bd40e7930890" name="PIN2" nameindex="2" pingraphic="" pintype="U" imin="" imax="" inominal="" vmin="" vnominal="" timax="" minwirecsa="" contactmaterial="" pingroup="" connectorgroup="" connectorcavity="" baseid="UIDfe54b4-1161fd78308-f07a5839dcbf9e609596bd40e7930890"/>
+    </interface>
+    <gfx id="UIDfe54b4-1161fd78287-f07a5839dcbf9e609596bd40e7930890" visibility="true">
+      <rectangle id="UIDfe54b4-1161fd782f9-f07a5839dcbf9e609596bd40e7930890" x="-15552.0" y="-8832.0" width="20544.0" height="23808.0" visibility="true"/>
+      <circle id="UIDfe54b4-1161fd782fb-f07a5839dcbf9e609596bd40e7930890" x="-4992.0" y="9792.0" radius="3540.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd782fd-f07a5839dcbf9e609596bd40e7930890" x1="-1536.0" y1="9792.0" x2="2880.0" y2="9792.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd782ff-f07a5839dcbf9e609596bd40e7930890" x1="-4992.0" y1="6336.0" x2="-4992.0" y2="-4608.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd78301-f07a5839dcbf9e609596bd40e7930890" x1="-7104.0" y1="12480.0" x2="-2880.0" y2="6912.0" visibility="true"/>
+      <line id="UIDfe54b4-1161fd78303-f07a5839dcbf9e609596bd40e7930890" x1="-3264.0" y1="12864.0" x2="-6720.0" y2="6720.0" visibility="true"/>
+      <schempin id="UIDfe54b4-1161fd78306-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd78305-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="3840.0" y="9600.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd78307-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+      <schempin id="UIDfe54b4-1161fd78309-f07a5839dcbf9e609596bd40e7930890" connref="UIDfe54b4-1161fd78308-f07a5839dcbf9e609596bd40e7930890" transform="1.0 0.0 0.0 1.0 0.0 0.0" x="-5760.0" y="-7680.0" visibility="true">
+        <attributetext id="UIDfe54b4-1161fd7830a-f07a5839dcbf9e609596bd40e7930890" nameref="Name" x="0.0" y="0.0" rotation="0" height="1997.0" hjust="left" vjust="center" font="Lucida Sans" style="plain" visibility="true"/>
+      </schempin>
+    </gfx>
+  </symbol>
+  <symlibfoldermgr id="UIDfe54b4-1161fd78284-f07a5839dcbf9e609596bd40e7930890" modified="7" baseid="UIDfe54b4-1161fd78284-f07a5839dcbf9e609596bd40e7930890">
+    <symbolnode id="UIDfe54b4-1161fd782e9-f07a5839dcbf9e609596bd40e7930890" symbol_id="UIDfe54b4-1161fd78285-f07a5839dcbf9e609596bd40e7930890"/>
+    <symbolnode id="UIDfe54b4-1161fd7836f-f07a5839dcbf9e609596bd40e7930890" symbol_id="UIDfe54b4-1161fd7830b-f07a5839dcbf9e609596bd40e7930890"/>
+  </symlibfoldermgr>
+</symbollib>
