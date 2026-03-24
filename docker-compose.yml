@@ -10,7 +10,7 @@ services:
       - .env
     environment:
       HOST: ${HOST:-0.0.0.0}
-      PORT: ${PORT:-8000}
+      PORT: 8000
       LLM_BASE_URL: ${LLM_BASE_URL:-}
       LLM_API_KEY: ${LLM_API_KEY:-}
       LLM_MODEL: ${LLM_MODEL:-}
@@ -20,7 +20,7 @@ services:
       INGEST_REBUILD: ${INGEST_REBUILD:-false}
       INGEST_ENABLE_PDF: ${INGEST_ENABLE_PDF:-false}
     ports:
-      - "${PORT:-8000}:8000"
+      - "${HOST_PORT:-18000}:8000"
     volumes:
       - raglocal_runtime:/app/runtime
     healthcheck:

@@ -53,6 +53,7 @@
 ```env
 HOST=0.0.0.0
 PORT=8000
+HOST_PORT=18000
 LLM_BASE_URL=https://your-openai-compatible-host/v1
 LLM_API_KEY=replace-with-your-llm-api-key
 LLM_MODEL=replace-with-your-model-name
@@ -73,9 +74,15 @@ INGEST_ENABLE_PDF=false
 
 ### 端口
 
-应用监听端口：
+容器内部监听端口：
 
 - `8000`
+
+宿主机绑定端口建议单独使用：
+
+- `HOST_PORT=18000`
+
+如果 Dokploy 提示 `Bind for 8000 already in use`，通常就是宿主机的 `8000` 已经被别的服务占用了。现在这套配置已经把宿主机端口拆开，你只需要改 `HOST_PORT`，不用改应用内部端口。
 
 ### 持久化
 
