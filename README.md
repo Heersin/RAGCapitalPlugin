@@ -129,8 +129,8 @@ If not configured, service uses deterministic local mock generation.
 
 ## Docker Port Notes
 - The app listens on container port `8000`.
-- Docker Compose publishes that container port via `HOST_PORT` and defaults to `18000`.
-- If your host already uses `8000`, do not change the app port; change `HOST_PORT` instead.
+- For Dokploy, prefer internal proxying and do not publish a host port from Docker Compose.
+- In Dokploy Domains, set the container port to `8000`.
 
 ## Notes
 - PDF ingest is supported and controlled by the `enable_pdf` ingest flag.

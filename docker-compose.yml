@@ -19,8 +19,8 @@ services:
       INGEST_DOC_ROOT: ${INGEST_DOC_ROOT:-sample/plugin}
       INGEST_REBUILD: ${INGEST_REBUILD:-false}
       INGEST_ENABLE_PDF: ${INGEST_ENABLE_PDF:-false}
-    ports:
-      - "${HOST_PORT:-18000}:8000"
+    expose:
+      - "8000"
     volumes:
       - raglocal_runtime:/app/runtime
     healthcheck:

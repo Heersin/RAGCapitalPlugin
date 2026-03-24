@@ -17,6 +17,8 @@
 - `.env` 环境变量
 - `raglocal_runtime` 持久卷
 
+在 Dokploy 场景下，Compose 现在只 `expose 8000`，不再把端口绑定到宿主机，避免 `already bind` 冲突。
+
 ## 2. 需要填写的环境变量
 
 把 `.env.example` 复制成 `.env` 后，至少按需填写这些值：
@@ -53,7 +55,6 @@
 ```env
 HOST=0.0.0.0
 PORT=8000
-HOST_PORT=18000
 LLM_BASE_URL=https://your-openai-compatible-host/v1
 LLM_API_KEY=replace-with-your-llm-api-key
 LLM_MODEL=replace-with-your-model-name
@@ -78,11 +79,12 @@ INGEST_ENABLE_PDF=false
 
 - `8000`
 
-宿主机绑定端口建议单独使用：
+在 Dokploy GUI 里：
 
-- `HOST_PORT=18000`
+- `Domains -> Container Port` 填 `8000`
+- 不要再单独映射宿主机端口
 
-如果 Dokploy 提示 `Bind for 8000 already in use`，通常就是宿主机的 `8000` 已经被别的服务占用了。现在这套配置已经把宿主机端口拆开，你只需要改 `HOST_PORT`，不用改应用内部端口。
+如果你之前遇到 `Bind for 8000 already in use`，就是因为旧配置把容器端口映射到了宿主机。现在这套 Compose 已经移除了 `ports:`。
 
 ### 持久化
 
