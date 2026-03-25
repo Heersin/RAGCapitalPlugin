@@ -87,6 +87,8 @@ curl -X POST http://localhost:8000/evaluate/run \
 1. If `LLM_BASE_URL`, `LLM_API_KEY`, and `LLM_MODEL` are all configured, generation uses an external OpenAI-compatible `chat/completions` API.
 2. If LLM config is missing, or the remote call fails, the service falls back to deterministic local mock generation.
 3. The current chat page keeps visible history in the browser, but the backend still handles each `/chat` request independently unless conversation memory is implemented later.
+4. The chat response now exposes whether a remote LLM was actually used for that answer.
+5. When a remote LLM is enabled, retrieved evidence is sent as grounding context, but the final answer is no longer forced into a rigid normalized template.
 
 ## RAG Improvements In This Version
 1. Retrieval now expands mixed Chinese/English requests into API-oriented query hints before BM25 and dense search.

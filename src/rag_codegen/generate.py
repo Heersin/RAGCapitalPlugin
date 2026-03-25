@@ -35,6 +35,7 @@ class Generator:
         self_check_enabled: bool = True,
     ) -> Dict:
         t0 = time.time()
+        used_remote_llm = False
 
         resolved_type = plugin_type
         if not resolved_type:
@@ -54,7 +55,12 @@ class Generator:
             trace = result.trace
 
         analysis = self._analyze_requirement(requirement, resolved_type)
-        answer_text = self._generate_text(requirement, resolved_type, evidence_cards, analysis)
+        answer_text, used_remote_llm = self._generate_text(
+            requirement,
+            resolved_type,
+            evidence_cards,
+            analysis,
+        )
 
         report = self._self_check(answer_text, resolved_type)
 
@@ -62,6 +68,7 @@ class Generator:
             revised = self._revise(answer_text, report, requirement, resolved_type, evidence_cards)
             if revised:
                 answer_text = revised
+                used_remote_llm = True
                 report = self._self_check(answer_text, resolved_type)
                 report["fixed"] = not (report["invalid_symbols"] or report["missing_required_methods"])
 
@@ -74,12 +81,14 @@ class Generator:
         return {
             "plugin_type": resolved_type,
             "analysis": analysis,
+            "raw_answer": answer_text,
             "code_blocks": code_blocks,
             "used_symbols": used_symbols,
             "self_check_report": report,
             "evidence_cards": evidence_cards,
             "trace": trace,
             "latency_seconds": round(time.time() - t0, 3),
+            "used_remote_llm": used_remote_llm,
         }
 
     def _generate_text(
@@ -88,9 +97,9 @@ class Generator:
         plugin_type: str,
         evidence_cards: List[Dict],
         analysis: str,
-    ) -> str:
+    ) -> tuple[str, bool]:
         if not self.llm.enabled:
-            return self._mock_generation(requirement, plugin_type, evidence_cards)
+            return self._mock_generation(requirement, plugin_type, evidence_cards), False
 
         ev = []
         for i, c in enumerate(evidence_cards, start=1):
@@ -102,9 +111,12 @@ class Generator:
             f"Requirement:\n{requirement}\n\n"
             f"Plugin type: {plugin_type}\n"
             f"Structured analysis:\n{analysis}\n\n"
+            "Please answer the user's request directly in natural language.\n"
+            "Treat the retrieved evidence as the source of truth.\n"
+            "You may include Java code blocks when useful, but do not force a fixed report template.\n"
+            "If the evidence is insufficient, say what is uncertain and avoid inventing APIs.\n\n"
             "Evidence:\n"
             + "\n\n".join(ev)
-            + "\n\nOutput style: core class + template"
         )
 
         messages = [
@@ -115,9 +127,9 @@ class Generator:
 
         try:
             content, _usage = self.llm.chat(messages, temperature=0.1, max_tokens=1800)
-            return content
+            return content, True
         except Exception:
-            return self._mock_generation(requirement, plugin_type, evidence_cards)
+            return self._mock_generation(requirement, plugin_type, evidence_cards), False
 
     def _revise(
         self,

@@ -64,6 +64,7 @@ class GenerateResponse(BaseModel):
     self_check_report: SelfCheckReport
     evidence_cards: List[EvidenceCard]
     latency_seconds: float
+    used_remote_llm: bool = False
 
 
 class ChatRequest(BaseModel):
@@ -88,6 +89,7 @@ class ChatResponse(BaseModel):
     self_check_report: SelfCheckReport
     sources: List[ChatSource]
     latency_seconds: float
+    used_remote_llm: bool = False
 
 
 class EvaluateRunRequest(BaseModel):

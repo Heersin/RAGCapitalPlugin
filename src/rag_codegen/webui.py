@@ -4,7 +4,20 @@ from typing import Dict, List
 
 
 def build_chat_answer(result: Dict) -> str:
-    lines = [f"插件类型：{result['plugin_type']}", "", "需求分析：", result["analysis"]]
+    lines = [
+        f"插件类型：{result['plugin_type']}",
+        f"LLM 调用：{'远程 LLM' if result.get('used_remote_llm') else '本地 mock'}",
+        "",
+    ]
+
+    if result.get("used_remote_llm"):
+        if result.get("code_blocks"):
+            lines.extend(["补充代码块："])
+            for i, block in enumerate(result["code_blocks"], start=1):
+                lines.extend(["", f"代码块 {i}:", "```java", block.strip(), "```"])
+        return "\n".join([x for x in lines + [result.get("raw_answer", "").strip()] if x]).strip()
+
+    lines.extend(["需求分析：", result["analysis"]])
     report = result["self_check_report"]
     if report.get("invalid_symbols") or report.get("missing_required_methods"):
         lines.extend(["", "自检提醒："])
@@ -460,6 +473,7 @@ CHAT_UI_HTML = """<!doctype html>
           <div class="bubble-head"><strong>助手</strong><span>${nowTime()}</span></div>
           <div class="bubble-body">${renderMarkdownish(data.answer)}</div>
           <div class="assistant-meta">
+            <span class="chip">${data.used_remote_llm ? "remote LLM" : "local mock"}</span>
             <span class="chip">plugin_type=${esc(data.plugin_type)}</span>
             <span class="chip">latency=${Number(data.latency_seconds).toFixed(3)}s</span>
             <span class="chip">symbols=${(data.used_symbols || []).length}</span>

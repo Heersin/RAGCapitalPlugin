@@ -95,6 +95,7 @@ def generate(req: GenerateRequest) -> GenerateResponse:
             self_check_report=SelfCheckReport(**res["self_check_report"]),
             evidence_cards=res["evidence_cards"],
             latency_seconds=res["latency_seconds"],
+            used_remote_llm=res["used_remote_llm"],
         )
     except Exception as err:
         raise HTTPException(status_code=400, detail=str(err)) from err
@@ -119,6 +120,7 @@ def chat(req: ChatRequest) -> ChatResponse:
             self_check_report=SelfCheckReport(**res["self_check_report"]),
             sources=[ChatSource(**item) for item in source_cards_for_chat(res["evidence_cards"])],
             latency_seconds=res["latency_seconds"],
+            used_remote_llm=res["used_remote_llm"],
         )
     except Exception as err:
         raise HTTPException(status_code=400, detail=str(err)) from err
