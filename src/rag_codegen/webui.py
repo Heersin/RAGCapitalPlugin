@@ -4,18 +4,11 @@ from typing import Dict, List
 
 
 def build_chat_answer(result: Dict) -> str:
-    lines = [
-        f"插件类型：{result['plugin_type']}",
-        f"LLM 调用：{'远程 LLM' if result.get('used_remote_llm') else '本地 mock'}",
-        "",
-    ]
+    raw_answer = (result.get("raw_answer") or "").strip()
+    if result.get("used_remote_llm") and raw_answer:
+        return raw_answer
 
-    if result.get("used_remote_llm"):
-        if result.get("code_blocks"):
-            lines.extend(["补充代码块："])
-            for i, block in enumerate(result["code_blocks"], start=1):
-                lines.extend(["", f"代码块 {i}:", "```java", block.strip(), "```"])
-        return "\n".join([x for x in lines + [result.get("raw_answer", "").strip()] if x]).strip()
+    lines = [f"插件类型：{result['plugin_type']}", ""]
 
     lines.extend(["需求分析：", result["analysis"]])
     report = result["self_check_report"]
@@ -256,6 +249,70 @@ CHAT_UI_HTML = """<!doctype html>
       color:var(--muted);
       font-style:italic
     }
+    details.trace-panel{
+      margin-top:14px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.88);
+      overflow:hidden
+    }
+    details.trace-panel summary{
+      cursor:pointer;
+      list-style:none;
+      padding:12px 14px;
+      font-size:13px;
+      font-weight:700;
+      color:var(--accent-strong);
+      border-bottom:1px solid transparent
+    }
+    details.trace-panel[open] summary{
+      border-bottom-color:var(--line);
+      background:rgba(15,118,110,.05)
+    }
+    .trace-content{
+      padding:14px;
+      display:grid;
+      gap:12px
+    }
+    .trace-block{
+      padding:12px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid var(--line)
+    }
+    .trace-title{
+      margin-bottom:8px;
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.06em
+    }
+    .trace-block pre{
+      margin:0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-size:12px;
+      line-height:1.6;
+      font-family:var(--mono)
+    }
+    .trace-grid{
+      display:grid;
+      gap:10px
+    }
+    .trace-message{
+      padding:10px 12px;
+      border-radius:12px;
+      background:#f8fbfb;
+      border:1px solid rgba(31,41,51,.08)
+    }
+    .trace-role{
+      margin-bottom:6px;
+      font-size:12px;
+      font-weight:700;
+      color:var(--accent-strong);
+      text-transform:uppercase
+    }
     .composer{
       border-top:1px solid var(--line);
       padding:18px 22px;
@@ -391,6 +448,7 @@ CHAT_UI_HTML = """<!doctype html>
     });
 
     const esc = (s) => String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    const formatJson = (value) => esc(JSON.stringify(value ?? {}, null, 2));
     const renderMarkdownish = (s) => esc(s)
       .replace(/```(?:\\w+)?\\n([\\s\\S]*?)```/g, (_, c) => "<pre><code>"+c.trim()+"</code></pre>")
       .replace(/\\n/g, "<br />");
@@ -417,6 +475,106 @@ CHAT_UI_HTML = """<!doctype html>
           <div class="path">plugin_type=${esc(item.plugin_type)} | score=${Number(item.score).toFixed(4)}</div>
         </div>
       `).join("");
+    }
+
+    function renderTraceMessages(messages) {
+      if (!messages || !messages.length) {
+        return '<div class="trace-block"><div class="trace-title">Prompt</div><pre>本次没有记录请求消息。</pre></div>';
+      }
+      return `
+        <div class="trace-block">
+          <div class="trace-title">Prompt Messages</div>
+          <div class="trace-grid">
+            ${messages.map((item) => `
+              <div class="trace-message">
+                <div class="trace-role">${esc(item.role || "unknown")}</div>
+                <pre>${esc(item.content || "")}</pre>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderLlmTrace(trace, usedRemote) {
+      if (!trace || (!trace.enabled && !trace.fallback_reason)) {
+        return "";
+      }
+      const revision = trace.revision || null;
+      return `
+        <details class="trace-panel">
+          <summary>LLM 调用详情 ${usedRemote ? "· 已调用远程模型" : "· 未成功调用远程模型"}</summary>
+          <div class="trace-content">
+            <div class="trace-block">
+              <div class="trace-title">Summary</div>
+              <pre>${formatJson({
+                enabled: Boolean(trace.enabled),
+                used_remote_llm: Boolean(trace.used_remote_llm),
+                fallback_reason: trace.fallback_reason || null,
+                usage: trace.usage || null,
+                request_payload: trace.request_payload ? {
+                  model: trace.request_payload.model,
+                  temperature: trace.request_payload.temperature,
+                  max_tokens: trace.request_payload.max_tokens
+                } : null
+              })}</pre>
+            </div>
+            ${renderTraceMessages(trace.request_messages || trace.request_payload?.messages || [])}
+            <div class="trace-block">
+              <div class="trace-title">Response</div>
+              <pre>${esc(trace.response_text || "本轮没有远程响应文本。")}</pre>
+            </div>
+            ${revision ? `
+              <div class="trace-block">
+                <div class="trace-title">Revision Summary</div>
+                <pre>${formatJson({
+                  used_remote_llm: Boolean(revision.used_remote_llm),
+                  fallback_reason: revision.fallback_reason || null,
+                  usage: revision.usage || null
+                })}</pre>
+              </div>
+              ${renderTraceMessages(revision.request_messages || revision.request_payload?.messages || [])}
+              <div class="trace-block">
+                <div class="trace-title">Revision Response</div>
+                <pre>${esc(revision.response_text || "没有修订响应。")}</pre>
+              </div>
+            ` : ""}
+          </div>
+        </details>
+      `;
+    }
+
+    function renderRetrievalTrace(trace) {
+      if (!trace || !Object.keys(trace).length) {
+        return "";
+      }
+      return `
+        <details class="trace-panel">
+          <summary>检索规划与召回详情</summary>
+          <div class="trace-content">
+            <div class="trace-block">
+              <div class="trace-title">Plan</div>
+              <pre>${formatJson(trace.plan || {})}</pre>
+            </div>
+            <div class="trace-block">
+              <div class="trace-title">Retrieval Trace</div>
+              <pre>${formatJson({
+                mode: trace.mode,
+                plugin_type: trace.plugin_type,
+                route_confidence: trace.route_confidence,
+                retrieval_query: trace.retrieval_query,
+                query_expansions: trace.query_expansions,
+                stage_candidates: trace.stage_candidates,
+                fused_candidates: trace.fused_candidates,
+                expanded_candidates: trace.expanded_candidates,
+                second_hop_candidates: trace.second_hop_candidates,
+                final_candidates: trace.final_candidates,
+                selected_titles: trace.selected_titles
+              })}</pre>
+            </div>
+          </div>
+        </details>
+      `;
     }
 
     function appendUserMessage(text) {
@@ -478,6 +636,8 @@ CHAT_UI_HTML = """<!doctype html>
             <span class="chip">latency=${Number(data.latency_seconds).toFixed(3)}s</span>
             <span class="chip">symbols=${(data.used_symbols || []).length}</span>
           </div>
+          ${renderLlmTrace(data.llm_trace || {}, Boolean(data.used_remote_llm))}
+          ${renderRetrievalTrace(data.retrieval_trace || {})}
           <div class="sources">${buildSourceList(data.sources || [])}</div>
         </div>
       `;

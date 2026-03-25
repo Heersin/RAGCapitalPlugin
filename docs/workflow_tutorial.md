@@ -28,7 +28,7 @@
    把 `sample/plugin` 这类文档目录扫描一遍，切成结构化 chunk，写入 SQLite 和向量索引。
 
 2. `retrieve`
-   当你提问时，系统先判断你更像在问 `action / drc / constraint` 中的哪一类插件，再从索引中召回相关证据。
+   当你提问时，系统先判断你更像在问 `action / drc / constraint` 中的哪一类插件，再按“拆子目标 -> 先找 API -> 扩关系 -> 补示例”的顺序召回证据。
 
 3. `generate`
    生成层拿着需求、插件类型和检索到的 evidence cards，调用 LLM 或本地 mock 生成结果。
@@ -56,7 +56,7 @@
   - `symbols`
 
 - `retrieve.py`
-  检索层。组合 BM25、dense search、RRF 融合和 symbol overlap 加权。
+  检索层。现在会先构建 query plan，再组合 BM25、dense search、RRF、多阶段召回和 1-2 跳关系扩展。
 
 - `generate.py`
   生成层。先分析需求，再调用 LLM 或 mock 输出代码，并做自检。
@@ -103,17 +103,33 @@
 这里的逻辑是：
 
 1. 根据问题文字推断插件类型，或者使用你显式传入的 `plugin_type_hint`
-2. 在允许的类型范围里检索：
+2. 把问题整理成一个 query plan：
+   - `subgoals`
+   - `english_terms`
+   - `api_terms`
+   - `relation_terms`
+   - `example_terms`
+3. 在允许的类型范围里检索：
    - 当前类型
    - `core`
-3. 走两套召回：
-   - BM25 关键词检索
-   - dense 向量检索
-4. 用 RRF 融合两边结果
-5. 再用 query 和 symbols 的重合做一点加权
-6. 产出 `evidence_cards`
+4. 分阶段召回：
+   - `general_lookup`
+   - `api_lookup`
+   - `example_lookup`
+   - `guide_lookup`
+5. 用 RRF 融合两边结果
+6. 再做邻域扩展：
+   - 同 source file
+   - symbol link
+   - class link
+   - method link
+   - second-hop 扩展
+7. 再用 query、title、显式 API symbol、read-only / output-window 语义做加权
+8. 产出 `evidence_cards`
 
 这些 `evidence_cards` 就是后面生成时给模型看的参考材料。
+
+现在 `/chat` 和 `/generate` 也会把 `retrieval_trace` 一并返回，所以你可以看到这轮到底是怎样检索出来的。
 
 ## 6. generate 阶段怎么出答案
 
@@ -157,6 +173,8 @@
 - 生成后的可读答案
 - 代码块
 - 关键来源
+- LLM 调用详情
+- retrieval plan / trace
 
 这样就不需要你手动去看原始 JSON 了。
 
@@ -177,6 +195,19 @@ curl -X POST http://localhost:8000/chat \
 ```
 
 它内部仍然复用了原有生成链路，但返回中多了一个已经格式化好的 `answer` 字段，适合 UI 直接展示。
+
+另外现在还会返回：
+
+- `used_remote_llm`
+- `llm_trace`
+- `retrieval_trace`
+
+所以如果你怀疑“LLM 没拿到足够信息”，可以直接看：
+
+1. `retrieval_trace.plan`
+2. `retrieval_trace.selected_titles`
+3. `llm_trace.request_messages`
+4. `llm_trace.response_text`
 
 ## 8. 推荐使用方式
 

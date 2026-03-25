@@ -165,6 +165,137 @@ class Storage:
             }
         return out
 
+    def get_chunks_by_source_paths(
+        self,
+        source_paths: Iterable[str],
+        plugin_types: Optional[List[str]] = None,
+    ) -> List[Dict[str, Any]]:
+        paths = list(dict.fromkeys(str(x) for x in source_paths if x))
+        if not paths:
+            return []
+
+        clauses = []
+        params: List[Any] = []
+
+        placeholders = ",".join(["?"] * len(paths))
+        clauses.append(f"source_path IN ({placeholders})")
+        params.extend(paths)
+
+        if plugin_types:
+            type_placeholders = ",".join(["?"] * len(plugin_types))
+            clauses.append(f"plugin_type IN ({type_placeholders})")
+            params.extend(plugin_types)
+
+        sql = "SELECT * FROM chunks WHERE " + " AND ".join(clauses)
+        with self._conn() as conn:
+            rows = conn.execute(sql, params).fetchall()
+
+        out: List[Dict[str, Any]] = []
+        for r in rows:
+            out.append(
+                {
+                    "chunk_id": r["chunk_id"],
+                    "source_path": r["source_path"],
+                    "source_type": r["source_type"],
+                    "plugin_type": r["plugin_type"],
+                    "text": r["text"],
+                    "symbols": json.loads(r["symbols_json"] or "[]"),
+                    "title": r["title"],
+                    "package_name": r["package_name"],
+                    "class_name": r["class_name"],
+                    "method_name": r["method_name"],
+                    "signature": r["signature"],
+                    "meta": json.loads(r["meta_json"] or "{}"),
+                }
+            )
+        return out
+
+    def get_chunk_ids_for_symbols(
+        self,
+        symbols: Iterable[str],
+        plugin_types: Optional[List[str]] = None,
+        limit: int = 80,
+    ) -> List[str]:
+        names = [str(x) for x in symbols if str(x).strip()]
+        if not names:
+            return []
+
+        clauses = []
+        params: List[Any] = []
+        placeholders = ",".join(["?"] * len(names))
+        clauses.append(f"symbol IN ({placeholders})")
+        params.extend(names)
+
+        if plugin_types:
+            type_placeholders = ",".join(["?"] * len(plugin_types))
+            clauses.append(f"plugin_type IN ({type_placeholders})")
+            params.extend(plugin_types)
+
+        sql = (
+            "SELECT source_chunk_id, COUNT(1) AS cnt "
+            "FROM symbols WHERE "
+            + " AND ".join(clauses)
+            + " GROUP BY source_chunk_id ORDER BY cnt DESC, source_chunk_id ASC LIMIT ?"
+        )
+        params.append(limit)
+        with self._conn() as conn:
+            rows = conn.execute(sql, params).fetchall()
+        return [str(r["source_chunk_id"]) for r in rows]
+
+    def get_chunk_ids_for_class_names(
+        self,
+        class_names: Iterable[str],
+        plugin_types: Optional[List[str]] = None,
+        limit: int = 80,
+    ) -> List[str]:
+        names = [str(x) for x in class_names if str(x).strip()]
+        if not names:
+            return []
+
+        clauses = []
+        params: List[Any] = []
+        placeholders = ",".join(["?"] * len(names))
+        clauses.append(f"class_name IN ({placeholders})")
+        params.extend(names)
+
+        if plugin_types:
+            type_placeholders = ",".join(["?"] * len(plugin_types))
+            clauses.append(f"plugin_type IN ({type_placeholders})")
+            params.extend(plugin_types)
+
+        sql = "SELECT chunk_id FROM chunks WHERE " + " AND ".join(clauses) + " LIMIT ?"
+        params.append(limit)
+        with self._conn() as conn:
+            rows = conn.execute(sql, params).fetchall()
+        return [str(r["chunk_id"]) for r in rows]
+
+    def get_chunk_ids_for_method_names(
+        self,
+        method_names: Iterable[str],
+        plugin_types: Optional[List[str]] = None,
+        limit: int = 80,
+    ) -> List[str]:
+        names = [str(x) for x in method_names if str(x).strip()]
+        if not names:
+            return []
+
+        clauses = []
+        params: List[Any] = []
+        placeholders = ",".join(["?"] * len(names))
+        clauses.append(f"method_name IN ({placeholders})")
+        params.extend(names)
+
+        if plugin_types:
+            type_placeholders = ",".join(["?"] * len(plugin_types))
+            clauses.append(f"plugin_type IN ({type_placeholders})")
+            params.extend(plugin_types)
+
+        sql = "SELECT chunk_id FROM chunks WHERE " + " AND ".join(clauses) + " LIMIT ?"
+        params.append(limit)
+        with self._conn() as conn:
+            rows = conn.execute(sql, params).fetchall()
+        return [str(r["chunk_id"]) for r in rows]
+
     def search_bm25(self, query: str, plugin_types: List[str], limit: int = 40) -> List[Dict[str, Any]]:
         safe = self._fts_query(query)
         if not safe:

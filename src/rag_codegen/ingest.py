@@ -110,12 +110,25 @@ class Ingestor:
             title = self._extract_first(raw, r"<title>([^<]+)</title>") or path.stem
 
         class_name = title.split()[-1] if title else ""
+        class_signature = strip_html(
+            self._extract_first(raw, r'<div class="description">[\s\S]*?<pre>([\s\S]*?)</pre>') or ""
+        )
+        super_types = self._extract_relation_symbols(raw, "All Superinterfaces")
+        inherited_methods = self._extract_inherited_methods(raw)
 
         chunks: List[Dict] = []
 
         # Class-level chunk
-        class_text = truncate_text(stripped, 5000)
-        class_symbols = extract_symbols(raw)
+        relation_lines: List[str] = []
+        if class_signature:
+            relation_lines.append(f"Signature: {class_signature}")
+        if super_types:
+            relation_lines.append("Superinterfaces: " + ", ".join(super_types))
+        for owner, methods in inherited_methods.items():
+            relation_lines.append(f"Inherited methods from {owner}: " + ", ".join(methods[:24]))
+
+        class_text = truncate_text("\n".join(relation_lines + [stripped]), 5000)
+        class_symbols = extract_symbols(raw + "\n" + "\n".join(relation_lines))
         chunks.append(
             {
                 "chunk_id": self._chunk_id(path, "class", class_name or path.stem),
@@ -125,35 +138,75 @@ class Ingestor:
                 "package_name": package,
                 "class_name": class_name,
                 "method_name": "",
-                "signature": "",
+                "signature": class_signature,
                 "title": title,
                 "text": class_text,
                 "symbols": class_symbols,
-                "meta": {"kind": "class"},
+                "meta": {
+                    "kind": "class",
+                    "super_types": super_types,
+                    "inherited_methods": inherited_methods,
+                },
             }
         )
 
         # Method-level chunks
+        method_chunks: Dict[str, Dict] = {}
+        for method_name, sig_clean, description in self._extract_html_method_summaries(raw):
+            suffix = self._method_chunk_suffix(class_name, method_name, sig_clean)
+            method_symbols = extract_symbols(f"{sig_clean}\n{description}\n{raw}")
+            method_text = truncate_text(
+                "\n".join(
+                    [
+                        f"{title} {method_name}",
+                        sig_clean,
+                        description,
+                    ]
+                ).strip(),
+                1600,
+            )
+            method_chunks[suffix] = {
+                "chunk_id": self._chunk_id(path, "method", suffix),
+                "source_path": str(path),
+                "source_type": "javadoc_html",
+                "plugin_type": plugin_type,
+                "package_name": package,
+                "class_name": class_name,
+                "method_name": method_name,
+                "signature": sig_clean,
+                "title": f"{class_name}.{method_name}",
+                "text": method_text,
+                "symbols": method_symbols,
+                "meta": {"kind": "method", "owner_class": class_name},
+            }
+
         for method_name, signature in re.findall(r"<h4>([^<]+)</h4>\s*<pre>([\s\S]*?)</pre>", raw):
-            sig_clean = strip_html(signature)
+            sig_clean = self._normalize_method_signature(method_name, strip_html(signature))
+            suffix = self._method_chunk_suffix(class_name, method_name, sig_clean)
+            existing = method_chunks.get(suffix)
+            if existing:
+                if sig_clean and sig_clean not in existing["text"]:
+                    existing["text"] = truncate_text(existing["text"] + "\n" + sig_clean, 1600)
+                continue
+
             method_symbols = extract_symbols(sig_clean + " " + raw)
             method_text = f"{title} {method_name} {sig_clean}"
-            chunks.append(
-                {
-                    "chunk_id": self._chunk_id(path, "method", f"{class_name}.{method_name}"),
-                    "source_path": str(path),
-                    "source_type": "javadoc_html",
-                    "plugin_type": plugin_type,
-                    "package_name": package,
-                    "class_name": class_name,
-                    "method_name": method_name,
-                    "signature": sig_clean,
-                    "title": f"{class_name}.{method_name}",
-                    "text": truncate_text(method_text, 1200),
-                    "symbols": method_symbols,
-                    "meta": {"kind": "method"},
-                }
-            )
+            method_chunks[suffix] = {
+                "chunk_id": self._chunk_id(path, "method", suffix),
+                "source_path": str(path),
+                "source_type": "javadoc_html",
+                "plugin_type": plugin_type,
+                "package_name": package,
+                "class_name": class_name,
+                "method_name": method_name,
+                "signature": sig_clean,
+                "title": f"{class_name}.{method_name}",
+                "text": truncate_text(method_text, 1200),
+                "symbols": method_symbols,
+                "meta": {"kind": "method", "owner_class": class_name},
+            }
+
+        chunks.extend(method_chunks.values())
 
         return chunks
 
@@ -266,7 +319,14 @@ class Ingestor:
             return "constraint"
 
         # Keep core plugin APIs as shared dependencies.
-        if "/plugin/api/com/mentor/chs/plugin/" in p and all(
+        if (
+            "/plugin/api/com/mentor/chs/plugin/" in p
+            or "/plugin/api/com/mentor/chs/api/" in p
+        ) and all(
+            x not in p for x in ["/plugin/action/", "/plugin/drc/", "/plugin/constraint/"]
+        ):
+            return "core"
+        if "/plugin/examples/java/" in p and all(
             x not in p for x in ["/plugin/action/", "/plugin/drc/", "/plugin/constraint/"]
         ):
             return "core"
@@ -287,6 +347,46 @@ class Ingestor:
     def _extract_first(self, text: str, pattern: str) -> Optional[str]:
         m = re.search(pattern, text)
         return m.group(1).strip() if m else None
+
+    def _extract_relation_symbols(self, raw: str, label: str) -> List[str]:
+        m = re.search(rf"<dt>{re.escape(label)}:</dt>\s*<dd>([\s\S]*?)</dd>", raw)
+        if not m:
+            return []
+        return sorted(set(re.findall(r">((?:IX|com\.mentor\.)[A-Za-z0-9_\.]+)<", m.group(1))))
+
+    def _extract_inherited_methods(self, raw: str) -> Dict[str, List[str]]:
+        inherited: Dict[str, List[str]] = {}
+        for owner, body in re.findall(
+            r"Methods inherited from (?:class|interface).*?<a [^>]*>([^<]+)</a></h3>\s*<code>([\s\S]*?)</code>",
+            raw,
+        ):
+            methods = re.findall(r">([A-Za-z_][A-Za-z0-9_]*)</a>", body)
+            if methods:
+                inherited[owner] = sorted(set(methods))
+        return inherited
+
+    def _extract_html_method_summaries(self, raw: str) -> List[tuple[str, str, str]]:
+        out: List[tuple[str, str, str]] = []
+        pattern = re.compile(
+            r'<td class="colLast"><code><span class="memberNameLink"><a [^>]*>([^<]+)</a></span>\(([\s\S]*?)\)</code>\s*(?:<div class="block">([\s\S]*?)</div>)?',
+            re.MULTILINE,
+        )
+        for method_name, signature_part, description in pattern.findall(raw):
+            sig_clean = self._normalize_method_signature(method_name, strip_html(f"{method_name}({signature_part})"))
+            desc_clean = strip_html(description or "")
+            out.append((method_name.strip(), sig_clean, desc_clean))
+        return out
+
+    def _method_chunk_suffix(self, class_name: str, method_name: str, signature: str) -> str:
+        sig_suffix = signature or method_name
+        return f"{class_name}.{method_name}.{sig_suffix}"
+
+    def _normalize_method_signature(self, method_name: str, signature: str) -> str:
+        flat = " ".join(signature.split())
+        marker = re.search(rf"\b{re.escape(method_name)}\s*\(", flat)
+        if marker:
+            return flat[marker.start() :]
+        return flat
 
     def _strip_java_comments(self, code: str) -> str:
         code = re.sub(r"/\*[\s\S]*?\*/", " ", code)

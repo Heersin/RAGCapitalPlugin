@@ -63,8 +63,10 @@ class GenerateResponse(BaseModel):
     used_symbols: List[str]
     self_check_report: SelfCheckReport
     evidence_cards: List[EvidenceCard]
+    retrieval_trace: Dict[str, Any] = Field(default_factory=dict)
     latency_seconds: float
     used_remote_llm: bool = False
+    llm_trace: Dict[str, Any] = Field(default_factory=dict)
 
 
 class ChatRequest(BaseModel):
@@ -88,8 +90,10 @@ class ChatResponse(BaseModel):
     used_symbols: List[str]
     self_check_report: SelfCheckReport
     sources: List[ChatSource]
+    retrieval_trace: Dict[str, Any] = Field(default_factory=dict)
     latency_seconds: float
     used_remote_llm: bool = False
+    llm_trace: Dict[str, Any] = Field(default_factory=dict)
 
 
 class EvaluateRunRequest(BaseModel):

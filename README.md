@@ -78,23 +78,37 @@ curl -X POST http://localhost:8000/evaluate/run \
 
 ## Current Workflow
 1. `/ingest` scans your doc root, parses HTML/Java/PDF, stores chunks in SQLite, and rebuilds the dense index.
-2. `/chat` is the browser-friendly question-answer entrypoint. It wraps retrieval, generation, and self-check into a simpler response.
+2. `/retrieve` now follows an API-first staged plan:
+   - decompose the request into subgoals
+   - expand Chinese intent into English/API lookup terms
+   - search Javadoc first
+   - expand related classes/methods/superinterfaces
+   - then blend in examples
 3. `/retrieve` exposes evidence cards when you want to inspect recall quality.
 4. `/generate` exposes the full structured response when you need raw fields for automation.
-5. `/evaluate/run` replays evaluation tasks from `eval/tasks_seed.json`.
+5. `/chat` is the browser-friendly question-answer entrypoint. It wraps retrieval, generation, self-check, and now returns both `retrieval_trace` and `llm_trace`.
+6. `/evaluate/run` replays evaluation tasks from `eval/tasks_seed.json`.
 
 ## AI Behavior
 1. If `LLM_BASE_URL`, `LLM_API_KEY`, and `LLM_MODEL` are all configured, generation uses an external OpenAI-compatible `chat/completions` API.
 2. If LLM config is missing, or the remote call fails, the service falls back to deterministic local mock generation.
 3. The current chat page keeps visible history in the browser, but the backend still handles each `/chat` request independently unless conversation memory is implemented later.
 4. The chat response now exposes whether a remote LLM was actually used for that answer.
-5. When a remote LLM is enabled, retrieved evidence is sent as grounding context, but the final answer is no longer forced into a rigid normalized template.
+5. Both `/chat` and `/generate` now expose `llm_trace`, including the prompt messages, request payload summary, response text, usage, and any fallback reason.
+6. When a remote LLM is enabled, retrieved evidence is sent as grounding context, but the final answer is no longer forced into a rigid normalized template.
 
 ## RAG Improvements In This Version
-1. Retrieval now expands mixed Chinese/English requests into API-oriented query hints before BM25 and dense search.
-2. Fusion now adds metadata-aware reranking for titles, methods, examples, read-only semantics, and output-window intent.
-3. Final evidence selection now reduces duplicate hits from the same source file.
-4. Chunk FTS and symbol indexes are rebuilt from the canonical chunks table to avoid drift after repeated ingest runs.
+1. Retrieval now expands mixed Chinese/English requests into a structured search plan with `subgoals`, `english_terms`, `api_terms`, `relation_terms`, and `example_terms`.
+2. The retrieval chain is API-first: Javadoc lookup runs before relation expansion and example lookup, which better matches the manual plugin-writing workflow.
+3. HTML ingest now preserves more Javadoc structure:
+   - class signatures
+   - superinterfaces
+   - inherited method lists
+   - method summary descriptions
+4. Overloaded methods now get stable chunk ids, reducing collisions and recall loss in the SQLite index.
+5. Fusion now adds metadata-aware reranking for titles, methods, examples, read-only semantics, output-window intent, and explicit API symbol matches.
+6. Final evidence selection now reduces duplicate hits from the same source file and keeps more API docs ahead of example code.
+7. Chunk FTS and symbol indexes are rebuilt from the canonical chunks table to avoid drift after repeated ingest runs.
 
 ## Development Script
 Use `scripts/raglocal.py` to simplify common workflows:

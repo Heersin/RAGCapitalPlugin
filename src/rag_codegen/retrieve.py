@@ -50,27 +50,88 @@ class Retriever:
         top_k = max(1, min(40, top_k))
         profile = build_query_profile(query, plugin_type)
         candidate_limit = max(40, top_k * 5)
+        expansion_budget = max(24, top_k * 4)
 
-        bm25_hits = []
-        if mode in {"hybrid"}:
-            bm25_hits = self.storage.search_bm25(
-                profile.retrieval_query,
-                allowed_types,
-                limit=candidate_limit,
-            )
+        general_hits = self._stage_search(
+            profile=profile,
+            plugin_type=plugin_type,
+            plugin_types=allowed_types,
+            mode=mode,
+            query_text=profile.retrieval_query,
+            limit=candidate_limit,
+        )
+        api_hits = self._scale_hits(
+            self._stage_search(
+                profile=build_query_profile(" ".join(profile.api_terms[:16]), plugin_type),
+                plugin_type=plugin_type,
+                plugin_types=allowed_types,
+                mode=mode,
+                query_text=" ".join(profile.api_terms[:16]),
+                limit=max(24, top_k * 4),
+                source_types=["javadoc_html"],
+            ),
+            factor=1.15,
+            reason="api_lookup",
+        )
+        example_hits = self._scale_hits(
+            self._stage_search(
+                profile=build_query_profile(" ".join(profile.example_terms[:14]), plugin_type),
+                plugin_type=plugin_type,
+                plugin_types=allowed_types,
+                mode=mode,
+                query_text=" ".join(profile.example_terms[:14]),
+                limit=max(16, top_k * 3),
+                source_types=["java_example"],
+            ),
+            factor=0.45,
+            reason="example_lookup",
+        )
+        guide_hits = self._scale_hits(
+            self._stage_search(
+                profile=build_query_profile(" ".join(profile.english_terms[:14]), plugin_type),
+                plugin_type=plugin_type,
+                plugin_types=allowed_types,
+                mode=mode,
+                query_text=" ".join(profile.english_terms[:14]),
+                limit=max(12, top_k * 2),
+                source_types=["pdf"],
+            ),
+            factor=0.4,
+            reason="guide_lookup",
+        )
 
-        dense_hits = []
-        if mode in {"dense", "hybrid"}:
-            dense_hits = self._dense_search(
-                profile.retrieval_query,
-                allowed_types,
-                limit=candidate_limit,
-            )
-
-        fused = self._rrf_fuse(bm25_hits, dense_hits, profile, plugin_type, k=self.settings.rrf_k)
+        fused = self._merge_ranked_hits(general_hits, api_hits)
+        fused = self._merge_ranked_hits(fused, example_hits)
+        fused = self._merge_ranked_hits(fused, guide_hits)
         fused_ids = [x["chunk_id"] for x in fused]
         chunk_map = self.storage.get_chunks_by_ids(fused_ids)
-        selected = self._select_diverse_hits(fused, chunk_map, top_k)
+        expanded = self._expand_neighborhood(
+            query=query,
+            plugin_types=allowed_types,
+            profile=profile,
+            initial_hits=fused,
+            initial_chunk_map=chunk_map,
+            top_k=expansion_budget,
+        )
+        expanded_seed = self._merge_ranked_hits(fused, expanded)
+        expanded_seed_ids = [x["chunk_id"] for x in expanded_seed[: max(20, top_k * 4)]]
+        expanded_seed_map = self.storage.get_chunks_by_ids(expanded_seed_ids)
+        expanded_second_hop = self._scale_hits(
+            self._expand_neighborhood(
+                query=query,
+                plugin_types=allowed_types,
+                profile=profile,
+                initial_hits=expanded_seed[: max(20, top_k * 4)],
+                initial_chunk_map=expanded_seed_map,
+                top_k=expansion_budget,
+            ),
+            factor=0.7,
+            reason="second_hop",
+        )
+        combined = self._merge_ranked_hits(expanded_seed, expanded_second_hop)
+        combined_ids = [x["chunk_id"] for x in combined]
+        chunk_map = self.storage.get_chunks_by_ids(combined_ids)
+        selected = self._select_diverse_hits(combined, chunk_map, top_k, profile)
 
         cards = []
         for item in selected:
@@ -96,12 +157,66 @@ class Retriever:
             "route_confidence": confidence,
             "retrieval_query": profile.retrieval_query,
             "query_expansions": profile.expansions[:12],
-            "bm25_candidates": len(bm25_hits),
-            "dense_candidates": len(dense_hits),
+            "plan": {
+                "subgoals": profile.subgoals,
+                "english_terms": profile.english_terms[:12],
+                "api_terms": profile.api_terms[:14],
+                "relation_terms": profile.relation_terms[:14],
+                "example_terms": profile.example_terms[:12],
+            },
+            "stage_candidates": {
+                "general_lookup": len(general_hits),
+                "api_lookup": len(api_hits),
+                "example_lookup": len(example_hits),
+                "guide_lookup": len(guide_hits),
+            },
             "fused_candidates": len(fused),
+            "expanded_candidates": len(expanded),
+            "second_hop_candidates": len(expanded_second_hop),
+            "final_candidates": len(combined),
+            "selected_titles": [card["title"] for card in cards[:6]],
         }
 
         return RetrievalResult(plugin_type=plugin_type, evidence_cards=cards, trace=trace)
+
+    def _stage_search(
+        self,
+        profile: QueryProfile,
+        plugin_type: str,
+        plugin_types: List[str],
+        mode: RetrievalMode,
+        query_text: str,
+        limit: int,
+        source_types: Optional[List[str]] = None,
+        kinds: Optional[List[str]] = None,
+    ) -> List[Dict]:
+        if not query_text.strip():
+            return []
+
+        bm25_hits = []
+        if mode in {"hybrid"}:
+            bm25_hits = self.storage.search_bm25(query_text, plugin_types, limit=limit)
+
+        dense_hits = []
+        if mode in {"dense", "hybrid"}:
+            dense_hits = self._dense_search(query_text, plugin_types, limit=limit)
+
+        fused = self._rrf_fuse(bm25_hits, dense_hits, profile, plugin_type, k=self.settings.rrf_k)
+        if not source_types and not kinds:
+            return fused
+
+        chunk_map = self.storage.get_chunks_by_ids([item["chunk_id"] for item in fused])
+        filtered: List[Dict] = []
+        for item in fused:
+            chunk = chunk_map.get(item["chunk_id"])
+            if not chunk:
+                continue
+            if source_types and chunk.get("source_type") not in source_types:
+                continue
+            if kinds and chunk.get("meta", {}).get("kind") not in kinds:
+                continue
+            filtered.append(item)
+        return filtered
 
     def _dense_search(self, query: str, plugin_types: List[str], limit: int = 40) -> List[Dict]:
         dense_path = Path(self.settings.dense_index_path)
@@ -185,6 +300,124 @@ class Retriever:
         fused.sort(key=lambda x: x["score"], reverse=True)
         return fused
 
+    def _expand_neighborhood(
+        self,
+        query: str,
+        plugin_types: List[str],
+        profile: QueryProfile,
+        initial_hits: List[Dict],
+        initial_chunk_map: Dict[str, Dict],
+        top_k: int,
+    ) -> List[Dict]:
+        if not initial_hits:
+            return []
+
+        seed_hits = initial_hits[: max(4, min(10, top_k * 2))]
+        source_paths = []
+        symbols = set()
+        class_names = set()
+        method_names = set()
+
+        for hit in seed_hits:
+            chunk = initial_chunk_map.get(hit["chunk_id"])
+            if not chunk:
+                continue
+            source_paths.append(chunk.get("source_path", ""))
+            symbols.update(chunk.get("symbols", [])[:16])
+            if chunk.get("class_name"):
+                class_names.add(chunk["class_name"])
+            if chunk.get("method_name"):
+                method_names.add(chunk["method_name"])
+            class_names.update([tok for tok in tokenize(chunk.get("signature", "")) if tok.startswith("IX")])
+            class_names.update([tok for tok in tokenize(chunk.get("text", "")) if tok.startswith("IX")][:12])
+            meta = chunk.get("meta", {}) or {}
+            class_names.update(meta.get("super_types", [])[:12])
+            for owner, methods in (meta.get("inherited_methods", {}) or {}).items():
+                class_names.add(owner)
+                method_names.update(methods[:16])
+
+        symbols.update([tok for tok in tokenize(query) if tok.startswith("IX")])
+        symbols.update([tok for tok in profile.query_tokens if tok.startswith("IX")])
+        method_names.update(
+            [
+                tok
+                for tok in tokenize(query)
+                if tok in {"execute", "check", "begin", "end", "println", "isAvailable", "isReadOnly", "getTriggers"}
+            ]
+        )
+
+        expanded_by_id: Dict[str, Dict] = {}
+
+        related_chunks = self.storage.get_chunks_by_source_paths(source_paths, plugin_types=plugin_types)
+        for chunk in related_chunks:
+            reason_bonus = 0.12 if chunk.get("meta", {}).get("kind") == "class" else 0.08
+            expanded_by_id[chunk["chunk_id"]] = {
+                "chunk_id": chunk["chunk_id"],
+                "score": reason_bonus,
+                "reason": "same_source",
+            }
+
+        for chunk_id in self.storage.get_chunk_ids_for_symbols(symbols, plugin_types=plugin_types, limit=max(30, top_k * 6)):
+            row = expanded_by_id.setdefault(
+                chunk_id,
+                {"chunk_id": chunk_id, "score": 0.0, "reason": "symbol_link"},
+            )
+            row["score"] += 0.09
+
+        for chunk_id in self.storage.get_chunk_ids_for_class_names(
+            class_names,
+            plugin_types=plugin_types,
+            limit=max(20, top_k * 4),
+        ):
+            row = expanded_by_id.setdefault(
+                chunk_id,
+                {"chunk_id": chunk_id, "score": 0.0, "reason": "class_link"},
+            )
+            row["score"] += 0.1
+
+        for chunk_id in self.storage.get_chunk_ids_for_method_names(
+            method_names,
+            plugin_types=plugin_types,
+            limit=max(24, top_k * 5),
+        ):
+            row = expanded_by_id.setdefault(
+                chunk_id,
+                {"chunk_id": chunk_id, "score": 0.0, "reason": "method_link"},
+            )
+            row["score"] += 0.08
+
+        for hit in seed_hits:
+            expanded_by_id.pop(hit["chunk_id"], None)
+
+        expanded = list(expanded_by_id.values())
+        expanded.sort(key=lambda x: x["score"], reverse=True)
+        return expanded
+
+    def _merge_ranked_hits(self, primary: List[Dict], expanded: List[Dict]) -> List[Dict]:
+        merged: Dict[str, Dict] = {}
+        for item in primary:
+            merged[item["chunk_id"]] = dict(item)
+        for item in expanded:
+            row = merged.setdefault(
+                item["chunk_id"],
+                {"chunk_id": item["chunk_id"], "score": 0.0, "bm25_rank": None, "dense_rank": None},
+            )
+            row["score"] += item["score"]
+            if "reason" in item:
+                row["reason"] = item["reason"]
+        out = list(merged.values())
+        out.sort(key=lambda x: x["score"], reverse=True)
+        return out
+
+    def _scale_hits(self, hits: List[Dict], factor: float, reason: str) -> List[Dict]:
+        scaled: List[Dict] = []
+        for item in hits:
+            row = dict(item)
+            row["score"] = float(row.get("score", 0.0)) * factor
+            row["reason"] = reason
+            scaled.append(row)
+        return scaled
+
     def _metadata_bonus(
         self,
         profile: QueryProfile,
@@ -205,12 +438,16 @@ class Retriever:
                 ]
             )
         )
+        title_token_set = {tok.lower() for tok in title_tokens}
         text_low = chunk.get("text", "").lower()
         meta = chunk.get("meta", {}) or {}
         kind = meta.get("kind", "")
         bonus = 0.0
 
         bonus += 0.18 * keyword_overlap_score(query_tokens, title_tokens)
+        explicit_api_symbols = [term.lower() for term in profile.api_terms if term.startswith("IX")]
+        symbol_hits = sum(1 for term in explicit_api_symbols if term.lower() in title_token_set)
+        bonus += min(0.24, 0.06 * symbol_hits)
 
         if chunk.get("plugin_type") == plugin_type:
             bonus += 0.05
@@ -228,34 +465,79 @@ class Retriever:
             bonus += 0.08
         if profile.output_window and ("ixoutputwindow" in text_low or "output window" in text_low):
             bonus += 0.08
+        if profile.output_window and (
+            "ixoutputwindow" in title_token_set or "println" in title_token_set or "getoutputwindow" in title_token_set
+        ):
+            bonus += 0.24
 
         if chunk.get("source_type") == "pdf":
             bonus -= 0.03
 
         return bonus
 
-    def _select_diverse_hits(self, fused: List[Dict], chunk_map: Dict[str, Dict], top_k: int) -> List[Dict]:
+    def _select_diverse_hits(
+        self,
+        fused: List[Dict],
+        chunk_map: Dict[str, Dict],
+        top_k: int,
+        profile: QueryProfile,
+    ) -> List[Dict]:
         selected: List[Dict] = []
         per_source: Dict[str, int] = {}
         deferred: List[Dict] = []
+        selected_ids = set()
+        selected_titles = set()
+        api_quota = min(top_k, max(3, top_k // 2))
+        example_quota = max(2, top_k // 3) if profile.wants_examples else max(1, top_k // 4)
 
-        for item in fused:
+        def _try_select(item: Dict) -> bool:
             chunk = chunk_map.get(item["chunk_id"])
             if not chunk:
-                continue
+                return False
             source_path = chunk.get("source_path", "")
             used = per_source.get(source_path, 0)
             if used >= 2:
                 deferred.append(item)
-                continue
+                return False
+            title = chunk.get("title") or item["chunk_id"]
+            if title in selected_titles:
+                deferred.append(item)
+                return False
+            example_count = sum(
+                1 for existing in selected if chunk_map.get(existing["chunk_id"], {}).get("source_type") == "java_example"
+            )
+            if chunk.get("source_type") == "java_example" and example_count >= example_quota:
+                deferred.append(item)
+                return False
             selected.append(item)
+            selected_ids.add(item["chunk_id"])
+            selected_titles.add(title)
             per_source[source_path] = used + 1
+            return True
+
+        for item in fused:
+            if len(selected) >= api_quota:
+                break
+            chunk = chunk_map.get(item["chunk_id"])
+            if not chunk or chunk.get("source_type") != "javadoc_html":
+                continue
+            _try_select(item)
+
+        for item in fused:
+            if item["chunk_id"] in selected_ids:
+                continue
+            _try_select(item)
             if len(selected) >= top_k:
                 return selected
 
         for item in deferred:
             if len(selected) >= top_k:
                 break
+            if item["chunk_id"] in selected_ids:
+                continue
             selected.append(item)
+            selected_ids.add(item["chunk_id"])
+            chunk = chunk_map.get(item["chunk_id"], {})
+            selected_titles.add(chunk.get("title") or item["chunk_id"])
 
         return selected

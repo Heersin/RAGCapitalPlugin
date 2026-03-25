@@ -18,6 +18,11 @@ class QueryProfile:
     retrieval_query: str
     query_tokens: List[str]
     expansions: List[str]
+    subgoals: List[str]
+    english_terms: List[str]
+    api_terms: List[str]
+    relation_terms: List[str]
+    example_terms: List[str]
     wants_examples: bool
     wants_api_docs: bool
     prefers_methods: bool
@@ -66,9 +71,19 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
     prefers_methods = bool(re.search(r"方法|签名|枚举|method|signature|trigger|severity", low))
     read_only = bool(re.search(r"只读|read[\s\-]?only|readonly", low))
     output_window = bool(re.search(r"输出窗口|output window|println|print|打印|日志", low))
+    explicit_api_terms = [tok for tok in tokenize(query) if tok.startswith("IX") or "." in tok]
+
+    subgoals = [
+        f"Confirm the primary {plugin_type} plugin interface and required lifecycle methods.",
+        "Locate candidate APIs by interface name, method name, and description keywords.",
+        "Inspect related classes, superinterfaces, and inherited methods one to two hops deep.",
+        "Find implementation examples or templates that can be combined into the final answer.",
+    ]
 
     plugin_expansions = {
         "action": [
+            "custom action",
+            "logic action",
             "IXAction",
             "IXLogicAction",
             "execute",
@@ -79,6 +94,8 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
             "Trigger.ContextMenu",
         ],
         "drc": [
+            "custom drc",
+            "design rule check",
             "IXDRCheck",
             "IXLogicDRCheck",
             "IXDRCViolationReporter",
@@ -88,6 +105,8 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
             "Severity",
         ],
         "constraint": [
+            "custom constraint",
+            "set attribute constraint",
             "constraint",
             "IXConstraint",
             "match",
@@ -95,42 +114,134 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
             "validate",
         ],
     }
-    expansions.extend(plugin_expansions.get(plugin_type, []))
+    api_terms: List[str] = []
+    english_terms = [plugin_type, "plugin api", "javadoc"]
+    relation_terms = ["superinterface", "inherited methods", "extends", "implements", "related class"]
+    example_terms = [plugin_type, "example", "template", "implementation"]
 
     hint_patterns = [
-        (r"只读|read[\s\-]?only|readonly", ["read only", "isReadOnly"]),
-        (r"输出窗口|output window|println|print|打印|日志", ["IXOutputWindow", "println", "output window"]),
-        (r"菜单|context menu|main menu|按钮|action", ["Trigger.MainMenu", "Trigger.ContextMenu", "menu"]),
-        (r"选中对象|selected object|selection", ["IXObject", "selected object", "selection"]),
-        (r"属性|attribute|property", ["attribute", "property", "getAttribute"]),
-        (r"检查|违规|rule|check", ["check", "rule"]),
-        (r"线长|wire length", ["IXWire", "wire length", "IXWireLengthResult"]),
-        (r"示例|模板|实现|example|template|implement", ["example", "template", "implementation"]),
-        (r"接口|签名|方法|api|signature|method", ["API", "method", "signature"]),
+        (
+            r"只读|read[\s\-]?only|readonly",
+            ["read only", "read-only plugin"],
+            ["isReadOnly"],
+            ["isReadOnly", "IXAvailability"],
+            ["read only example"],
+            "Confirm read-only semantics and availability checks.",
+        ),
+        (
+            r"输出窗口|output window|println|print|打印|日志",
+            ["output window", "print message", "logging"],
+            ["IXOutputWindow", "println", "IXApplicationContext"],
+            ["IXOutputWindow", "IXOutputPrinter"],
+            ["output window example"],
+            "Find APIs for writing messages to the output window.",
+        ),
+        (
+            r"菜单|context menu|main menu|按钮|action",
+            ["menu action", "context menu", "main menu"],
+            ["Trigger.MainMenu", "Trigger.ContextMenu", "getTriggers"],
+            ["IXAction", "IXBaseAction"],
+            ["action template"],
+            "Check how the plugin is exposed in the menu system.",
+        ),
+        (
+            r"选中对象|selected object|selection",
+            ["selected object", "selection context"],
+            ["IXObject", "selection", "context"],
+            ["IXComponentSelectionContext", "IXObject"],
+            ["selection example"],
+            "Locate APIs for reading the current selection or target object.",
+        ),
+        (
+            r"属性|attribute|property",
+            ["attribute", "property"],
+            ["attribute", "property", "getAttribute"],
+            ["IXAttribute", "IXObject"],
+            ["attribute example"],
+            "Locate APIs for reading or writing object attributes.",
+        ),
+        (
+            r"检查|违规|rule|check",
+            ["rule check", "validation"],
+            ["check", "rule", "violation"],
+            ["IXDRCheck", "Severity"],
+            ["drc example"],
+            "Inspect rule-checking interfaces, severities, and callbacks.",
+        ),
+        (
+            r"线长|wire length",
+            ["wire length"],
+            ["IXWire", "wire length", "IXWireLengthResult"],
+            ["IXWire", "IXRoute"],
+            ["wire example"],
+            "Find geometry or wire-length APIs related to the requirement.",
+        ),
+        (
+            r"示例|模板|实现|example|template|implement",
+            ["example", "template", "implementation"],
+            ["implementation"],
+            ["related methods"],
+            ["example", "template", "implementation"],
+            "Look for example code that demonstrates the API combination.",
+        ),
+        (
+            r"接口|签名|方法|api|signature|method",
+            ["api", "method signature", "interface description"],
+            ["API", "method", "signature", "description"],
+            ["superinterface", "inherited methods"],
+            ["api example"],
+            "Prioritize interface and method documentation over broad guides.",
+        ),
     ]
 
-    for pattern, terms in hint_patterns:
+    for pattern, english, api, relation, example, subgoal in hint_patterns:
         if re.search(pattern, low):
-            expansions.extend(terms)
+            english_terms.extend(english)
+            api_terms.extend(api)
+            relation_terms.extend(relation)
+            example_terms.extend(example)
+            subgoals.append(subgoal)
 
-    deduped: List[str] = []
-    seen = set()
-    for term in [query] + expansions:
-        norm = term.strip()
-        if not norm:
-            continue
-        key = norm.lower()
-        if key in seen:
-            continue
-        seen.add(key)
-        deduped.append(norm)
+    api_terms.extend(plugin_expansions.get(plugin_type, []))
 
-    retrieval_query = " ".join(deduped)
+    english_terms.extend(explicit_api_terms)
+    api_terms.extend(explicit_api_terms)
+    relation_terms.extend(explicit_api_terms)
+    example_terms.extend(explicit_api_terms)
+
+    def _dedupe(items: List[str]) -> List[str]:
+        out: List[str] = []
+        seen = set()
+        for item in items:
+            norm = item.strip()
+            if not norm:
+                continue
+            key = norm.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(norm)
+        return out
+
+    english_terms = _dedupe(english_terms)
+    api_terms = _dedupe(api_terms)
+    relation_terms = _dedupe(relation_terms)
+    example_terms = _dedupe(example_terms)
+    subgoals = _dedupe(subgoals)
+
+    expansions = _dedupe(english_terms + api_terms + relation_terms + example_terms)
+
+    retrieval_query = " ".join([query] + expansions)
     return QueryProfile(
         raw_query=query,
         retrieval_query=retrieval_query,
         query_tokens=tokenize(retrieval_query),
-        expansions=deduped[1:],
+        expansions=expansions,
+        subgoals=subgoals,
+        english_terms=english_terms,
+        api_terms=api_terms,
+        relation_terms=relation_terms,
+        example_terms=example_terms,
         wants_examples=wants_examples,
         wants_api_docs=wants_api_docs,
         prefers_methods=prefers_methods,

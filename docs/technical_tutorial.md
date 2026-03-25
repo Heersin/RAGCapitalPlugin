@@ -4,7 +4,8 @@
 
 1. 当前系统是否真的调用了 AI
 2. 现有聊天界面的“上下文”到底到哪一层
-3. 如果要做真正的多轮上下文记忆，应该怎么设计
+3. 现在的 RAG 为什么比之前更接近人工写插件的工作流
+4. 如果要做真正的多轮上下文记忆，应该怎么设计
 
 ## 1. 当前是否存在 AI 调用
 
@@ -64,6 +65,24 @@
 
 1. 初次生成
 2. 自检后修订
+
+### 现在怎么确认到底发了什么给 LLM
+
+`/chat` 和 `/generate` 现在都会返回：
+
+- `used_remote_llm`
+- `llm_trace`
+
+其中 `llm_trace` 会包含：
+
+- `request_messages`
+- `request_payload`
+- `response_text`
+- `usage`
+- `fallback_reason`
+- `revision`（如果发生了修订）
+
+首页聊天界面里也新增了折叠面板，你可以直接展开看本轮 prompt 和返回内容。
 
 ## 2. 当前聊天界面的上下文现状
 
@@ -209,11 +228,103 @@ curl -X POST http://localhost:8000/ingest \
 
 之后 `/retrieve`、`/generate`、`/chat` 才能基于这些数据做 RAG。
 
-## 5. 带上下文记忆应该怎么做
+## 5. 现在的 RAG 为什么更接近人工写插件流程
+
+你前面描述的人工工作流大致是：
+
+1. 先拆子目标
+2. 把子目标转成英文/API 概念去搜
+3. 找到 API 后，再补父类、关联类、继承方法
+4. 最后结合示例拼代码
+
+现在后端已经朝这个方向做了几件事。
+
+### 3.1 Query plan 不再只是平铺关键字
+
+`build_query_profile(...)` 现在除了 `retrieval_query`，还会生成：
+
+- `subgoals`
+- `english_terms`
+- `api_terms`
+- `relation_terms`
+- `example_terms`
+
+这意味着检索阶段不再只是“整句直接搜”，而是先把问题组织成一个更像人工检索计划的结构。
+
+### 3.2 检索顺序改成 API-first
+
+`Retriever.retrieve(...)` 现在不是单段检索，而是分阶段：
+
+1. `general_lookup`
+2. `api_lookup`
+3. `example_lookup`
+4. `guide_lookup`
+5. 邻域扩展
+6. second-hop 扩展
+
+其中 `api_lookup` 会优先看 `javadoc_html`，并优先使用 query-specific 的 API 术语。
+
+例如：
+
+- `输出窗口` 会优先转成 `IXOutputWindow / println / IXApplicationContext`
+- `只读` 会优先转成 `isReadOnly`
+
+所以检索更容易先把关键接口拉出来，而不是一开始就被大批 example 淹没。
+
+### 3.3 ingest 里补了更细的 Javadoc 结构
+
+HTML ingest 现在会额外保留：
+
+- class signature
+- superinterfaces
+- inherited methods
+- method summary description
+
+这点很重要，因为你提到要做“名字 -> description”的二级搜索。
+
+以前 method chunk 更多只有签名。
+现在 method summary 的描述文本也会进 chunk，所以像：
+
+- 某方法是干什么的
+- 某接口适合什么场景
+
+这种信息更容易被检索到。
+
+### 3.4 方法重载不再互相覆盖
+
+以前某些 overloaded method 可能因为 chunk id 太粗，后写入的覆盖先写入的。
+
+现在 method chunk id 会带上规范化后的签名，像：
+
+- `clear()`
+- `clear(java.lang.String tab)`
+
+会成为不同 chunk。
+
+这能减少 API 丢失。
+
+### 3.5 现在还能看到 retrieval_trace
+
+`/chat` 和 `/generate` 现在还会返回 `retrieval_trace`。
+
+里面会包含：
+
+- `plan`
+- `stage_candidates`
+- `selected_titles`
+- `expanded_candidates`
+- `second_hop_candidates`
+
+所以你现在可以区分：
+
+- 是 RAG 没把资料召回来
+- 还是资料召回了，但 LLM 没用好
+
+## 6. 带上下文记忆应该怎么做
 
 如果要做“真正的多轮聊天”，建议分三层来做。
 
-## 5.1 第一层：最小可用记忆
+## 6.1 第一层：最小可用记忆
 
 目标：
 
@@ -251,7 +362,7 @@ curl -X POST http://localhost:8000/ingest \
 - 成本和延迟会上升
 - 长对话容易退化
 
-## 5.2 第二层：服务端会话记忆
+## 6.2 第二层：服务端会话记忆
 
 目标：
 
@@ -293,7 +404,7 @@ curl -X POST http://localhost:8000/ingest \
 3. 后续每轮都带上这个 `conversation_id`
 4. 后端从数据库取最近几轮历史，再参与生成
 
-## 5.3 第三层：摘要记忆 + 检索记忆
+## 6.3 第三层：摘要记忆 + 检索记忆
 
 目标：
 
@@ -324,7 +435,7 @@ curl -X POST http://localhost:8000/ingest \
 5. current question
 6. retrieved evidence cards
 
-## 6. 真正落地时建议怎么改代码
+## 7. 真正落地时建议怎么改代码
 
 最稳妥的顺序是：
 
@@ -357,7 +468,7 @@ curl -X POST http://localhost:8000/ingest \
    页面保存当前 `conversation_id`
    每一轮继续带回后端
 
-## 7. 推荐的记忆策略
+## 8. 推荐的记忆策略
 
 如果现在开始做，我建议先这样：
 
@@ -379,7 +490,7 @@ curl -X POST http://localhost:8000/ingest \
 
 这样改动节奏最稳，也比较适合当前这个项目体量。
 
-## 8. 本次 RAG 优化做了什么
+## 9. 本次 RAG 优化做了什么
 
 这一版没有引入新的向量库或外部检索服务，而是先优化了当前本地检索链路：
 
@@ -402,7 +513,7 @@ curl -X POST http://localhost:8000/ingest \
 4. 索引一致性修复
    repeated ingest 后，`chunks / chunks_fts / symbols` 现在会重新同步，避免 FTS 漂移。
 
-## 9. 开发脚本
+## 10. 开发脚本
 
 现在可以使用：
 
@@ -417,7 +528,7 @@ uv run python scripts/raglocal.py serve --host 0.0.0.0 --port 8000
 uv run python scripts/raglocal.py dev --doc-root sample/plugin
 ```
 
-## 10. Dokploy 部署文件
+## 11. Dokploy 部署文件
 
 已经准备好这些文件：
 
@@ -430,6 +541,6 @@ uv run python scripts/raglocal.py dev --doc-root sample/plugin
 
 - `docs/dokploy_deploy.md`
 
-## 11. 当前状态一句话总结
+## 12. 当前状态一句话总结
 
 当前已经有可选的外部 AI 调用，但聊天记忆还只是前端展示层；如果要做真正多轮，需要把会话状态放到后端，并把“最近消息 + 摘要 + 检索记忆”一起送进生成链路。

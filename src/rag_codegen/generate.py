@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import re
 import time
 from typing import Dict, List, Optional, Tuple
@@ -10,6 +11,23 @@ from .prompts import DEVELOPER_PROMPT, SELF_CHECK_PROMPT, SYSTEM_PROMPT
 from .retrieve import RetrievalMode, Retriever
 from .storage import Storage
 from .text_utils import detect_plugin_type, extract_symbols
+
+
+def subgoals_to_text(plan: Dict) -> str:
+    if not plan:
+        return "No staged retrieval plan available."
+    lines = []
+    if plan.get("subgoals"):
+        lines.append("Subgoals: " + " | ".join(plan["subgoals"][:4]))
+    if plan.get("english_terms"):
+        lines.append("English concepts: " + ", ".join(plan["english_terms"][:10]))
+    if plan.get("api_terms"):
+        lines.append("API lookup terms: " + ", ".join(plan["api_terms"][:12]))
+    if plan.get("relation_terms"):
+        lines.append("Relation expansion terms: " + ", ".join(plan["relation_terms"][:12]))
+    if plan.get("example_terms"):
+        lines.append("Example lookup terms: " + ", ".join(plan["example_terms"][:10]))
+    return "\n".join(lines) if lines else "No staged retrieval plan available."
 
 
 class Generator:
@@ -36,6 +54,7 @@ class Generator:
     ) -> Dict:
         t0 = time.time()
         used_remote_llm = False
+        llm_trace: Dict = {"enabled": self.llm.enabled}
 
         resolved_type = plugin_type
         if not resolved_type:
@@ -54,21 +73,23 @@ class Generator:
             evidence_cards = result.evidence_cards
             trace = result.trace
 
-        analysis = self._analyze_requirement(requirement, resolved_type)
-        answer_text, used_remote_llm = self._generate_text(
+        analysis = self._analyze_requirement(requirement, resolved_type, trace)
+        answer_text, used_remote_llm, llm_trace = self._generate_text(
             requirement,
             resolved_type,
             evidence_cards,
             analysis,
+            trace,
         )
 
         report = self._self_check(answer_text, resolved_type)
 
         if self_check_enabled and self.llm.enabled and (report["invalid_symbols"] or report["missing_required_methods"]):
-            revised = self._revise(answer_text, report, requirement, resolved_type, evidence_cards)
+            revised, revise_trace = self._revise(answer_text, report, requirement, resolved_type, evidence_cards)
             if revised:
                 answer_text = revised
                 used_remote_llm = True
+                llm_trace["revision"] = revise_trace
                 report = self._self_check(answer_text, resolved_type)
                 report["fixed"] = not (report["invalid_symbols"] or report["missing_required_methods"])
 
@@ -89,6 +110,7 @@ class Generator:
             "trace": trace,
             "latency_seconds": round(time.time() - t0, 3),
             "used_remote_llm": used_remote_llm,
+            "llm_trace": llm_trace,
         }
 
     def _generate_text(
@@ -97,9 +119,14 @@ class Generator:
         plugin_type: str,
         evidence_cards: List[Dict],
         analysis: str,
-    ) -> tuple[str, bool]:
+        retrieval_trace: Dict,
+    ) -> tuple[str, bool, Dict]:
         if not self.llm.enabled:
-            return self._mock_generation(requirement, plugin_type, evidence_cards), False
+            return self._mock_generation(requirement, plugin_type, evidence_cards), False, {
+                "enabled": False,
+                "used_remote_llm": False,
+                "fallback_reason": "llm_disabled",
+            }
 
         ev = []
         for i, c in enumerate(evidence_cards, start=1):
@@ -107,10 +134,12 @@ class Generator:
                 f"[{i}] title={c['title']} source={c['source_path']} symbols={','.join(c['symbols'][:12])}\n{c['text']}"
             )
 
+        retrieval_plan = retrieval_trace.get("plan", {}) if retrieval_trace else {}
         user_prompt = (
             f"Requirement:\n{requirement}\n\n"
             f"Plugin type: {plugin_type}\n"
             f"Structured analysis:\n{analysis}\n\n"
+            f"Retrieval plan:\n{subgoals_to_text(retrieval_plan)}\n\n"
             "Please answer the user's request directly in natural language.\n"
             "Treat the retrieved evidence as the source of truth.\n"
             "You may include Java code blocks when useful, but do not force a fixed report template.\n"
@@ -125,11 +154,30 @@ class Generator:
             {"role": "user", "content": user_prompt},
         ]
 
+        request_payload = {
+            "model": self.llm.cfg.model,
+            "temperature": 0.1,
+            "max_tokens": 1800,
+            "messages": copy.deepcopy(messages),
+        }
         try:
-            content, _usage = self.llm.chat(messages, temperature=0.1, max_tokens=1800)
-            return content, True
-        except Exception:
-            return self._mock_generation(requirement, plugin_type, evidence_cards), False
+            content, usage = self.llm.chat(messages, temperature=0.1, max_tokens=1800)
+            return content, True, {
+                "enabled": True,
+                "used_remote_llm": True,
+                "request_messages": copy.deepcopy(messages),
+                "request_payload": request_payload,
+                "response_text": content,
+                "usage": usage,
+            }
+        except Exception as err:
+            return self._mock_generation(requirement, plugin_type, evidence_cards), False, {
+                "enabled": True,
+                "used_remote_llm": False,
+                "request_messages": copy.deepcopy(messages),
+                "request_payload": request_payload,
+                "fallback_reason": str(err),
+            }
 
     def _revise(
         self,
@@ -138,7 +186,7 @@ class Generator:
         requirement: str,
         plugin_type: str,
         evidence_cards: List[Dict],
-    ) -> Optional[str]:
+    ) -> tuple[Optional[str], Dict]:
         ev = []
         for i, c in enumerate(evidence_cards, start=1):
             ev.append(f"[{i}] {c['title']} symbols={','.join(c['symbols'][:8])}")
@@ -159,30 +207,61 @@ class Generator:
             {"role": "user", "content": user_prompt},
         ]
 
+        request_payload = {
+            "model": self.llm.cfg.model,
+            "temperature": 0.0,
+            "max_tokens": 1800,
+            "messages": copy.deepcopy(messages),
+        }
         try:
-            content, _usage = self.llm.chat(messages, temperature=0.0, max_tokens=1800)
-            return content
-        except Exception:
-            return None
+            content, usage = self.llm.chat(messages, temperature=0.0, max_tokens=1800)
+            return content, {
+                "request_messages": copy.deepcopy(messages),
+                "request_payload": request_payload,
+                "response_text": content,
+                "usage": usage,
+                "used_remote_llm": True,
+            }
+        except Exception as err:
+            return None, {
+                "request_messages": copy.deepcopy(messages),
+                "request_payload": request_payload,
+                "fallback_reason": str(err),
+                "used_remote_llm": False,
+            }
 
-    def _analyze_requirement(self, requirement: str, plugin_type: str) -> str:
+    def _analyze_requirement(self, requirement: str, plugin_type: str, retrieval_trace: Optional[Dict] = None) -> str:
         low = requirement.lower()
         read_only = "read-only" in low or "只读" in requirement
         trigger = "MainMenu/ContextMenu" if plugin_type == "action" else "N/A"
         risk = "API mismatch" if "ix" not in low else "Low"
-        return (
+        summary = (
             f"plugin_type={plugin_type}; "
             f"read_only={str(read_only).lower()}; "
             f"trigger={trigger}; "
             f"risk={risk}"
         )
+        plan = (retrieval_trace or {}).get("plan", {})
+        if not plan:
+            return summary
+        subgoals = ", ".join(plan.get("subgoals", [])[:4])
+        api_terms = ", ".join(plan.get("api_terms", [])[:8])
+        return summary + f"; subgoals={subgoals}; api_terms={api_terms}"
 
     def _extract_code_blocks(self, text: str) -> List[str]:
         blocks = re.findall(r"```(?:java)?\n([\s\S]*?)```", text)
         return [b.strip() for b in blocks if b.strip()]
 
     def _self_check(self, answer_text: str, plugin_type: str) -> Dict:
-        code = "\n".join(self._extract_code_blocks(answer_text)) or answer_text
+        code_blocks = self._extract_code_blocks(answer_text)
+        if not code_blocks:
+            return {
+                "invalid_symbols": [],
+                "missing_required_methods": [],
+                "fixed": False,
+            }
+
+        code = "\n".join(code_blocks)
         used_symbols = sorted(set(extract_symbols(code)))
 
         valid_symbols = set(self.storage.list_symbols([plugin_type, "core"]))
