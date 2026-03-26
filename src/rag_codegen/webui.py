@@ -121,6 +121,7 @@ CHAT_UI_HTML = """<!doctype html>
     }
     .settings textarea{min-height:110px;resize:vertical;line-height:1.6}
     .row{display:grid;grid-template-columns:1fr 112px;gap:12px}
+    .mode-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .actions,.composer-actions{display:flex;gap:10px;flex-wrap:wrap}
     button{
       border:none;
@@ -361,7 +362,7 @@ CHAT_UI_HTML = """<!doctype html>
     @media (max-width:640px){
       .wrap{padding:14px}
       .workspace-head,.thread,.composer,.sidebar{padding:16px}
-      .row,.composer-bar{grid-template-columns:1fr}
+      .row,.mode-row,.composer-bar{grid-template-columns:1fr}
       .bubble{max-width:100%}
     }
   </style>
@@ -375,7 +376,14 @@ CHAT_UI_HTML = """<!doctype html>
       <div class="settings">
         <label for="preset-question">示例问题</label>
         <textarea id="preset-question" placeholder="例如：生成一个只读 action，在输出窗口打印选中对象属性。"></textarea>
-        <div class="row">
+        <div class="mode-row">
+          <div>
+            <label for="chat_mode">回答模式</label>
+            <select id="chat_mode" name="chat_mode">
+              <option value="rag">RAG（检索增强）</option>
+              <option value="direct">Direct（直连大模型）</option>
+            </select>
+          </div>
           <div>
             <label for="plugin_type">插件类型</label>
             <select id="plugin_type" name="plugin_type">
@@ -385,6 +393,8 @@ CHAT_UI_HTML = """<!doctype html>
               <option value="constraint">constraint</option>
             </select>
           </div>
+        </div>
+        <div class="row">
           <div>
             <label for="context_budget">检索条数</label>
             <input id="context_budget" name="context_budget" type="number" min="1" max="20" value="10" />
@@ -396,7 +406,7 @@ CHAT_UI_HTML = """<!doctype html>
         <button class="secondary" id="clear-btn" type="button">清空对话</button>
       </div>
       <div class="note">
-        首次使用前，先运行一次 <code>/ingest</code> 导入文档。当前聊天界面是多轮前端会话，后端每一轮仍按“当前问题”独立检索和生成。
+        首次使用前，先运行一次 <code>/ingest</code> 导入文档。`RAG` 模式会先检索本地证据再回答；`Direct` 模式会跳过检索，直接把当前输入转发给你配置的大模型。
       </div>
     </aside>
     <main class="card workspace">
@@ -405,7 +415,7 @@ CHAT_UI_HTML = """<!doctype html>
           <strong>对话</strong>
           <div><span id="status">等待提问</span></div>
         </div>
-        <span id="session-meta">plugin_type=自动判断 · top_k=10</span>
+        <span id="session-meta">mode=rag · plugin_type=自动判断 · top_k=10</span>
       </div>
       <div class="thread" id="thread">
         <div class="empty" id="empty-state">先执行一次文档导入，然后在底部输入框里开始聊天。</div>
@@ -434,6 +444,7 @@ CHAT_UI_HTML = """<!doctype html>
     const presetQuestionEl = document.getElementById("preset-question");
     const questionEl = document.getElementById("question");
     const pluginTypeEl = document.getElementById("plugin_type");
+    const chatModeEl = document.getElementById("chat_mode");
     const contextBudgetEl = document.getElementById("context_budget");
     let messageCounter = 0;
 
@@ -441,8 +452,10 @@ CHAT_UI_HTML = """<!doctype html>
       const sample = "生成一个只读 action，在输出窗口打印选中对象属性";
       presetQuestionEl.value = sample;
       questionEl.value = sample;
+      chatModeEl.value = "rag";
       pluginTypeEl.value = "action";
       contextBudgetEl.value = "10";
+      syncSessionMeta();
       questionEl.focus();
     });
 
@@ -471,9 +484,12 @@ CHAT_UI_HTML = """<!doctype html>
       }
     }
 
-    function buildSourceList(items) {
+    function buildSourceList(items, mode) {
       if (!items || !items.length) {
-        return '<div class="source"><strong>参考来源</strong><div class="path">本次没有返回来源。</div></div>';
+        const text = mode === "direct"
+          ? "Direct 模式不会检索本地来源。"
+          : "本次没有返回来源。";
+        return `<div class="source"><strong>参考来源</strong><div class="path">${esc(text)}</div></div>`;
       }
       return items.map(item => `
         <div class="source">
@@ -585,6 +601,17 @@ CHAT_UI_HTML = """<!doctype html>
       `;
     }
 
+    function modeLabel(mode) {
+      return mode === "direct" ? "direct" : "rag";
+    }
+
+    function llmChip(mode, usedRemote) {
+      if (mode === "direct") {
+        return usedRemote ? "direct LLM" : "direct unavailable";
+      }
+      return usedRemote ? "remote LLM" : "local mock";
+    }
+
     function renderReasoningCards(cards) {
       if (!cards || !cards.length) {
         return "";
@@ -624,14 +651,19 @@ CHAT_UI_HTML = """<!doctype html>
     function appendLoadingMessage() {
       ensureThreadActive();
       const id = `msg-${++messageCounter}`;
+      const currentMode = chatModeEl.value || "rag";
+      const avatar = currentMode === "direct" ? "DIR" : "RAG";
+      const loadingText = currentMode === "direct"
+        ? "正在直接调用大模型..."
+        : "正在检索证据并整理回复...";
       const node = document.createElement("div");
       node.className = "message assistant";
       node.id = id;
       node.innerHTML = `
-        <div class="avatar assistant">RAG</div>
+        <div class="avatar assistant">${avatar}</div>
         <div class="bubble">
           <div class="bubble-head"><strong>助手</strong><span>${nowTime()}</span></div>
-          <div class="bubble-body loading">正在检索证据并整理回复...</div>
+          <div class="bubble-body loading">${loadingText}</div>
         </div>
       `;
       threadEl.appendChild(node);
@@ -654,13 +686,15 @@ CHAT_UI_HTML = """<!doctype html>
         return;
       }
 
+      const mode = data.mode || "rag";
       target.innerHTML = `
-        <div class="avatar assistant">RAG</div>
+        <div class="avatar assistant">${mode === "direct" ? "DIR" : "RAG"}</div>
         <div class="bubble">
           <div class="bubble-head"><strong>助手</strong><span>${nowTime()}</span></div>
           <div class="bubble-body">${renderMarkdownish(data.answer)}</div>
           <div class="assistant-meta">
-            <span class="chip">${data.used_remote_llm ? "remote LLM" : "local mock"}</span>
+            <span class="chip">${llmChip(mode, Boolean(data.used_remote_llm))}</span>
+            <span class="chip">mode=${esc(modeLabel(mode))}</span>
             <span class="chip">plugin_type=${esc(data.plugin_type)}</span>
             <span class="chip">latency=${Number(data.latency_seconds).toFixed(3)}s</span>
             <span class="chip">symbols=${(data.used_symbols || []).length}</span>
@@ -668,16 +702,25 @@ CHAT_UI_HTML = """<!doctype html>
           ${renderReasoningCards((data.retrieval_trace || {}).reasoning_cards || [])}
           ${renderLlmTrace(data.llm_trace || {}, Boolean(data.used_remote_llm))}
           ${renderRetrievalTrace(data.retrieval_trace || {})}
-          <div class="sources">${buildSourceList(data.sources || [])}</div>
+          <div class="sources">${buildSourceList(data.sources || [], mode)}</div>
         </div>
       `;
       threadEl.scrollTop = threadEl.scrollHeight;
     }
 
     function syncSessionMeta() {
-      sessionMetaEl.textContent = `plugin_type=${pluginTypeEl.value || "自动判断"} · top_k=${contextBudgetEl.value || "10"}`;
+      const mode = chatModeEl.value || "rag";
+      const isDirect = mode === "direct";
+      contextBudgetEl.disabled = isDirect;
+      contextBudgetEl.title = isDirect ? "Direct 模式不会使用检索条数" : "";
+      sessionMetaEl.textContent = `mode=${modeLabel(mode)} · plugin_type=${pluginTypeEl.value || "自动判断"} · top_k=${isDirect ? "-" : (contextBudgetEl.value || "10")}`;
+      document.getElementById("composer-hint").textContent = isDirect
+        ? "当前模式会直接转发本轮输入给大模型"
+        : "当前模式会先检索本地证据，再交给生成链路";
+      statusEl.textContent = "等待提问";
     }
 
+    chatModeEl.addEventListener("change", syncSessionMeta);
     pluginTypeEl.addEventListener("change", syncSessionMeta);
     contextBudgetEl.addEventListener("input", syncSessionMeta);
     presetQuestionEl.addEventListener("input", () => {
@@ -696,6 +739,7 @@ CHAT_UI_HTML = """<!doctype html>
       event.preventDefault();
       const payload = {
         question: questionEl.value.trim(),
+        mode: chatModeEl.value || "rag",
         plugin_type: pluginTypeEl.value || null,
         context_budget: Number(contextBudgetEl.value || 10)
       };
@@ -708,7 +752,7 @@ CHAT_UI_HTML = """<!doctype html>
       appendUserMessage(payload.question);
       const loadingId = appendLoadingMessage();
       submitBtn.disabled = true;
-      statusEl.textContent = '正在检索和生成...';
+      statusEl.textContent = payload.mode === "direct" ? '正在直接调用大模型...' : '正在检索和生成...';
       try{
         const resp = await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
         const data = await resp.json();

@@ -1,546 +1,262 @@
 # RAGLocal 技术教程
 
-这份文档面向开发者，重点解释三件事：
+这份文档面向开发者，解释当前真实实现的技术链路，而不是概念版流程。
 
-1. 当前系统是否真的调用了 AI
-2. 现有聊天界面的“上下文”到底到哪一层
-3. 现在的 RAG 为什么比之前更接近人工写插件的工作流
-4. 如果要做真正的多轮上下文记忆，应该怎么设计
+## 1. 当前是否真的存在 AI 调用
 
-## 1. 当前是否存在 AI 调用
+存在，但分两种模式。
 
-存在，但它是“可选启用”的。
+### 1.1 RAG 模式
 
-当前代码路径是：
+入口：
+- `src/rag_codegen/app.py`
+- `POST /chat` with `mode="rag"`
+- `POST /generate`
 
-1. `src/rag_codegen/app.py`
-   `POST /chat` 和 `POST /generate` 都会进入生成链路。
+链路：
+1. `Generator.generate(...)`
+2. `Retriever.retrieve(...)`
+3. `Generator._generate_text(...)`
+4. 如果启用 LLM，就发 OpenAI-compatible `chat/completions`
+5. 如果自检失败且 LLM 可用，可能触发一次修订调用
 
-2. `src/rag_codegen/generate.py`
-   `Generator.generate(...)` 会调用 `_generate_text(...)`。
+### 1.2 Direct 模式
 
-3. `src/rag_codegen/llm.py`
-   如果检测到 LLM 配置存在，就会发起一次 OpenAI-compatible `chat/completions` HTTP 请求。
+入口：
+- `src/rag_codegen/app.py`
+- `POST /chat` with `mode="direct"`
 
-### 什么时候会真的调用外部 AI
+链路：
+1. `Generator.direct_chat(...)`
+2. 不走检索
+3. 只把当前用户输入发给 LLM
 
-只有当下面 3 个环境变量都配置了，`LLMClient.enabled` 才会是 `True`：
+## 2. 哪些环境变量决定 LLM 是否可用
 
+文件：
+- `src/rag_codegen/config.py`
+- `src/rag_codegen/llm.py`
+
+启用条件：
 - `LLM_BASE_URL`
 - `LLM_API_KEY`
 - `LLM_MODEL`
 
-相关代码：
-- `src/rag_codegen/config.py`
-- `src/rag_codegen/llm.py`
+可选：
+- `LLM_TIMEOUT_SECONDS`
 
-### 没配置时会发生什么
+`LLMClient.enabled` 只有在前三个都存在时才为 `True`。
 
-如果没有配置这些变量，或者请求失败，系统会退回本地 mock generation。
+## 3. 当前聊天接口的真实行为
 
-也就是说：
+文件：
+- `src/rag_codegen/schemas.py`
+- `src/rag_codegen/app.py`
 
-- 服务仍然能正常工作
-- `/chat` 和 `/generate` 仍然会返回结果
-- 但结果更偏模板和示例，不是强定制的真实 LLM 输出
+`ChatRequest` 现在包含：
+- `question`
+- `plugin_type`
+- `context_budget`
+- `mode`
 
-### 当前 AI 调用的两个位置
+其中：
+- `mode="rag"`
+  进入标准检索增强流程
+- `mode="direct"`
+  直接转发当前输入给大模型
 
-#### 第一次生成
-
-在 `Generator._generate_text(...)` 里：
-
-- 先把需求、插件类型、analysis、evidence cards 组织成 prompt
-- 再调用 `self.llm.chat(...)`
-
-#### 第二次修订
-
-在 `Generator._revise(...)` 里：
-
-- 如果自检发现无效符号或缺失方法
-- 并且 LLM 已启用
-- 会再次调用 `self.llm.chat(...)` 尝试修订草稿
-
-所以真实 LLM 场景下，一次请求最多可能触发两次外部 AI 调用：
-
-1. 初次生成
-2. 自检后修订
-
-### 现在怎么确认到底发了什么给 LLM
-
-`/chat` 和 `/generate` 现在都会返回：
-
+`ChatResponse` 现在会包含：
+- `mode`
+- `answer`
+- `sources`
+- `retrieval_trace`
 - `used_remote_llm`
 - `llm_trace`
 
-其中 `llm_trace` 会包含：
+## 4. RAG 模式内部做了什么
 
-- `request_messages`
-- `request_payload`
-- `response_text`
-- `usage`
-- `fallback_reason`
-- `revision`（如果发生了修订）
+文件：
+- `src/rag_codegen/retrieve.py`
+- `src/rag_codegen/generate.py`
 
-首页聊天界面里也新增了折叠面板，你可以直接展开看本轮 prompt 和返回内容。
+### 4.1 检索规划
 
-## 2. 当前聊天界面的上下文现状
-
-当前首页已经是聊天式 UI，但它的“上下文”主要是前端展示层面的，不是后端真正的会话记忆。
-
-### 现在实际发生的事情
-
-每次你在页面里发送一条消息：
-
-1. 前端把当前这一条问题发到 `POST /chat`
-2. 后端按这条问题独立执行：
-   - plugin type 判断
-   - retrieval
-   - generation
-   - self-check
-3. 前端把这次回复追加到聊天记录里
-
-### 这意味着什么
-
-现在的聊天界面具备：
-
-- 多轮消息展示
-- 页面内历史可见
-- 连续提问体验更自然
-
-但当前还不具备：
-
-- 后端 session 级历史记忆
-- 自动携带上一轮问答进入下一轮 prompt
-- 长对话压缩总结
-- 跨刷新持久会话
-
-一句话说：
-
-当前是“聊天外观 + 单轮后端”。
-
-## 3. `PYTHONPATH=src uv run uvicorn rag_codegen.app:app --host 0.0.0.0 --port 8000` 在做什么
-
-这是启动服务的命令。
-
-分开看：
-
-### `PYTHONPATH=src`
-
-把 `src` 目录加进 Python 的模块搜索路径。
-
-因为代码放在：
-
-- `src/rag_codegen/app.py`
-
-如果不加这段，Python 可能找不到 `rag_codegen` 这个包。
-
-### `uv run`
-
-表示用 `uv` 管理的项目环境来运行后面的命令。
-
-作用是：
-
-- 使用当前项目安装好的依赖
-- 避免混用系统 Python 环境
-
-### `uvicorn`
-
-这是一个 ASGI 服务器，用来运行 FastAPI 应用。
-
-### `rag_codegen.app:app`
-
-意思是：
-
-- 导入模块 `rag_codegen.app`
-- 找到里面名为 `app` 的 FastAPI 对象
-- 把这个对象作为 Web 服务入口启动
-
-### `--host 0.0.0.0`
-
-监听所有网络接口。
-
-这样不仅能通过本机 `localhost` 访问，在同网段场景下也更容易被外部访问到。
-
-### `--port 8000`
-
-把服务绑定到 `8000` 端口。
-
-所以访问地址就是：
-
-- `http://localhost:8000/`
-
-## 4. `/ingest` 这条 curl 命令在做什么
-
-命令如下：
-
-```bash
-curl -X POST http://localhost:8000/ingest \
-  -H 'Content-Type: application/json' \
-  -d '{"doc_root":"sample/plugin","rebuild":true,"enable_pdf":false}'
-```
-
-它的作用是“导入文档并重建检索索引”。
-
-### `POST /ingest`
-
-调用后端导入接口。
-
-### `doc_root: "sample/plugin"`
-
-告诉系统去扫描 `sample/plugin` 目录下的文档和示例代码。
-
-### `rebuild: true`
-
-表示先清空旧数据，再完整重建。
-
-当前会影响：
-
-- SQLite chunks
-- SQLite symbols
-- FTS 数据
-- dense index
-
-### `enable_pdf: false`
-
-本次不解析 PDF，只处理：
-
-- HTML JavaDoc
-- Java 示例
-
-项目现在已经正式依赖 `pypdf`，所以把 `enable_pdf` 改成 `true` 时，容器和本地环境都会尝试解析 PDF。
-
-需要注意：
-
-- 当前 PDF 是否纳入索引，还取决于文件名能否映射到支持的插件类型
-- 目前主要识别：
-  - `action`
-  - `drc`
-  - `constraint`
-- 其他更泛化的 PDF 指南如果没有映射到这些类型，当前仍可能跳过
-
-### 执行之后会产出什么
-
-系统会把结果写到：
-
-- `runtime/raglocal.db`
-- `runtime/dense_index.npz`
-
-之后 `/retrieve`、`/generate`、`/chat` 才能基于这些数据做 RAG。
-
-## 5. 现在的 RAG 为什么更接近人工写插件流程
-
-你前面描述的人工工作流大致是：
-
-1. 先拆子目标
-2. 把子目标转成英文/API 概念去搜
-3. 找到 API 后，再补父类、关联类、继承方法
-4. 最后结合示例拼代码
-
-现在后端已经朝这个方向做了几件事。
-
-### 3.1 Query plan 不再只是平铺关键字
-
-`build_query_profile(...)` 现在除了 `retrieval_query`，还会生成：
-
+系统会先构建 query profile，包括：
 - `subgoals`
 - `english_terms`
 - `api_terms`
 - `relation_terms`
 - `example_terms`
 
-这意味着检索阶段不再只是“整句直接搜”，而是先把问题组织成一个更像人工检索计划的结构。
+这个阶段的目的，是把中文需求转成更接近 API 文档与示例检索习惯的检索计划。
 
-### 3.2 检索顺序改成 API-first
+### 4.2 分阶段检索
 
-`Retriever.retrieve(...)` 现在不是单段检索，而是分阶段：
+当前检索不是一次性搜索，而是分阶段：
+- general lookup
+- API lookup
+- example lookup
+- guide lookup
 
-1. `general_lookup`
-2. `api_lookup`
-3. `example_lookup`
-4. `guide_lookup`
-5. 邻域扩展
-6. second-hop 扩展
+然后再做：
+- 融合排序
+- 关系扩展
+- 二跳扩展
+- 元数据重排
 
-其中 `api_lookup` 会优先看 `javadoc_html`，并优先使用 query-specific 的 API 术语。
+### 4.3 Reasoning Cards
 
-例如：
+检索层会产出 `reasoning_cards`，用来总结：
+- 当前识别出的目标对象
+- 推荐访问路径
+- 可能要调用的方法
+- 可以支撑答案的关键证据标题
 
-- `输出窗口` 会优先转成 `IXOutputWindow / println / IXApplicationContext`
-- `只读` 会优先转成 `isReadOnly`
+这些卡片会进入：
+- `retrieval_trace.reasoning_cards`
+- 网页界面展示
+- RAG prompt
 
-所以检索更容易先把关键接口拉出来，而不是一开始就被大批 example 淹没。
+### 4.4 生成
 
-### 3.3 ingest 里补了更细的 Javadoc 结构
+RAG prompt 由这些信息组成：
+- 原始需求
+- plugin type
+- analysis
+- retrieval plan
+- reasoning cards
+- evidence cards
 
-HTML ingest 现在会额外保留：
+如果 LLM 不可用，则回退到本地 mock generation。
 
-- class signature
-- superinterfaces
-- inherited methods
-- method summary description
+### 4.5 自检
 
-这点很重要，因为你提到要做“名字 -> description”的二级搜索。
+文件：
+- `src/rag_codegen/generate.py`
 
-以前 method chunk 更多只有签名。
-现在 method summary 的描述文本也会进 chunk，所以像：
+当前自检会检查：
+- 代码里用到的符号是否在索引里
+- 插件类型对应的关键方法是否缺失
 
-- 某方法是干什么的
-- 某接口适合什么场景
+如果 LLM 可用并发现问题，会尝试做一次 revision。
 
-这种信息更容易被检索到。
+## 5. Direct 模式内部做了什么
 
-### 3.4 方法重载不再互相覆盖
+文件：
+- `src/rag_codegen/generate.py`
 
-以前某些 overloaded method 可能因为 chunk id 太粗，后写入的覆盖先写入的。
+`Generator.direct_chat(...)` 的目标很明确：
 
-现在 method chunk id 会带上规范化后的签名，像：
+1. 不做 retrieval
+2. 不拼 evidence
+3. 只发送当前用户消息
+4. 返回模型原始回答
 
-- `clear()`
-- `clear(java.lang.String tab)`
+这条链路更适合：
+- 普通对话
+- 开放式需求分析
+- 验证模型效果
 
-会成为不同 chunk。
+如果没有配置 LLM，Direct 模式不会走本地 mock，而是直接提示你补齐 LLM 配置。
 
-这能减少 API 丢失。
+## 6. 当前“聊天上下文”到哪一层
 
-### 3.5 现在还能看到 retrieval_trace
+文件：
+- `src/rag_codegen/webui.py`
 
-`/chat` 和 `/generate` 现在还会返回 `retrieval_trace`。
+当前页面已经是聊天式 UI，但后端依旧是单轮接口。
 
-里面会包含：
+也就是说：
+- 浏览器里保留历史消息
+- 每次都追加显示
+- 但后端只处理本轮输入
 
-- `plan`
-- `stage_candidates`
-- `selected_titles`
-- `expanded_candidates`
-- `second_hop_candidates`
-
-所以你现在可以区分：
-
-- 是 RAG 没把资料召回来
-- 还是资料召回了，但 LLM 没用好
-
-## 6. 带上下文记忆应该怎么做
-
-如果要做“真正的多轮聊天”，建议分三层来做。
-
-## 6.1 第一层：最小可用记忆
-
-目标：
-
-- 不改太多后端
-- 尽快让下一轮能看到上一轮
-
-做法：
-
-1. 前端保存最近 N 轮对话
-2. 新增 `messages` 字段到 `POST /chat`
-3. 后端把最近几轮对话拼进 prompt
-
-例如请求结构可以变成：
-
-```json
-{
-  "question": "再补一个模板类",
-  "plugin_type": "action",
-  "context_budget": 10,
-  "messages": [
-    {"role": "user", "content": "生成一个只读 action"},
-    {"role": "assistant", "content": "..." }
-  ]
-}
-```
-
-优点：
-
-- 改动小
-- 很快能看到效果
-
-缺点：
-
-- prompt 会越来越长
-- 成本和延迟会上升
-- 长对话容易退化
-
-## 6.2 第二层：服务端会话记忆
-
-目标：
-
-- 让会话成为后端的一等对象
-- 支持刷新页面后继续聊
-
-建议新增：
-
+当前尚未实现：
 - `conversation_id`
-- `messages` 表
-- `conversation_summary` 表或字段
+- 消息持久化
+- 历史压缩摘要
+- 多轮记忆参与下一轮 prompt
 
-### 推荐数据结构
+## 7. 为什么当前 RAG 更接近人工写插件流程
 
-可以直接放进当前 SQLite：
+你前面描述的人类工作流大致是：
+1. 拆子目标
+2. 把目标转成英文/API 概念
+3. 找相关类和方法
+4. 再补父类、关联类、继承链
+5. 最后组合代码
 
-#### `conversations`
+当前系统已经把其中大部分动作显式化了：
 
-- `conversation_id`
-- `title`
-- `created_at`
-- `updated_at`
-- `plugin_type_last`
-- `summary_text`
+- query profile 负责拆子目标
+- API-first 检索负责先找接口定义
+- relation expansion 负责补父类、关联类、方法链
+- example lookup 负责补代码示例
+- reasoning cards 负责把“为什么这样找”显式化
 
-#### `conversation_messages`
+所以它已经不再是“粗暴搜几个 API 名字”，而是在向“可解释的检索规划器”演进。
 
-- `id`
-- `conversation_id`
-- `role`
-- `content`
-- `created_at`
-- `meta_json`
+## 8. 现在怎么排查效果问题
 
-### 请求流程建议
+### 8.1 回答太偏、太泛
 
-1. 前端第一次发消息时，不传 `conversation_id`
-2. 后端创建一个会话并返回 `conversation_id`
-3. 后续每轮都带上这个 `conversation_id`
-4. 后端从数据库取最近几轮历史，再参与生成
+先看：
+- `retrieval_trace.plan`
+- `retrieval_trace.selected_titles`
+- `retrieval_trace.reasoning_cards`
 
-## 6.3 第三层：摘要记忆 + 检索记忆
+问题通常在：
+- query plan 不够准
+- 证据不够完整
+- 文档本身没 ingest 到
 
-目标：
+### 8.2 LLM 似乎没拿到足够信息
 
-- 长对话也稳定
-- 控制 prompt 长度
+看：
+- `llm_trace.request_messages`
+- `llm_trace.response_text`
 
-推荐把上下文分成三块：
+这样可以确认：
+- 到底发了哪些证据
+- reasoning cards 有没有进 prompt
+- 模型实际怎样响应
 
-1. `recent turns`
-   最近 3 到 6 轮原始对话
+### 8.3 Direct 模式没有回答
 
-2. `conversation summary`
-   系统自动生成的会话摘要，例如：
-   - 当前插件类型
-   - 已确定的约束
-   - 用户偏好的输出形式
-   - 已生成过哪些类
+通常说明：
+- `LLM_BASE_URL`
+- `LLM_API_KEY`
+- `LLM_MODEL`
 
-3. `retrieved memory`
-   从历史消息中检索和当前问题最相关的内容
+至少有一个没配置对。
 
-最终 prompt 可以变成：
+## 9. 如果以后要做真正的上下文记忆
 
-1. system prompt
-2. developer prompt
-3. conversation summary
-4. recent turns
-5. current question
-6. retrieved evidence cards
+建议最小实现如下：
 
-## 7. 真正落地时建议怎么改代码
+1. 给 `POST /chat` 增加 `conversation_id`
+2. 新增消息存储表
+3. 每轮把最近 N 轮消息拼进 prompt
+4. 超长时做历史摘要
+5. 区分：
+   - RAG 证据上下文
+   - 会话历史上下文
 
-最稳妥的顺序是：
+这样可以避免把“用户历史”与“检索证据”混成一团。
 
-1. 扩展 schema
-   在 `src/rag_codegen/schemas.py` 给 `ChatRequest` 增加：
-   - `conversation_id`
-   - `messages`
+## 10. 关键文件总览
 
-2. 加会话存储
-   在 `src/rag_codegen/storage.py` 增加会话表和消息表
-
-3. 抽一个 chat service
-   新建例如：
-   - `src/rag_codegen/chat_service.py`
-
-   负责：
-   - 会话创建
-   - 历史加载
-   - 摘要压缩
-   - 组装最终 prompt
-
-4. 调整 `app.py`
-   让 `POST /chat` 返回：
-   - `conversation_id`
-   - `answer`
-   - `sources`
-   - 可选 `memory_summary`
-
-5. 调整前端
-   页面保存当前 `conversation_id`
-   每一轮继续带回后端
-
-## 8. 推荐的记忆策略
-
-如果现在开始做，我建议先这样：
-
-### Phase 1
-
-- 先做 `conversation_id`
-- 保存消息到 SQLite
-- 每轮带最近 4 轮上下文
-
-### Phase 2
-
-- 对超过阈值的历史做摘要
-- prompt 中只保留“摘要 + 最近 4 轮”
-
-### Phase 3
-
-- 对历史消息建立轻量检索
-- 针对当前问题召回最相关历史片段
-
-这样改动节奏最稳，也比较适合当前这个项目体量。
-
-## 9. 本次 RAG 优化做了什么
-
-这一版没有引入新的向量库或外部检索服务，而是先优化了当前本地检索链路：
-
-1. 查询扩展
-   对中文/英文混合需求补充 API 提示词，例如：
-   - `只读` -> `isReadOnly`
-   - `输出窗口` -> `IXOutputWindow`, `println`
-   - `菜单` -> `Trigger.MainMenu`, `Trigger.ContextMenu`
-
-2. 元数据重排
-   在 RRF 融合后，进一步考虑：
-   - title / class / method / signature 的匹配
-   - `java_example` 是否更适合当前问题
-   - method-level chunk 是否更适合当前问题
-   - read-only / output window 等意图提示
-
-3. 结果去重
-   避免最终 top-k 被同一个 source file 的多个近似 chunk 占满。
-
-4. 索引一致性修复
-   repeated ingest 后，`chunks / chunks_fts / symbols` 现在会重新同步，避免 FTS 漂移。
-
-## 10. 开发脚本
-
-现在可以使用：
-
-- `scripts/raglocal.py`
-
-常见命令：
-
-```bash
-uv run python scripts/raglocal.py setup
-uv run python scripts/raglocal.py ingest --doc-root sample/plugin
-uv run python scripts/raglocal.py serve --host 0.0.0.0 --port 8000
-uv run python scripts/raglocal.py dev --doc-root sample/plugin
-```
-
-## 11. Dokploy 部署文件
-
-已经准备好这些文件：
-
-- `Dockerfile`
-- `docker-compose.yml`
-- `.env.example`
-- `docker/start.sh`
-
-说明文档在：
-
-- `docs/dokploy_deploy.md`
-
-## 12. 当前状态一句话总结
-
-当前已经有可选的外部 AI 调用，但聊天记忆还只是前端展示层；如果要做真正多轮，需要把会话状态放到后端，并把“最近消息 + 摘要 + 检索记忆”一起送进生成链路。
+- `src/rag_codegen/app.py`
+  FastAPI 路由与模式分流
+- `src/rag_codegen/ingest.py`
+  文档解析与索引构建
+- `src/rag_codegen/storage.py`
+  SQLite 存储与查询
+- `src/rag_codegen/retrieve.py`
+  staged retrieval planner 与 evidence selection
+- `src/rag_codegen/generate.py`
+  RAG 生成、Direct 聊天、自检与修订
+- `src/rag_codegen/llm.py`
+  OpenAI-compatible LLM 客户端
+- `src/rag_codegen/webui.py`
+  单页聊天界面与 trace 展示

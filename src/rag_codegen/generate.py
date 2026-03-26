@@ -114,6 +114,7 @@ class Generator:
 
         return {
             "plugin_type": resolved_type,
+            "chat_mode": "rag",
             "analysis": analysis,
             "raw_answer": answer_text,
             "code_blocks": code_blocks,
@@ -125,6 +126,114 @@ class Generator:
             "used_remote_llm": used_remote_llm,
             "llm_trace": llm_trace,
         }
+
+    def direct_chat(
+        self,
+        question: str,
+        plugin_type: Optional[str] = None,
+    ) -> Dict:
+        t0 = time.time()
+        resolved_type = plugin_type
+        if not resolved_type:
+            resolved_type, _ = detect_plugin_type(question)
+
+        analysis = (
+            f"chat_mode=direct; plugin_type={resolved_type}; "
+            f"retrieval=disabled; llm_enabled={str(self.llm.enabled).lower()}"
+        )
+        messages = [{"role": "user", "content": question}]
+        request_payload = {
+            "model": self.llm.cfg.model,
+            "temperature": 0.7,
+            "max_tokens": 1800,
+            "messages": copy.deepcopy(messages),
+        }
+
+        if not self.llm.enabled:
+            answer_text = (
+                "Direct 模式会把当前输入直接转发给大模型。"
+                " 但当前未配置 LLM，请先设置 LLM_BASE_URL、LLM_API_KEY、LLM_MODEL。"
+            )
+            return {
+                "plugin_type": resolved_type,
+                "chat_mode": "direct",
+                "analysis": analysis,
+                "raw_answer": answer_text,
+                "code_blocks": [],
+                "used_symbols": [],
+                "self_check_report": {
+                    "invalid_symbols": [],
+                    "missing_required_methods": [],
+                    "fixed": False,
+                },
+                "evidence_cards": [],
+                "trace": {},
+                "latency_seconds": round(time.time() - t0, 3),
+                "used_remote_llm": False,
+                "llm_trace": {
+                    "enabled": False,
+                    "used_remote_llm": False,
+                    "request_messages": copy.deepcopy(messages),
+                    "request_payload": request_payload,
+                    "fallback_reason": "llm_disabled_direct_mode",
+                },
+            }
+
+        try:
+            content, usage = self.llm.chat(messages, temperature=0.7, max_tokens=1800)
+            code_blocks = self._extract_code_blocks(content)
+            used_symbols = sorted(set(extract_symbols("\n".join(code_blocks)))) if code_blocks else []
+            return {
+                "plugin_type": resolved_type,
+                "chat_mode": "direct",
+                "analysis": analysis,
+                "raw_answer": content,
+                "code_blocks": code_blocks,
+                "used_symbols": used_symbols,
+                "self_check_report": {
+                    "invalid_symbols": [],
+                    "missing_required_methods": [],
+                    "fixed": False,
+                },
+                "evidence_cards": [],
+                "trace": {},
+                "latency_seconds": round(time.time() - t0, 3),
+                "used_remote_llm": True,
+                "llm_trace": {
+                    "enabled": True,
+                    "used_remote_llm": True,
+                    "request_messages": copy.deepcopy(messages),
+                    "request_payload": request_payload,
+                    "response_text": content,
+                    "usage": usage,
+                },
+            }
+        except Exception as err:
+            answer_text = f"Direct 模式调用大模型失败：{err}"
+            return {
+                "plugin_type": resolved_type,
+                "chat_mode": "direct",
+                "analysis": analysis,
+                "raw_answer": answer_text,
+                "code_blocks": [],
+                "used_symbols": [],
+                "self_check_report": {
+                    "invalid_symbols": [],
+                    "missing_required_methods": [],
+                    "fixed": False,
+                },
+                "evidence_cards": [],
+                "trace": {},
+                "latency_seconds": round(time.time() - t0, 3),
+                "used_remote_llm": False,
+                "llm_trace": {
+                    "enabled": True,
+                    "used_remote_llm": False,
+                    "request_messages": copy.deepcopy(messages),
+                    "request_payload": request_payload,
+                    "fallback_reason": str(err),
+                },
+            }
 
     def _generate_text(
         self,

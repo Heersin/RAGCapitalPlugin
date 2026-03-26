@@ -106,16 +106,23 @@ def generate(req: GenerateRequest) -> GenerateResponse:
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
     try:
-        res = generator.generate(
-            requirement=req.question,
-            plugin_type=req.plugin_type,
-            context_budget=req.context_budget,
-            retrieval_mode="hybrid",
-            self_check_enabled=True,
-        )
+        if req.mode == "direct":
+            res = generator.direct_chat(
+                question=req.question,
+                plugin_type=req.plugin_type,
+            )
+        else:
+            res = generator.generate(
+                requirement=req.question,
+                plugin_type=req.plugin_type,
+                context_budget=req.context_budget,
+                retrieval_mode="hybrid",
+                self_check_enabled=True,
+            )
         return ChatResponse(
+            mode=res.get("chat_mode", req.mode),
             plugin_type=res["plugin_type"],
-            answer=build_chat_answer(res),
+            answer=res["raw_answer"] if res.get("chat_mode") == "direct" else build_chat_answer(res),
             analysis=res["analysis"],
             code_blocks=res["code_blocks"],
             used_symbols=res["used_symbols"],

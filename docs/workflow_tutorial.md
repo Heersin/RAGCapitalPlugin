@@ -1,188 +1,148 @@
 # RAGLocal 当前工作流教程
 
-这份教程说明当前仓库是怎么工作的，以及现在新增的简易问答界面该怎么用。
+这份教程面向使用者，说明现在这个项目从导入文档到网页聊天的完整工作流。
 
-## 1. 这个项目在做什么
+## 1. 先理解系统在做什么
 
-这是一个本地优先的 RAG 原型，用来基于已有文档和示例代码，生成插件代码。
+这个项目不是“直接问大模型写代码”。
 
-目前支持三类插件：
-- `action`
-- `drc`
-- `constraint`
+默认推荐流程是：
+1. 先把本地文档导入为知识库
+2. 提问时先检索 API 与示例
+3. 再把证据交给生成层
+4. 最后把答案、代码、来源和 trace 返回给你
 
-文档来源主要是：
-- JavaDoc HTML
-- Java 示例代码
-- 可选 PDF
+同时，系统现在也支持一个纯直连模式：
 
-现在 PDF 解析依赖已经内置到项目里，开启 `enable_pdf=true` 就可以参与导入。
+- `RAG`
+  先查本地知识，再回答
+- `Direct`
+  不查本地，直接把当前输入发给大模型
 
-系统目标不是直接“瞎写”代码，而是尽量先检索文档证据，再带着证据去生成，从而减少 API 幻觉。
+## 2. 启动服务
 
-## 2. 当前工作流总览
+安装依赖：
 
-整个流程可以理解成 5 步：
+```bash
+uv sync --extra dev
+```
 
-1. `ingest`
-   把 `sample/plugin` 这类文档目录扫描一遍，切成结构化 chunk，写入 SQLite 和向量索引。
+启动服务：
 
-2. `retrieve`
-   当你提问时，系统先判断你更像在问 `action / drc / constraint` 中的哪一类插件，再按“拆子目标 -> 先找 API -> 扩关系 -> 补示例”的顺序召回证据。
+```bash
+PYTHONPATH=src uv run uvicorn rag_codegen.app:app --host 0.0.0.0 --port 8000
+```
 
-3. `generate`
-   生成层拿着需求、插件类型和检索到的 evidence cards，调用 LLM 或本地 mock 生成结果。
+浏览器打开：
 
-4. `self-check`
-   生成后会检查代码里引用的符号是否存在、关键方法是否缺失；如果配置了 LLM，还会尝试自动修正一次。
+```text
+http://localhost:8000/
+```
 
-5. `return`
-   以前主要返回结构化 JSON。现在新增了网页问答页和 `POST /chat`，会把结果整理成更直接的答案。
+## 3. 第一次必须做的事：ingest
 
-## 3. 代码结构
+如果你还没有导入文档，RAG 效果会很弱，因为本地知识库还是空的。
 
-核心目录在 `src/rag_codegen`：
+执行：
 
-- `app.py`
-  FastAPI 入口，暴露所有 HTTP 接口。
+```bash
+curl -X POST http://localhost:8000/ingest \
+  -H 'Content-Type: application/json' \
+  -d '{"doc_root":"sample/plugin","rebuild":true,"enable_pdf":true}'
+```
 
-- `ingest.py`
-  文档导入逻辑。负责扫描 `.html`、`.java`、可选 `.pdf`，并切分成 chunk。
+参数说明：
 
-- `storage.py`
-  SQLite 存储层。维护：
-  - `chunks`
-  - `chunks_fts`
-  - `symbols`
+- `doc_root`
+  要扫描的文档根目录
+- `rebuild=true`
+  清空旧索引并完整重建
+- `enable_pdf=true`
+  连 PDF 也一起解析
 
-- `retrieve.py`
-  检索层。现在会先构建 query plan，再组合 BM25、dense search、RRF、多阶段召回和 1-2 跳关系扩展。
+导入完成后，数据会落到：
+- `runtime/raglocal.db`
+- `runtime/dense_index.npz`
 
-- `generate.py`
-  生成层。先分析需求，再调用 LLM 或 mock 输出代码，并做自检。
+## 4. 网页聊天怎么用
 
-- `llm.py`
-  OpenAI-compatible Chat Completions 客户端。
+首页现在已经是聊天界面。
 
-- `schemas.py`
-  所有请求和响应模型。
+你可以设置：
+- `回答模式`
+  - `RAG（检索增强）`
+  - `Direct（直连大模型）`
+- `插件类型`
+  - 自动判断
+  - `action`
+  - `drc`
+  - `constraint`
+- `检索条数`
+  只在 `RAG` 模式下生效
 
-- `webui.py`
-  新增的简易网页界面和聊天结果格式化逻辑。
+然后在底部输入问题直接发送。
 
-## 4. ingest 阶段到底做了什么
+## 5. 两种模式分别适合什么
 
-`POST /ingest` 会调用 `Ingestor.ingest(...)`。
+### 5.1 RAG
 
-它主要做这些事：
+适合：
+- 查 API
+- 找类、父类、方法关系
+- 基于本地文档生成插件代码
+- 想看证据来源和推理过程
 
-1. 扫描目录下的 HTML / Java / PDF 文件。
-2. 从路径判断这些文件属于哪类插件：
-   - `action`
-   - `drc`
-   - `constraint`
-   - 或 `core`
-3. 生成不同粒度的 chunk：
-   - 类级 chunk
-   - 方法级 chunk
-   - 示例代码 chunk
-4. 提取符号列表 `symbols`
-5. 写入 SQLite
-6. 构建 `runtime/dense_index.npz`
-
-产物位置：
-- SQLite: `runtime/raglocal.db`
-- 向量索引: `runtime/dense_index.npz`
-
-如果你还没有先执行 `ingest`，后面的检索和生成仍然能跑，但效果会明显变差，因为缺少证据。
-
-## 5. retrieve 阶段怎么选资料
-
-`POST /retrieve` 会进入 `Retriever.retrieve(...)`。
-
-这里的逻辑是：
-
-1. 根据问题文字推断插件类型，或者使用你显式传入的 `plugin_type_hint`
-2. 把问题整理成一个 query plan：
-   - `subgoals`
-   - `english_terms`
-   - `api_terms`
-   - `relation_terms`
-   - `example_terms`
-3. 在允许的类型范围里检索：
-   - 当前类型
-   - `core`
-4. 分阶段召回：
-   - `general_lookup`
-   - `api_lookup`
-   - `example_lookup`
-   - `guide_lookup`
-5. 用 RRF 融合两边结果
-6. 再做邻域扩展：
-   - 同 source file
-   - symbol link
-   - class link
-   - method link
-   - second-hop 扩展
-7. 再用 query、title、显式 API symbol、read-only / output-window 语义做加权
-8. 产出 `evidence_cards`
-
-这些 `evidence_cards` 就是后面生成时给模型看的参考材料。
-
-现在 `/chat` 和 `/generate` 也会把 `retrieval_trace` 一并返回，所以你可以看到这轮到底是怎样检索出来的。
-
-## 6. generate 阶段怎么出答案
-
-`POST /generate` 会进入 `Generator.generate(...)`。
-
-生成过程大致如下：
-
-1. 确定 `plugin_type`
-2. 调用检索拿上下文
-3. 做一个轻量 requirement analysis
-4. 调用 LLM 生成文本
-5. 如果没配 LLM，就使用本地 mock generation
-6. 提取代码块
-7. 执行 self-check
-8. 有问题时尝试自动修订
-
-`/generate` 返回的还是结构化结果，适合程序消费，包括：
-- `analysis`
-- `code_blocks`
-- `used_symbols`
-- `self_check_report`
-- `evidence_cards`
-
-## 7. 新增的简易问答界面是什么
-
-现在新增了两个更适合人工使用的入口：
-
-### `GET /`
-
-这是浏览器页面。你打开：
-
-`http://localhost:8000/`
-
-就能直接：
-- 输入问题
-- 选择插件类型或自动判断
-- 设置检索条数
-- 点击按钮获取整理后的答案
-
-页面会展示：
-- 生成后的可读答案
+它会返回：
+- 整理后的答案
 - 代码块
-- 关键来源
-- LLM 调用详情
-- retrieval plan / trace
+- 来源卡片
+- reasoning cards
+- retrieval trace
+- llm trace
 
-这样就不需要你手动去看原始 JSON 了。
+### 5.2 Direct
 
-### `POST /chat`
+适合：
+- 普通聊天
+- 头脑风暴
+- 不依赖当前本地知识库的问题
+- 想直接测试你配置的大模型
 
-这是一个比 `/generate` 更贴近“问答”的接口。
+它会返回：
+- 模型原始回答
+- llm trace
 
-请求示例：
+它不会返回：
+- 本地来源
+- retrieval trace
+
+## 6. API 方式怎么用
+
+### 6.1 `POST /retrieve`
+
+只看检索结果，不做生成：
+
+```bash
+curl -X POST http://localhost:8000/retrieve \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"生成一个只读action，在输出窗口打印选中对象属性","plugin_type_hint":"action","top_k":8}'
+```
+
+### 6.2 `POST /generate`
+
+走完整 RAG 生成，但返回结构化 JSON：
+
+```bash
+curl -X POST http://localhost:8000/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"requirement":"生成一个只读action，在输出窗口打印选中对象属性","plugin_type":"action","context_budget":10}'
+```
+
+### 6.3 `POST /chat`
+
+更适合 UI 或人工使用。
+
+RAG 模式：
 
 ```bash
 curl -X POST http://localhost:8000/chat \
@@ -190,145 +150,74 @@ curl -X POST http://localhost:8000/chat \
   -d '{
     "question":"生成一个只读 action，在输出窗口打印选中对象属性",
     "plugin_type":"action",
-    "context_budget":10
+    "context_budget":10,
+    "mode":"rag"
   }'
 ```
 
-它内部仍然复用了原有生成链路，但返回中多了一个已经格式化好的 `answer` 字段，适合 UI 直接展示。
+Direct 模式：
 
-另外现在还会返回：
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "question":"请直接帮我分析这个需求应该怎样拆解",
+    "mode":"direct"
+  }'
+```
+
+## 7. 当前真实工作流
+
+### 7.1 RAG 工作流
+
+1. 前端把当前问题发到 `POST /chat`
+2. 后端先判断插件类型
+3. 构建 query plan
+4. 分阶段检索：
+   - API docs 优先
+   - 关系扩展
+   - 示例补充
+5. 生成答案
+6. 自检代码符号和关键方法
+7. 返回答案、来源和 trace
+
+### 7.2 Direct 工作流
+
+1. 前端把当前问题发到 `POST /chat`
+2. 后端识别到 `mode=direct`
+3. 跳过检索
+4. 直接把当前输入发给 LLM
+5. 返回模型回答和调用 trace
+
+## 8. 如何确认本轮有没有真的调用 LLM
+
+看返回字段：
 
 - `used_remote_llm`
 - `llm_trace`
-- `retrieval_trace`
 
-所以如果你怀疑“LLM 没拿到足够信息”，可以直接看：
+网页里也能展开查看：
+- 请求 messages
+- 请求 payload 摘要
+- 响应文本
+- usage
+- fallback 原因
 
-1. `retrieval_trace.plan`
-2. `retrieval_trace.selected_titles`
-3. `llm_trace.request_messages`
-4. `llm_trace.response_text`
+## 9. 当前上下文记忆到什么程度
 
-## 8. 推荐使用方式
+现在的聊天页面有“前端历史记录”，但后端仍然是单轮处理。
 
-如果你是手动使用，建议顺序如下：
+也就是：
+- 页面里看起来像多轮聊天
+- 但每次请求只处理当前问题
+- 不会自动把上一轮问答拼进下一轮 prompt
 
-1. 安装依赖
+## 10. 实际建议
 
-```bash
-uv sync --extra dev
-```
-
-2. 启动服务
-
-```bash
-PYTHONPATH=src uv run uvicorn rag_codegen.app:app --host 0.0.0.0 --port 8000
-```
-
-3. 打开浏览器页面
-
-`http://localhost:8000/`
-
-4. 先导入样例文档
-
-当前简易页面只负责提问和展示答案，文档导入仍然走 API：
-
-```bash
-curl -X POST http://localhost:8000/ingest \
-  -H 'Content-Type: application/json' \
-  -d '{"doc_root":"sample/plugin","rebuild":true,"enable_pdf":false}'
-```
-
-5. 回到页面直接提问
-
-例如：
-- `生成一个只读 action，在输出窗口打印选中对象属性`
-- `生成一个 drc，检查对象是否缺少某个属性`
-- `生成一个 constraint，对线长做额外限制`
-
-## 9. 如果配置了外部 LLM
-
-如果你设置了这些环境变量：
-
-- `LLM_BASE_URL`
-- `LLM_API_KEY`
-- `LLM_MODEL`
-- `LLM_TIMEOUT_SECONDS`
-
-那么生成会走真实 LLM。
-
-如果没有配置，系统会回退到本地 deterministic mock generation。
-
-这意味着：
-- 服务总能跑起来
-- 但未配置 LLM 时，答案更像模板示例，不是高质量定制生成
-
-## 10. 当前到底有没有 AI 调用
-
-有，但它是条件触发的，不是无条件存在。
-
-实际行为是：
-
-1. 如果已经配置：
-   - `LLM_BASE_URL`
-   - `LLM_API_KEY`
-   - `LLM_MODEL`
-
-   那么生成阶段会调用外部 OpenAI-compatible 接口。
-
-2. 如果没有配置这些变量，或者远程调用失败：
-   系统会退回到本地 mock generation。
-
-所以你看到页面能回答问题，不代表一定已经走了外部 AI。
-
-最准确的判断方式是看运行环境里有没有这些变量。
-
-## 11. 当前聊天界面的上下文范围
-
-现在首页已经是聊天式界面，但后端还不是“真正多轮记忆”。
-
-当前状态是：
-
-- 页面会保留本轮浏览器中的聊天记录
-- 但每次 `POST /chat` 仍然只根据“当前问题”做检索和生成
-- 历史消息没有进入后端 prompt
-- 刷新页面后也不会从后端恢复会话
-
-也就是说，目前是：
-
-`聊天式 UI + 单轮后端`
-
-## 12. 如果要做真正多轮上下文记忆
-
-建议按这条路径做：
-
-1. 给 `/chat` 增加 `conversation_id`
-2. 后端把消息落到 SQLite
-3. 每轮取最近几轮消息加入 prompt
-4. 长对话再引入 summary memory
-5. 最后加历史消息检索
-
-更完整的设计细节见：
-
-- `docs/technical_tutorial.md`
-
-## 13. 什么时候该用哪个接口
-
-- 用 `GET /`
-  你想直接在网页里问问题，看可读答案。
-
-- 用 `POST /chat`
-  你想保留结构化返回，但不想自己拼接答案。
-
-- 用 `POST /generate`
-  你要拿完整结构化结果做二次开发。
-
-- 用 `POST /retrieve`
-  你只想检查召回证据，不做生成。
-
-- 用 `POST /ingest`
-  你更新了文档或换了一批样本，需要重建索引。
-
-## 14. 一句话理解当前工作流
-
-先把文档和示例代码结构化入库，再做检索增强生成，最后把生成结果做一次插件 API 自检，并通过新的聊天页直接展示给你。
+- 做插件 API 问答和代码生成，用 `RAG`
+- 测试模型本身、做开放式对话，用 `Direct`
+- 如果回答不够好，先检查：
+  - 是否已经 ingest 完整文档
+  - 是否开启了 PDF
+  - `retrieval_trace` 里找到了哪些证据
+  - `llm_trace` 里实际发了什么 prompt

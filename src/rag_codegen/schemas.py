@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 
 PluginType = Literal["action", "drc", "constraint"]
+ChatMode = Literal["rag", "direct"]
 
 
 class IngestRequest(BaseModel):
@@ -73,6 +74,7 @@ class ChatRequest(BaseModel):
     question: str
     plugin_type: Optional[PluginType] = None
     context_budget: int = 10
+    mode: ChatMode = "rag"
 
 
 class ChatSource(BaseModel):
@@ -83,6 +85,7 @@ class ChatSource(BaseModel):
 
 
 class ChatResponse(BaseModel):
+    mode: ChatMode = "rag"
     plugin_type: PluginType
     answer: str
     analysis: str
