@@ -11,6 +11,13 @@ def build_chat_answer(result: Dict) -> str:
     lines = [f"插件类型：{result['plugin_type']}", ""]
 
     lines.extend(["需求分析：", result["analysis"]])
+    reasoning_cards = (result.get("trace") or {}).get("reasoning_cards", [])
+    if reasoning_cards:
+        lines.extend(["", "推理链："])
+        for card in reasoning_cards[:5]:
+            lines.append(f"{card.get('title', '步骤')}：{card.get('summary', '')}")
+            if card.get("candidate_calls"):
+                lines.append("建议调用：" + " | ".join(card["candidate_calls"][:2]))
     report = result["self_check_report"]
     if report.get("invalid_symbols") or report.get("missing_required_methods"):
         lines.extend(["", "自检提醒："])
@@ -578,6 +585,27 @@ CHAT_UI_HTML = """<!doctype html>
       `;
     }
 
+    function renderReasoningCards(cards) {
+      if (!cards || !cards.length) {
+        return "";
+      }
+      return `
+        <details class="trace-panel" open>
+          <summary>中间推理卡片</summary>
+          <div class="trace-content">
+            ${cards.map((card) => `
+              <div class="trace-block">
+                <div class="trace-title">${esc(card.title || "Step")}</div>
+                <pre>${esc(card.summary || "")}</pre>
+                ${card.candidate_calls && card.candidate_calls.length ? `<pre>${esc("Candidate calls: " + card.candidate_calls.join(" | "))}</pre>` : ""}
+                ${card.evidence_titles && card.evidence_titles.length ? `<pre>${esc("Evidence: " + card.evidence_titles.join(", "))}</pre>` : ""}
+              </div>
+            `).join("")}
+          </div>
+        </details>
+      `;
+    }
+
     function appendUserMessage(text) {
       ensureThreadActive();
       const node = document.createElement("div");
@@ -637,6 +665,7 @@ CHAT_UI_HTML = """<!doctype html>
             <span class="chip">latency=${Number(data.latency_seconds).toFixed(3)}s</span>
             <span class="chip">symbols=${(data.used_symbols || []).length}</span>
           </div>
+          ${renderReasoningCards((data.retrieval_trace || {}).reasoning_cards || [])}
           ${renderLlmTrace(data.llm_trace || {}, Boolean(data.used_remote_llm))}
           ${renderRetrievalTrace(data.retrieval_trace || {})}
           <div class="sources">${buildSourceList(data.sources || [])}</div>

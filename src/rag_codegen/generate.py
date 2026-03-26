@@ -30,6 +30,19 @@ def subgoals_to_text(plan: Dict) -> str:
     return "\n".join(lines) if lines else "No staged retrieval plan available."
 
 
+def reasoning_cards_to_text(cards: List[Dict]) -> str:
+    if not cards:
+        return "No reasoning cards available."
+    lines: List[str] = []
+    for card in cards[:6]:
+        lines.append(f"{card.get('title', 'Step')}: {card.get('summary', '')}")
+        if card.get("candidate_calls"):
+            lines.append("Candidate calls: " + " | ".join(card["candidate_calls"][:3]))
+        if card.get("evidence_titles"):
+            lines.append("Evidence: " + ", ".join(card["evidence_titles"][:5]))
+    return "\n".join(lines)
+
+
 class Generator:
     def __init__(self, settings: Settings, storage: Storage, retriever: Retriever):
         self.settings = settings
@@ -135,11 +148,13 @@ class Generator:
             )
 
         retrieval_plan = retrieval_trace.get("plan", {}) if retrieval_trace else {}
+        reasoning_cards = retrieval_trace.get("reasoning_cards", []) if retrieval_trace else []
         user_prompt = (
             f"Requirement:\n{requirement}\n\n"
             f"Plugin type: {plugin_type}\n"
             f"Structured analysis:\n{analysis}\n\n"
             f"Retrieval plan:\n{subgoals_to_text(retrieval_plan)}\n\n"
+            f"Reasoning cards:\n{reasoning_cards_to_text(reasoning_cards)}\n\n"
             "Please answer the user's request directly in natural language.\n"
             "Treat the retrieved evidence as the source of truth.\n"
             "You may include Java code blocks when useful, but do not force a fixed report template.\n"

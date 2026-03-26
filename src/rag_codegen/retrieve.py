@@ -158,6 +158,7 @@ class Retriever:
                     "symbols": c.get("symbols", [])[:30],
                 }
             )
+        reasoning_cards = self._build_reasoning_cards(profile, selected, chunk_map)
 
         trace = {
             "mode": mode,
@@ -188,6 +189,7 @@ class Retriever:
             "second_hop_candidates": len(expanded_second_hop),
             "final_candidates": len(combined),
             "selected_titles": [card["title"] for card in cards[:6]],
+            "reasoning_cards": reasoning_cards,
         }
 
         return RetrievalResult(plugin_type=plugin_type, evidence_cards=cards, trace=trace)
@@ -845,3 +847,131 @@ class Retriever:
             if len(titles) >= limit:
                 break
         return titles
+
+    def _build_reasoning_cards(
+        self,
+        profile: QueryProfile,
+        selected: List[Dict],
+        chunk_map: Dict[str, Dict],
+    ) -> List[Dict]:
+        ordered_chunks: List[Dict] = []
+        for item in selected:
+            chunk = chunk_map.get(item["chunk_id"])
+            if not chunk:
+                continue
+            ordered_chunks.append(chunk)
+
+        def pick_titles(predicate, limit: int = 4) -> List[str]:
+            titles: List[str] = []
+            seen = set()
+            for chunk in ordered_chunks:
+                title = chunk.get("title") or chunk.get("chunk_id")
+                if title in seen or not predicate(chunk):
+                    continue
+                seen.add(title)
+                titles.append(title)
+                if len(titles) >= limit:
+                    break
+            return titles
+
+        target_symbol = next((sym for sym in profile.target_symbols if sym not in {"IXObject", "IXAttributes"}), "")
+        attribute_name = profile.attribute_names[0] if profile.attribute_names else ""
+        target_focus_symbols = [sym for sym in profile.target_symbols if sym not in {"IXObject", "IXAttributes"}]
+        if target_symbol.endswith("Design"):
+            target_focus_symbols.append(target_symbol + "Action")
+        target_titles = pick_titles(
+            lambda chunk: any(
+                sym.lower() in (chunk.get("title", "") + " " + chunk.get("class_name", "")).lower()
+                for sym in target_focus_symbols
+            )
+        )
+        access_method_names = {"getSelectedObjects", "getCurrentDesign"}
+        access_titles = pick_titles(
+            lambda chunk: chunk.get("method_name") in access_method_names
+        )
+        attribute_titles = pick_titles(
+            lambda chunk: chunk.get("title") in {f"IXAttributes.{name}" for name in profile.attribute_names}
+            or chunk.get("title") in {"IXObject.getAttribute", "IXObject.getAttributes", "IXAttributes"}
+        )
+        output_titles = pick_titles(
+            lambda chunk: "outputwindow" in (chunk.get("title", "") + " " + chunk.get("class_name", "")).lower()
+            or "println" == chunk.get("method_name", "")
+        )
+
+        cards: List[Dict] = []
+
+        if target_titles:
+            cards.append(
+                {
+                    "id": "target_object",
+                    "title": "1. 目标对象",
+                    "summary": f"当前问题的核心对象更像是 `{target_symbol or 'IXObject'}`，插件接口优先落在 `{target_titles[0]}` 这一侧。",
+                    "evidence_titles": target_titles,
+                    "suggested_api": target_titles[0],
+                }
+            )
+
+        if access_titles:
+            candidate_calls: List[str] = []
+            if target_symbol and "IXBaseCurrentContext.getSelectedObjects" in access_titles:
+                candidate_calls.append(f"applicationContext.getSelectedObjects({target_symbol}.class)")
+            if target_symbol and "IXCurrentContext.getSelectedObjects" in access_titles:
+                candidate_calls.append(f"currentContext.getSelectedObjects({target_symbol}.class)")
+            if target_symbol.endswith("Design") and "IXCurrentContext.getCurrentDesign" in access_titles:
+                candidate_calls.append(f"{target_symbol} design = ({target_symbol}) applicationContext.getCurrentDesign()")
+            cards.append(
+                {
+                    "id": "access_path",
+                    "title": "2. 获取路径",
+                    "summary": "先找到能拿到目标对象的方法，再决定后续属性读取是基于当前设计还是当前选中对象。",
+                    "evidence_titles": access_titles,
+                    "candidate_calls": candidate_calls[:3],
+                }
+            )
+
+        if attribute_titles:
+            candidate_attr_calls: List[str] = []
+            if attribute_name:
+                candidate_attr_calls.append(f"xObj.getAttribute(IXAttributes.{attribute_name})")
+                candidate_attr_calls.append(f'xObj.getAttribute("{attribute_name}")')
+            cards.append(
+                {
+                    "id": "attribute_access",
+                    "title": "3. 属性读取",
+                    "summary": f"属性读取证据集中在 `IXObject.getAttribute(...)`，而属性常量优先对应 `IXAttributes.{attribute_name}`。" if attribute_name else "属性读取证据集中在 `IXObject.getAttribute(...)`。",
+                    "evidence_titles": attribute_titles,
+                    "candidate_calls": candidate_attr_calls[:2],
+                }
+            )
+
+        if output_titles:
+            cards.append(
+                {
+                    "id": "output_path",
+                    "title": "4. 输出路径",
+                    "summary": "结果输出仍然建议走 output window 这条链。",
+                    "evidence_titles": output_titles,
+                    "candidate_calls": ["applicationContext.getOutputWindow().println(value)"],
+                }
+            )
+
+        synthesis_lines: List[str] = []
+        if target_symbol:
+            synthesis_lines.append(f"实现 `{target_symbol}Action` 一类接口")
+        if access_titles:
+            synthesis_lines.append("先从 current/selection context 拿到目标对象")
+        if attribute_titles and attribute_name:
+            synthesis_lines.append(f"再通过 `getAttribute(IXAttributes.{attribute_name})` 读取属性")
+        if output_titles:
+            synthesis_lines.append("最后用 output window 打印")
+        if synthesis_lines:
+            cards.append(
+                {
+                    "id": "synthesis",
+                    "title": "5. 组合建议",
+                    "summary": " -> ".join(synthesis_lines),
+                    "evidence_titles": list(dict.fromkeys(target_titles + access_titles + attribute_titles + output_titles))[:6],
+                }
+            )
+
+        return cards
