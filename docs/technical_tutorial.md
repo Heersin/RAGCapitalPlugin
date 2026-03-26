@@ -196,9 +196,79 @@ RAG prompt 由这些信息组成：
 
 所以它已经不再是“粗暴搜几个 API 名字”，而是在向“可解释的检索规划器”演进。
 
-## 8. 现在怎么排查效果问题
+## 8. `reasoning cards` 有论文支撑吗
 
-### 8.1 回答太偏、太泛
+有，但需要说准确一点：
+
+- `reasoning card` 不是某一篇论文里的标准术语
+- 它是本项目对“中间推理状态可视化”的工程化命名
+- 更准确地说，它受几条研究脉络启发，再结合本项目的 API 检索场景做了落地改造
+
+### 8.1 对应的研究脉络
+
+1. 显式中间推理步骤
+
+   [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
+
+   这篇工作证明了，把中间推理步骤显式展开，能提升复杂推理表现。我们的 `reasoning cards` 本质上也是把“当前推理到哪一步”显式化，只是我们没有直接照搬自由文本 CoT，而是把它压成更稳定的结构化卡片。
+
+2. 中间 scratchpad / workpad
+
+   [Show Your Work: Scratchpads for Intermediate Computation with Language Models](https://arxiv.org/abs/2112.00114)
+
+   这篇工作强调，让模型输出中间计算过程会显著改善多步任务。`reasoning cards` 可以看成面向 RAG 检索场景的一种 scratchpad：不是暴露全部原始思维，而是保留足够有用的中间状态，例如目标对象、候选调用、证据标题、下一步访问路径。
+
+3. 先拆子问题，再逐步求解
+
+   [Measuring and Narrowing the Compositionality Gap in Language Models](https://arxiv.org/abs/2210.03350)
+
+   这篇论文里的 `self-ask` 思路，是先提出 follow-up questions，再回答原问题。我们现在的 staged retrieval plan 和 reasoning cards，与它在方法论上很接近：先把需求拆成子目标，再决定应该搜什么 API、再补什么关联关系。
+
+4. 推理与检索交替推进
+
+   [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
+
+   [Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions](https://arxiv.org/abs/2212.10509)
+
+   `ReAct` 强调推理轨迹和外部动作交替进行，`IRCoT` 则更直接指出：下一步检索什么，取决于前面已经推导出了什么。我们现在的 reasoning cards 正是把这类“推理驱动检索”的中间状态显式记录下来，供后续检索和生成使用。
+
+5. 生成后再校验
+
+   [Large Language Models are Better Reasoners with Self-Verification](https://arxiv.org/abs/2212.09561)
+
+   这条脉络支持“先生成，再验证”的设计。虽然它不是 reasoning card 本身的来源，但解释了为什么我们会把中间状态、候选路径、自检结果都暴露出来，因为这些结构对后续 revision 和人工排查都更友好。
+
+### 8.2 本项目和论文的关系
+
+如果要一句话总结：
+
+- CoT / Scratchpad 给了“显式中间步骤”的依据
+- Self-Ask 给了“先拆子目标再推进”的依据
+- ReAct / IRCoT 给了“推理和检索要互相驱动”的依据
+- Self-Verification 给了“中间状态应该服务于后验检查”的依据
+
+而本项目的 `reasoning cards`，就是把这些思想压缩成更适合 API RAG 的结构化表示。
+
+### 8.3 为什么没有直接输出自由文本 CoT
+
+这是一个有意的工程取舍：
+
+- 自由文本 CoT 可读性高，但不稳定
+- 对前端展示、trace 对比、后续 rerank 利用不够友好
+- 容易夹杂无关表述
+
+所以这里采用的是“轻量结构化 reasoning state”，也就是：
+
+- `title`
+- `summary`
+- `candidate_calls`
+- `evidence_titles`
+
+这更像“可消费的推理摘要卡片”，而不是原样暴露模型完整思维链。
+
+## 9. 现在怎么排查效果问题
+
+### 9.1 回答太偏、太泛
 
 先看：
 - `retrieval_trace.plan`
@@ -210,7 +280,7 @@ RAG prompt 由这些信息组成：
 - 证据不够完整
 - 文档本身没 ingest 到
 
-### 8.2 LLM 似乎没拿到足够信息
+### 9.2 LLM 似乎没拿到足够信息
 
 看：
 - `llm_trace.request_messages`
@@ -221,7 +291,7 @@ RAG prompt 由这些信息组成：
 - reasoning cards 有没有进 prompt
 - 模型实际怎样响应
 
-### 8.3 Direct 模式没有回答
+### 9.3 Direct 模式没有回答
 
 通常说明：
 - `LLM_BASE_URL`
@@ -230,7 +300,7 @@ RAG prompt 由这些信息组成：
 
 至少有一个没配置对。
 
-## 9. 如果以后要做真正的上下文记忆
+## 10. 如果以后要做真正的上下文记忆
 
 建议最小实现如下：
 
@@ -244,7 +314,7 @@ RAG prompt 由这些信息组成：
 
 这样可以避免把“用户历史”与“检索证据”混成一团。
 
-## 10. 关键文件总览
+## 11. 关键文件总览
 
 - `src/rag_codegen/app.py`
   FastAPI 路由与模式分流

@@ -224,14 +224,54 @@ RAG 和 Direct 都会暴露：
 - 本轮是否真的打到了外部模型
 - 还是走了本地 fallback
 
-## 7. 当前限制
+## 7. `reasoning cards` 的研究背景
+
+这里也做一个准确说明：
+
+- `reasoning cards` 是本项目的工程术语
+- 它不是直接照搬某篇论文里的标准模块名
+- 它背后的设计，主要来自“显式中间推理 + 检索驱动推理 + 后验验证”这三条研究线
+
+对应参考：
+
+1. [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
+   支撑“显式展开中间步骤有助于复杂推理”。
+
+2. [Show Your Work: Scratchpads for Intermediate Computation with Language Models](https://arxiv.org/abs/2112.00114)
+   支撑“保留中间工作区/scratchpad 有助于多步任务”。
+
+3. [Measuring and Narrowing the Compositionality Gap in Language Models](https://arxiv.org/abs/2210.03350)
+   其中的 `self-ask` 支撑“先拆 follow-up questions 再逐步求解”。
+
+4. [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
+   支撑“推理轨迹与外部动作/搜索交替推进”。
+
+5. [Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions](https://arxiv.org/abs/2212.10509)
+   支撑“下一步检索内容要由当前推理状态决定”。
+
+6. [Large Language Models are Better Reasoners with Self-Verification](https://arxiv.org/abs/2212.09561)
+   支撑“中间结构和答案应服务于后验校验与修订”。
+
+本项目的落地方式是：
+
+- 不直接暴露自由文本 CoT
+- 而是把阶段性推理状态压成结构化卡片
+- 让它既能给人看，也能给后续 prompt / rerank / 调试链路复用
+
+因此，`reasoning cards` 更适合被理解为：
+
+- API-RAG 场景下的结构化 scratchpad
+- 带检索语义的中间推理摘要
+- 面向可观察性与可复用性的工程实现
+
+## 8. 当前限制
 
 - 后端仍然是单轮问答
 - Direct 模式不做检索，也不做 RAG 证据增强
 - PDF 已支持解析，但效果取决于 PDF 文本可抽取质量
 - 检索效果仍受 chunk 粒度和文档覆盖度影响
 
-## 8. 最适合的使用方式
+## 9. 最适合的使用方式
 
 - 需要 API 正确性、类关系、方法链路时，用 `RAG`
 - 需要开放式讨论、非本地知识问答、头脑风暴时，用 `Direct`
