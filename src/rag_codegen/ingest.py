@@ -153,14 +153,15 @@ class Ingestor:
 
         # Method-level chunks
         method_chunks: Dict[str, Dict] = {}
-        for method_name, sig_clean, description in self._extract_html_method_summaries(raw):
+        for method_name, sig_clean, full_signature, description in self._extract_html_method_summaries(raw):
             suffix = self._method_chunk_suffix(class_name, method_name, sig_clean)
-            method_symbols = extract_symbols(f"{sig_clean}\n{description}\n{raw}")
-            method_meta = self._method_signature_meta(method_name, sig_clean, class_name)
+            method_symbols = extract_symbols(f"{full_signature}\n{description}\n{raw}")
+            method_meta = self._method_signature_meta(method_name, sig_clean, full_signature, class_name)
             method_text = truncate_text(
                 "\n".join(
                     [
                         f"{title} {method_name}",
+                        full_signature,
                         sig_clean,
                         description,
                     ]
@@ -183,7 +184,8 @@ class Ingestor:
             }
 
         for method_name, signature in re.findall(r"<h4>([^<]+)</h4>\s*<pre>([\s\S]*?)</pre>", raw):
-            sig_clean = self._normalize_method_signature(method_name, strip_html(signature))
+            full_signature = " ".join(strip_html(signature).split())
+            sig_clean = self._normalize_method_signature(method_name, full_signature)
             suffix = self._method_chunk_suffix(class_name, method_name, sig_clean)
             existing = method_chunks.get(suffix)
             if existing:
@@ -191,9 +193,9 @@ class Ingestor:
                     existing["text"] = truncate_text(existing["text"] + "\n" + sig_clean, 1600)
                 continue
 
-            method_symbols = extract_symbols(sig_clean + " " + raw)
-            method_text = f"{title} {method_name} {sig_clean}"
-            method_meta = self._method_signature_meta(method_name, sig_clean, class_name)
+            method_symbols = extract_symbols(full_signature + " " + raw)
+            method_text = f"{title} {method_name} {full_signature}"
+            method_meta = self._method_signature_meta(method_name, sig_clean, full_signature, class_name)
             method_chunks[suffix] = {
                 "chunk_id": self._chunk_id(path, "method", suffix),
                 "source_path": str(path),
@@ -368,30 +370,46 @@ class Ingestor:
                 inherited[owner] = sorted(set(methods))
         return inherited
 
-    def _extract_html_method_summaries(self, raw: str) -> List[tuple[str, str, str]]:
-        out: List[tuple[str, str, str]] = []
+    def _extract_html_method_summaries(self, raw: str) -> List[tuple[str, str, str, str]]:
+        out: List[tuple[str, str, str, str]] = []
         pattern = re.compile(
+            r'<tr[^>]*>\s*<td class="colFirst"><code>([\s\S]*?)</code></td>\s*<td class="colLast"><code><span class="memberNameLink"><a [^>]*>([^<]+)</a></span>\(([\s\S]*?)\)</code>\s*(?:<div class="block">([\s\S]*?)</div>)?',
+            re.MULTILINE,
+        )
+        for return_part, method_name, signature_part, description in pattern.findall(raw):
+            full_signature = " ".join(strip_html(f"{return_part} {method_name}({signature_part})").split())
+            sig_clean = self._normalize_method_signature(method_name, full_signature)
+            desc_clean = strip_html(description or "")
+            out.append((method_name.strip(), sig_clean, full_signature, desc_clean))
+
+        if out:
+            return out
+
+        fallback = re.compile(
             r'<td class="colLast"><code><span class="memberNameLink"><a [^>]*>([^<]+)</a></span>\(([\s\S]*?)\)</code>\s*(?:<div class="block">([\s\S]*?)</div>)?',
             re.MULTILINE,
         )
-        for method_name, signature_part, description in pattern.findall(raw):
-            sig_clean = self._normalize_method_signature(method_name, strip_html(f"{method_name}({signature_part})"))
+        for method_name, signature_part, description in fallback.findall(raw):
+            full_signature = " ".join(strip_html(f"{method_name}({signature_part})").split())
+            sig_clean = self._normalize_method_signature(method_name, full_signature)
             desc_clean = strip_html(description or "")
-            out.append((method_name.strip(), sig_clean, desc_clean))
+            out.append((method_name.strip(), sig_clean, full_signature, desc_clean))
         return out
 
     def _method_chunk_suffix(self, class_name: str, method_name: str, signature: str) -> str:
         sig_suffix = signature or method_name
         return f"{class_name}.{method_name}.{sig_suffix}"
 
-    def _method_signature_meta(self, method_name: str, signature: str, owner_class: str) -> Dict:
+    def _method_signature_meta(self, method_name: str, signature: str, full_signature: str, owner_class: str) -> Dict:
         flat = " ".join(signature.split())
-        marker = re.search(rf"\b{re.escape(method_name)}\s*\(", flat)
-        prefix = flat[: marker.start()] if marker else ""
-        params_match = re.search(r"\((.*)\)", flat)
+        full_flat = " ".join(full_signature.split())
+        marker = re.search(rf"\b{re.escape(method_name)}\s*\(", full_flat)
+        prefix = full_flat[: marker.start()] if marker else ""
+        params_match = re.search(r"\((.*)\)", full_flat)
         params = params_match.group(1) if params_match else ""
         return_types = extract_symbols(prefix)
         param_types = extract_symbols(params)
+        generic_bounds = extract_symbols(full_flat)
         related_types = sorted(set(return_types + param_types))
         access_kind = (
             "getter"
@@ -405,7 +423,8 @@ class Ingestor:
             "owner_class": owner_class,
             "return_types": return_types,
             "param_types": param_types,
-            "related_types": related_types,
+            "related_types": sorted(set(related_types + generic_bounds)),
+            "full_signature": full_flat,
             "access_kind": access_kind,
         }
 

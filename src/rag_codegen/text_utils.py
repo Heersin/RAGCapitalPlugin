@@ -245,7 +245,7 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
         api_terms.extend(["Name", "IXAttributes.Name"])
 
     if re.search(r"寻找|获取|拿到|obtain|get|selected|selection|当前|current", low):
-        access_path_terms.extend(["getSelectedObjects", "getCurrentDesign", "getCurrentUser", "selection", "current"])
+        access_path_terms.extend(["getSelectedObjects", "getCurrentDesign", "selection", "current"])
 
     if "IXFunctionDesign" in target_symbols or re.search(r"functiondesign|function design|功能设计|功能图", low):
         target_symbols.extend(["IXFunctionDesign", "IXFunctionDesignAction"])

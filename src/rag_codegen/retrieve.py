@@ -51,6 +51,13 @@ class Retriever:
         profile = build_query_profile(query, plugin_type)
         candidate_limit = max(40, top_k * 5)
         expansion_budget = max(24, top_k * 4)
+        planner = self._run_retrieval_planner(
+            profile=profile,
+            plugin_type=plugin_type,
+            plugin_types=allowed_types,
+            mode=mode,
+            top_k=top_k,
+        )
 
         general_hits = self._stage_search(
             profile=profile,
@@ -99,16 +106,11 @@ class Retriever:
             factor=0.4,
             reason="guide_lookup",
         )
-        relation_chain_hits = self._build_relation_chain_hits(
-            profile=profile,
-            plugin_types=allowed_types,
-            top_k=top_k,
-        )
 
         fused = self._merge_ranked_hits(general_hits, api_hits)
         fused = self._merge_ranked_hits(fused, example_hits)
         fused = self._merge_ranked_hits(fused, guide_hits)
-        fused = self._merge_ranked_hits(fused, relation_chain_hits)
+        fused = self._merge_ranked_hits(fused, planner["combined_hits"])
         fused_ids = [x["chunk_id"] for x in fused]
         chunk_map = self.storage.get_chunks_by_ids(fused_ids)
         expanded = self._expand_neighborhood(
@@ -178,23 +180,177 @@ class Retriever:
                 "api_lookup": len(api_hits),
                 "example_lookup": len(example_hits),
                 "guide_lookup": len(guide_hits),
-                "relation_chain": len(relation_chain_hits),
+                "planner": len(planner["combined_hits"]),
             },
+            "planner": planner["trace"],
             "fused_candidates": len(fused),
             "expanded_candidates": len(expanded),
             "second_hop_candidates": len(expanded_second_hop),
             "final_candidates": len(combined),
             "selected_titles": [card["title"] for card in cards[:6]],
-            "relation_chain_titles": self._top_titles(relation_chain_hits, limit=8),
         }
 
         return RetrievalResult(plugin_type=plugin_type, evidence_cards=cards, trace=trace)
+
+    def _run_retrieval_planner(
+        self,
+        profile: QueryProfile,
+        plugin_type: str,
+        plugin_types: List[str],
+        mode: RetrievalMode,
+        top_k: int,
+    ) -> Dict:
+        stages: Dict[str, Dict] = {}
+
+        def add_stage(name: str, query_text: str, hits: List[Dict]) -> None:
+            stages[name] = {
+                "query": query_text,
+                "hits": hits,
+                "titles": self._top_titles(hits, limit=6),
+            }
+
+        target_query = " ".join(profile.target_symbols[:8] + profile.relation_terms[:8])
+        target_hits = self._scale_hits(
+            self._stage_search(
+                profile=build_query_profile(target_query or profile.raw_query, plugin_type),
+                plugin_type=plugin_type,
+                plugin_types=plugin_types,
+                mode=mode,
+                query_text=target_query,
+                limit=max(20, top_k * 4),
+                source_types=["javadoc_html"],
+            ),
+            factor=0.95,
+            reason="planner_target",
+        )
+        add_stage("target_lookup", target_query, target_hits)
+
+        interface_query = " ".join(profile.target_symbols[:6] + profile.api_terms[:10] + ["interface", plugin_type])
+        interface_hits = self._scale_hits(
+            self._stage_search(
+                profile=build_query_profile(interface_query or profile.raw_query, plugin_type),
+                plugin_type=plugin_type,
+                plugin_types=plugin_types,
+                mode=mode,
+                query_text=interface_query,
+                limit=max(18, top_k * 4),
+                source_types=["javadoc_html"],
+            ),
+            factor=0.88,
+            reason="planner_interface",
+        )
+        add_stage("interface_lookup", interface_query, interface_hits)
+
+        access_query = " ".join(profile.target_symbols[:6] + profile.access_path_terms[:10] + ["selection", "current"])
+        access_hits = self._scale_hits(
+            self._stage_search(
+                profile=build_query_profile(access_query or profile.raw_query, plugin_type),
+                plugin_type=plugin_type,
+                plugin_types=plugin_types,
+                mode=mode,
+                query_text=access_query,
+                limit=max(18, top_k * 4),
+                source_types=["javadoc_html"],
+            ),
+            factor=0.92,
+            reason="planner_access",
+        )
+        add_stage("access_path_lookup", access_query, access_hits)
+
+        attribute_query = " ".join(profile.target_symbols[:4] + ["IXObject", "IXAttributes", "getAttribute"] + profile.attribute_names[:4])
+        attribute_hits = self._scale_hits(
+            self._filter_attribute_hits(
+                self._stage_search(
+                    profile=build_query_profile(attribute_query or profile.raw_query, plugin_type),
+                    plugin_type=plugin_type,
+                    plugin_types=plugin_types,
+                    mode=mode,
+                    query_text=attribute_query,
+                    limit=max(16, top_k * 4),
+                    source_types=["javadoc_html"],
+                ),
+                profile,
+                plugin_types,
+            ),
+            factor=0.94,
+            reason="planner_attribute",
+        )
+        add_stage("attribute_lookup", attribute_query, attribute_hits)
+
+        relation_hits = self._build_relation_chain_hits(
+            profile=profile,
+            plugin_types=plugin_types,
+            top_k=top_k,
+            mode=mode,
+            plugin_type=plugin_type,
+        )
+        add_stage("relation_chain", "typed relation expansion", relation_hits)
+
+        combined: List[Dict] = []
+        for stage in stages.values():
+            combined = self._merge_ranked_hits(combined, stage["hits"])
+
+        return {
+            "combined_hits": combined,
+            "trace": {
+                name: {
+                    "query": stage["query"],
+                    "candidates": len(stage["hits"]),
+                    "titles": stage["titles"],
+                }
+                for name, stage in stages.items()
+            },
+        }
+
+    def _filter_attribute_hits(
+        self,
+        hits: List[Dict],
+        profile: QueryProfile,
+        plugin_types: List[str],
+    ) -> List[Dict]:
+        if not hits or not profile.attribute_names:
+            return hits
+
+        chunk_map = self.storage.get_chunks_by_ids([item["chunk_id"] for item in hits])
+        exact_titles = {f"IXAttributes.{name}" for name in profile.attribute_names[:6]}
+        keeper_titles = exact_titles.union(
+            {
+                "IXAttributes",
+                "IXObject",
+                "IXObject.getAttribute",
+                "IXObject.getAttributes",
+                "IXAttributeSetter.getAttributes",
+            }
+        )
+        filtered: List[Dict] = []
+        for item in hits:
+            chunk = chunk_map.get(item["chunk_id"])
+            if not chunk:
+                continue
+            title = chunk.get("title", "")
+            if title in keeper_titles or any(name.lower() in title.lower() for name in profile.attribute_names):
+                filtered.append(item)
+
+        if filtered:
+            return filtered
+
+        add_back = self.storage.get_chunk_ids_for_titles(sorted(keeper_titles), plugin_types=plugin_types, limit=12)
+        fallback = []
+        seen = set()
+        for chunk_id in add_back + [item["chunk_id"] for item in hits]:
+            if chunk_id in seen:
+                continue
+            seen.add(chunk_id)
+            fallback.append({"chunk_id": chunk_id, "score": 0.72, "reason": "attribute_filter_fallback", "reasons": ["attribute_filter_fallback"]})
+        return fallback
 
     def _build_relation_chain_hits(
         self,
         profile: QueryProfile,
         plugin_types: List[str],
         top_k: int,
+        mode: RetrievalMode,
+        plugin_type: str,
     ) -> List[Dict]:
         if not profile.target_symbols and not profile.access_path_terms:
             return []
@@ -205,10 +361,11 @@ class Retriever:
             for chunk_id in chunk_ids:
                 row = chain_hits.setdefault(
                     chunk_id,
-                    {"chunk_id": chunk_id, "score": 0.0, "reason": reason},
+                    {"chunk_id": chunk_id, "score": 0.0, "reason": reason, "reasons": [reason]},
                 )
                 row["score"] += score
                 row["reason"] = reason
+                row["reasons"] = sorted(set(row.get("reasons", []) + [reason]))
 
         add_hits(
             self.storage.get_chunk_ids_for_class_names(profile.target_symbols, plugin_types=plugin_types, limit=max(12, top_k * 3)),
@@ -238,19 +395,23 @@ class Retriever:
                 "attribute_constant",
             )
             attribute_query = " ".join(["IXAttributes", "getAttribute"] + profile.attribute_names[:4])
-            attribute_hits = self._stage_search(
-                profile=build_query_profile(attribute_query, "action"),
-                plugin_type="action",
-                plugin_types=plugin_types,
-                mode="hybrid",
-                query_text=attribute_query,
-                limit=max(16, top_k * 3),
-                source_types=["javadoc_html"],
+            attribute_hits = self._filter_attribute_hits(
+                self._stage_search(
+                    profile=build_query_profile(attribute_query, plugin_type),
+                    plugin_type=plugin_type,
+                    plugin_types=plugin_types,
+                    mode=mode,
+                    query_text=attribute_query,
+                    limit=max(16, top_k * 3),
+                    source_types=["javadoc_html"],
+                ),
+                profile,
+                plugin_types,
             )
             for item in attribute_hits:
                 row = chain_hits.setdefault(
                     item["chunk_id"],
-                    {"chunk_id": item["chunk_id"], "score": 0.0, "reason": "attribute_chain"},
+                    {"chunk_id": item["chunk_id"], "score": 0.0, "reason": "attribute_chain", "reasons": ["attribute_chain"]},
                 )
                 row["score"] += float(item.get("score", 0.0)) * 0.6 + 0.24
                 row["reason"] = "attribute_chain"
@@ -353,15 +514,23 @@ class Retriever:
 
         for hit in bm25_hits:
             cid = hit["chunk_id"]
-            row = by_id.setdefault(cid, {"chunk_id": cid, "score": 0.0, "bm25_rank": None, "dense_rank": None})
+            row = by_id.setdefault(
+                cid,
+                {"chunk_id": cid, "score": 0.0, "bm25_rank": None, "dense_rank": None, "reasons": []},
+            )
             row["bm25_rank"] = hit["rank"]
             row["score"] += 1.0 / (k + hit["rank"])
+            row["reasons"] = sorted(set(row.get("reasons", []) + ["bm25"]))
 
         for hit in dense_hits:
             cid = hit["chunk_id"]
-            row = by_id.setdefault(cid, {"chunk_id": cid, "score": 0.0, "bm25_rank": None, "dense_rank": None})
+            row = by_id.setdefault(
+                cid,
+                {"chunk_id": cid, "score": 0.0, "bm25_rank": None, "dense_rank": None, "reasons": []},
+            )
             row["dense_rank"] = hit["rank"]
             row["score"] += 1.0 / (k + hit["rank"])
+            row["reasons"] = sorted(set(row.get("reasons", []) + ["dense"]))
 
         if not by_id:
             return []
@@ -486,11 +655,15 @@ class Retriever:
         for item in expanded:
             row = merged.setdefault(
                 item["chunk_id"],
-                {"chunk_id": item["chunk_id"], "score": 0.0, "bm25_rank": None, "dense_rank": None},
+                {"chunk_id": item["chunk_id"], "score": 0.0, "bm25_rank": None, "dense_rank": None, "reasons": []},
             )
             row["score"] += item["score"]
             if "reason" in item:
                 row["reason"] = item["reason"]
+            if "reasons" in item:
+                row["reasons"] = sorted(set(row.get("reasons", []) + item["reasons"]))
+            elif "reason" in item:
+                row["reasons"] = sorted(set(row.get("reasons", []) + [item["reason"]]))
         out = list(merged.values())
         out.sort(key=lambda x: x["score"], reverse=True)
         return out
@@ -501,6 +674,7 @@ class Retriever:
             row = dict(item)
             row["score"] = float(row.get("score", 0.0)) * factor
             row["reason"] = reason
+            row["reasons"] = sorted(set(row.get("reasons", []) + [reason]))
             scaled.append(row)
         return scaled
 
@@ -595,6 +769,10 @@ class Retriever:
             if title in selected_titles:
                 deferred.append(item)
                 return False
+            if profile.attribute_names and title.startswith("IXAttributes.") and title != "IXAttributes":
+                if not any(name.lower() in title.lower() for name in profile.attribute_names):
+                    deferred.append(item)
+                    return False
             example_count = sum(
                 1 for existing in selected if chunk_map.get(existing["chunk_id"], {}).get("source_type") == "java_example"
             )
@@ -606,6 +784,26 @@ class Retriever:
             selected_titles.add(title)
             per_source[source_path] = used + 1
             return True
+
+        priority_reasons = [
+            "planner_target",
+            "planner_access",
+            "planner_attribute",
+            "planner_interface",
+            "attribute_constant",
+            "type_chain",
+        ]
+        for reason in priority_reasons:
+            if len(selected) >= min(top_k, 5):
+                break
+            for item in fused:
+                if item["chunk_id"] in selected_ids:
+                    continue
+                reasons = item.get("reasons", [])
+                if reason not in reasons:
+                    continue
+                if _try_select(item):
+                    break
 
         for item in fused:
             if len(selected) >= api_quota:

@@ -564,6 +564,7 @@ CHAT_UI_HTML = """<!doctype html>
                 route_confidence: trace.route_confidence,
                 retrieval_query: trace.retrieval_query,
                 query_expansions: trace.query_expansions,
+                planner: trace.planner,
                 stage_candidates: trace.stage_candidates,
                 fused_candidates: trace.fused_candidates,
                 expanded_candidates: trace.expanded_candidates,
