@@ -99,10 +99,16 @@ class Retriever:
             factor=0.4,
             reason="guide_lookup",
         )
+        relation_chain_hits = self._build_relation_chain_hits(
+            profile=profile,
+            plugin_types=allowed_types,
+            top_k=top_k,
+        )
 
         fused = self._merge_ranked_hits(general_hits, api_hits)
         fused = self._merge_ranked_hits(fused, example_hits)
         fused = self._merge_ranked_hits(fused, guide_hits)
+        fused = self._merge_ranked_hits(fused, relation_chain_hits)
         fused_ids = [x["chunk_id"] for x in fused]
         chunk_map = self.storage.get_chunks_by_ids(fused_ids)
         expanded = self._expand_neighborhood(
@@ -163,21 +169,95 @@ class Retriever:
                 "api_terms": profile.api_terms[:14],
                 "relation_terms": profile.relation_terms[:14],
                 "example_terms": profile.example_terms[:12],
+                "target_symbols": profile.target_symbols[:12],
+                "access_path_terms": profile.access_path_terms[:12],
+                "attribute_names": profile.attribute_names[:8],
             },
             "stage_candidates": {
                 "general_lookup": len(general_hits),
                 "api_lookup": len(api_hits),
                 "example_lookup": len(example_hits),
                 "guide_lookup": len(guide_hits),
+                "relation_chain": len(relation_chain_hits),
             },
             "fused_candidates": len(fused),
             "expanded_candidates": len(expanded),
             "second_hop_candidates": len(expanded_second_hop),
             "final_candidates": len(combined),
             "selected_titles": [card["title"] for card in cards[:6]],
+            "relation_chain_titles": self._top_titles(relation_chain_hits, limit=8),
         }
 
         return RetrievalResult(plugin_type=plugin_type, evidence_cards=cards, trace=trace)
+
+    def _build_relation_chain_hits(
+        self,
+        profile: QueryProfile,
+        plugin_types: List[str],
+        top_k: int,
+    ) -> List[Dict]:
+        if not profile.target_symbols and not profile.access_path_terms:
+            return []
+
+        chain_hits: Dict[str, Dict] = {}
+
+        def add_hits(chunk_ids: List[str], score: float, reason: str) -> None:
+            for chunk_id in chunk_ids:
+                row = chain_hits.setdefault(
+                    chunk_id,
+                    {"chunk_id": chunk_id, "score": 0.0, "reason": reason},
+                )
+                row["score"] += score
+                row["reason"] = reason
+
+        add_hits(
+            self.storage.get_chunk_ids_for_class_names(profile.target_symbols, plugin_types=plugin_types, limit=max(12, top_k * 3)),
+            0.92,
+            "target_class",
+        )
+        add_hits(
+            self.storage.get_related_chunk_ids(profile.target_symbols, plugin_types=plugin_types, limit=max(24, top_k * 6)),
+            0.84,
+            "type_chain",
+        )
+        add_hits(
+            self.storage.get_chunk_ids_for_method_names(
+                profile.access_path_terms,
+                plugin_types=plugin_types,
+                limit=max(18, top_k * 4),
+            ),
+            0.76,
+            "access_path",
+        )
+
+        if profile.attribute_names:
+            attribute_titles = [f"IXAttributes.{name}" for name in profile.attribute_names[:4]]
+            add_hits(
+                self.storage.get_chunk_ids_for_titles(attribute_titles, plugin_types=plugin_types, limit=max(8, top_k * 2)),
+                1.05,
+                "attribute_constant",
+            )
+            attribute_query = " ".join(["IXAttributes", "getAttribute"] + profile.attribute_names[:4])
+            attribute_hits = self._stage_search(
+                profile=build_query_profile(attribute_query, "action"),
+                plugin_type="action",
+                plugin_types=plugin_types,
+                mode="hybrid",
+                query_text=attribute_query,
+                limit=max(16, top_k * 3),
+                source_types=["javadoc_html"],
+            )
+            for item in attribute_hits:
+                row = chain_hits.setdefault(
+                    item["chunk_id"],
+                    {"chunk_id": item["chunk_id"], "score": 0.0, "reason": "attribute_chain"},
+                )
+                row["score"] += float(item.get("score", 0.0)) * 0.6 + 0.24
+                row["reason"] = "attribute_chain"
+
+        out = list(chain_hits.values())
+        out.sort(key=lambda item: item["score"], reverse=True)
+        return out
 
     def _stage_search(
         self,
@@ -332,12 +412,18 @@ class Retriever:
             class_names.update([tok for tok in tokenize(chunk.get("text", "")) if tok.startswith("IX")][:12])
             meta = chunk.get("meta", {}) or {}
             class_names.update(meta.get("super_types", [])[:12])
+            class_names.update(meta.get("related_types", [])[:12])
             for owner, methods in (meta.get("inherited_methods", {}) or {}).items():
                 class_names.add(owner)
                 method_names.update(methods[:16])
+            class_names.update(meta.get("return_types", [])[:12])
+            class_names.update(meta.get("param_types", [])[:12])
 
         symbols.update([tok for tok in tokenize(query) if tok.startswith("IX")])
         symbols.update([tok for tok in profile.query_tokens if tok.startswith("IX")])
+        symbols.update(profile.target_symbols[:12])
+        class_names.update(profile.target_symbols[:12])
+        method_names.update(profile.access_path_terms[:12])
         method_names.update(
             [
                 tok
@@ -448,6 +534,8 @@ class Retriever:
         explicit_api_symbols = [term.lower() for term in profile.api_terms if term.startswith("IX")]
         symbol_hits = sum(1 for term in explicit_api_symbols if term.lower() in title_token_set)
         bonus += min(0.24, 0.06 * symbol_hits)
+        target_symbol_hits = sum(1 for term in profile.target_symbols if term.lower() in title_token_set)
+        bonus += min(0.32, 0.1 * target_symbol_hits)
 
         if chunk.get("plugin_type") == plugin_type:
             bonus += 0.05
@@ -469,6 +557,10 @@ class Retriever:
             "ixoutputwindow" in title_token_set or "println" in title_token_set or "getoutputwindow" in title_token_set
         ):
             bonus += 0.24
+        if profile.attribute_names and ("getattribute" in title_token_set or "ixattributes" in title_token_set):
+            bonus += 0.18
+        if profile.access_path_terms and any(term.lower() == chunk.get("method_name", "").lower() for term in profile.access_path_terms):
+            bonus += 0.18
 
         if chunk.get("source_type") == "pdf":
             bonus -= 0.03
@@ -541,3 +633,17 @@ class Retriever:
             selected_titles.add(chunk.get("title") or item["chunk_id"])
 
         return selected
+
+    def _top_titles(self, hits: List[Dict], limit: int = 6) -> List[str]:
+        if not hits:
+            return []
+        chunk_map = self.storage.get_chunks_by_ids([item["chunk_id"] for item in hits[:limit]])
+        titles: List[str] = []
+        for item in hits:
+            chunk = chunk_map.get(item["chunk_id"])
+            if not chunk:
+                continue
+            titles.append(chunk.get("title") or item["chunk_id"])
+            if len(titles) >= limit:
+                break
+        return titles

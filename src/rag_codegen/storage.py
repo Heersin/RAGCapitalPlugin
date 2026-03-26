@@ -296,6 +296,98 @@ class Storage:
             rows = conn.execute(sql, params).fetchall()
         return [str(r["chunk_id"]) for r in rows]
 
+    def get_related_chunk_ids(
+        self,
+        type_names: Iterable[str],
+        plugin_types: Optional[List[str]] = None,
+        limit: int = 120,
+    ) -> List[str]:
+        names = [str(x) for x in type_names if str(x).strip()]
+        if not names:
+            return []
+
+        with self._conn() as conn:
+            rows = conn.execute("SELECT * FROM chunks").fetchall()
+
+        scored: List[tuple[float, str]] = []
+        lowered_names = [name.lower() for name in names]
+        for row in rows:
+            if plugin_types and row["plugin_type"] not in plugin_types:
+                continue
+
+            meta = json.loads(row["meta_json"] or "{}")
+            class_name = str(row["class_name"] or "")
+            method_name = str(row["method_name"] or "")
+            signature = str(row["signature"] or "")
+            title = str(row["title"] or "")
+            text = str(row["text"] or "")
+            return_types = [str(x) for x in meta.get("return_types", [])]
+            param_types = [str(x) for x in meta.get("param_types", [])]
+            related_types = [str(x) for x in meta.get("related_types", [])]
+            super_types = [str(x) for x in meta.get("super_types", [])]
+
+            class_low = class_name.lower()
+            method_low = method_name.lower()
+            title_low = title.lower()
+            signature_low = signature.lower()
+            text_low = text.lower()
+            return_low = {x.lower() for x in return_types}
+            param_low = {x.lower() for x in param_types}
+            related_low = {x.lower() for x in related_types}
+            super_low = {x.lower() for x in super_types}
+
+            score = 0.0
+            for name in lowered_names:
+                if class_low == name:
+                    score += 1.8
+                if name in title_low:
+                    score += 0.8
+                if name in return_low:
+                    score += 1.4
+                if name in param_low:
+                    score += 0.9
+                if name in related_low or name in super_low:
+                    score += 0.9
+                if name in signature_low:
+                    score += 0.4
+                if name in text_low:
+                    score += 0.18
+                if method_low.startswith(("get", "find", "select")) and (name in return_low or name in related_low):
+                    score += 0.35
+
+            if score > 0:
+                scored.append((score, str(row["chunk_id"])))
+
+        scored.sort(key=lambda item: (-item[0], item[1]))
+        return [chunk_id for _, chunk_id in scored[:limit]]
+
+    def get_chunk_ids_for_titles(
+        self,
+        titles: Iterable[str],
+        plugin_types: Optional[List[str]] = None,
+        limit: int = 80,
+    ) -> List[str]:
+        names = [str(x) for x in titles if str(x).strip()]
+        if not names:
+            return []
+
+        clauses = []
+        params: List[Any] = []
+        placeholders = ",".join(["?"] * len(names))
+        clauses.append(f"title IN ({placeholders})")
+        params.extend(names)
+
+        if plugin_types:
+            type_placeholders = ",".join(["?"] * len(plugin_types))
+            clauses.append(f"plugin_type IN ({type_placeholders})")
+            params.extend(plugin_types)
+
+        sql = "SELECT chunk_id FROM chunks WHERE " + " AND ".join(clauses) + " LIMIT ?"
+        params.append(limit)
+        with self._conn() as conn:
+            rows = conn.execute(sql, params).fetchall()
+        return [str(r["chunk_id"]) for r in rows]
+
     def search_bm25(self, query: str, plugin_types: List[str], limit: int = 40) -> List[Dict[str, Any]]:
         safe = self._fts_query(query)
         if not safe:

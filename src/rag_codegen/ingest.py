@@ -145,6 +145,7 @@ class Ingestor:
                 "meta": {
                     "kind": "class",
                     "super_types": super_types,
+                    "related_types": sorted(set(super_types + extract_symbols(class_signature))),
                     "inherited_methods": inherited_methods,
                 },
             }
@@ -155,6 +156,7 @@ class Ingestor:
         for method_name, sig_clean, description in self._extract_html_method_summaries(raw):
             suffix = self._method_chunk_suffix(class_name, method_name, sig_clean)
             method_symbols = extract_symbols(f"{sig_clean}\n{description}\n{raw}")
+            method_meta = self._method_signature_meta(method_name, sig_clean, class_name)
             method_text = truncate_text(
                 "\n".join(
                     [
@@ -177,7 +179,7 @@ class Ingestor:
                 "title": f"{class_name}.{method_name}",
                 "text": method_text,
                 "symbols": method_symbols,
-                "meta": {"kind": "method", "owner_class": class_name},
+                "meta": method_meta,
             }
 
         for method_name, signature in re.findall(r"<h4>([^<]+)</h4>\s*<pre>([\s\S]*?)</pre>", raw):
@@ -191,6 +193,7 @@ class Ingestor:
 
             method_symbols = extract_symbols(sig_clean + " " + raw)
             method_text = f"{title} {method_name} {sig_clean}"
+            method_meta = self._method_signature_meta(method_name, sig_clean, class_name)
             method_chunks[suffix] = {
                 "chunk_id": self._chunk_id(path, "method", suffix),
                 "source_path": str(path),
@@ -203,7 +206,7 @@ class Ingestor:
                 "title": f"{class_name}.{method_name}",
                 "text": truncate_text(method_text, 1200),
                 "symbols": method_symbols,
-                "meta": {"kind": "method", "owner_class": class_name},
+                "meta": method_meta,
             }
 
         chunks.extend(method_chunks.values())
@@ -380,6 +383,31 @@ class Ingestor:
     def _method_chunk_suffix(self, class_name: str, method_name: str, signature: str) -> str:
         sig_suffix = signature or method_name
         return f"{class_name}.{method_name}.{sig_suffix}"
+
+    def _method_signature_meta(self, method_name: str, signature: str, owner_class: str) -> Dict:
+        flat = " ".join(signature.split())
+        marker = re.search(rf"\b{re.escape(method_name)}\s*\(", flat)
+        prefix = flat[: marker.start()] if marker else ""
+        params_match = re.search(r"\((.*)\)", flat)
+        params = params_match.group(1) if params_match else ""
+        return_types = extract_symbols(prefix)
+        param_types = extract_symbols(params)
+        related_types = sorted(set(return_types + param_types))
+        access_kind = (
+            "getter"
+            if method_name.startswith(("get", "find", "create", "load", "fetch"))
+            else "selector"
+            if method_name.startswith(("select", "current", "active"))
+            else "other"
+        )
+        return {
+            "kind": "method",
+            "owner_class": owner_class,
+            "return_types": return_types,
+            "param_types": param_types,
+            "related_types": related_types,
+            "access_kind": access_kind,
+        }
 
     def _normalize_method_signature(self, method_name: str, signature: str) -> str:
         flat = " ".join(signature.split())

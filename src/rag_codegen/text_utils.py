@@ -23,6 +23,9 @@ class QueryProfile:
     api_terms: List[str]
     relation_terms: List[str]
     example_terms: List[str]
+    target_symbols: List[str]
+    access_path_terms: List[str]
+    attribute_names: List[str]
     wants_examples: bool
     wants_api_docs: bool
     prefers_methods: bool
@@ -72,6 +75,7 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
     read_only = bool(re.search(r"只读|read[\s\-]?only|readonly", low))
     output_window = bool(re.search(r"输出窗口|output window|println|print|打印|日志", low))
     explicit_api_terms = [tok for tok in tokenize(query) if tok.startswith("IX") or "." in tok]
+    raw_tokens = tokenize(query)
 
     subgoals = [
         f"Confirm the primary {plugin_type} plugin interface and required lifecycle methods.",
@@ -118,6 +122,9 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
     english_terms = [plugin_type, "plugin api", "javadoc"]
     relation_terms = ["superinterface", "inherited methods", "extends", "implements", "related class"]
     example_terms = [plugin_type, "example", "template", "implementation"]
+    target_symbols: List[str] = []
+    access_path_terms: List[str] = []
+    attribute_names: List[str] = []
 
     hint_patterns = [
         (
@@ -177,6 +184,14 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
             "Find geometry or wire-length APIs related to the requirement.",
         ),
         (
+            r"functiondesign|function design|功能设计|功能图",
+            ["function design", "capture design"],
+            ["IXFunctionDesign", "IXFunctionDesignAction"],
+            ["IXDesign", "IXObject", "IXBaseCurrentContext"],
+            ["function design action example"],
+            "Locate the function-design specific action interface and the API path to the active or selected function design.",
+        ),
+        (
             r"示例|模板|实现|example|template|implement",
             ["example", "template", "implementation"],
             ["implementation"],
@@ -204,6 +219,40 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
 
     api_terms.extend(plugin_expansions.get(plugin_type, []))
 
+    attr_match = re.search(r"(?:属性|attribute)(?:值| value)?\s*[\"'“”]?\s*([A-Z][A-Za-z0-9_]+)", query)
+    if attr_match:
+        attribute_names.append(attr_match.group(1))
+
+    for token in raw_tokens:
+        if token.startswith("IX"):
+            target_symbols.append(token)
+            continue
+        if re.match(r"[A-Z][A-Za-z0-9]+Design$", token):
+            inferred = "IX" + token
+            target_symbols.append(inferred)
+            api_terms.append(inferred)
+            relation_terms.append(inferred)
+
+    if re.search(r"属性值|attribute value|attribute", low):
+        target_symbols.extend(["IXObject", "IXAttributes"])
+        api_terms.extend(["getAttribute", "IXObject", "IXAttributes"])
+        relation_terms.extend(["IXObject", "IXWriteableObject"])
+        access_path_terms.extend(["getAttribute", "getAttributes"])
+        subgoals.append("Find how the target object exposes attributes and whether the Name attribute is available directly.")
+
+    if re.search(r"\bname\b|名称|名字", low):
+        attribute_names.append("Name")
+        api_terms.extend(["Name", "IXAttributes.Name"])
+
+    if re.search(r"寻找|获取|拿到|obtain|get|selected|selection|当前|current", low):
+        access_path_terms.extend(["getSelectedObjects", "getCurrentDesign", "getCurrentUser", "selection", "current"])
+
+    if "IXFunctionDesign" in target_symbols or re.search(r"functiondesign|function design|功能设计|功能图", low):
+        target_symbols.extend(["IXFunctionDesign", "IXFunctionDesignAction"])
+        access_path_terms.extend(["getSelectedObjects", "selection", "filterClass", "IXBaseCurrentContext"])
+        api_terms.extend(["IXBaseCurrentContext", "getSelectedObjects"])
+        relation_terms.extend(["IXDesign", "IXObject", "IXBaseCurrentContext"])
+
     english_terms.extend(explicit_api_terms)
     api_terms.extend(explicit_api_terms)
     relation_terms.extend(explicit_api_terms)
@@ -228,8 +277,13 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
     relation_terms = _dedupe(relation_terms)
     example_terms = _dedupe(example_terms)
     subgoals = _dedupe(subgoals)
+    target_symbols = _dedupe(target_symbols)
+    access_path_terms = _dedupe(access_path_terms)
+    attribute_names = _dedupe(attribute_names)
 
-    expansions = _dedupe(english_terms + api_terms + relation_terms + example_terms)
+    expansions = _dedupe(
+        english_terms + api_terms + relation_terms + example_terms + target_symbols + access_path_terms + attribute_names
+    )
 
     retrieval_query = " ".join([query] + expansions)
     return QueryProfile(
@@ -242,6 +296,9 @@ def build_query_profile(query: str, plugin_type: PluginType) -> QueryProfile:
         api_terms=api_terms,
         relation_terms=relation_terms,
         example_terms=example_terms,
+        target_symbols=target_symbols,
+        access_path_terms=access_path_terms,
+        attribute_names=attribute_names,
         wants_examples=wants_examples,
         wants_api_docs=wants_api_docs,
         prefers_methods=prefers_methods,
