@@ -6,8 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
       HOST: ${HOST:-0.0.0.0}
       PORT: 8000
@@ -15,7 +13,7 @@ services:
       LLM_API_KEY: ${LLM_API_KEY:-}
       LLM_MODEL: ${LLM_MODEL:-}
       LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-60}
-      AUTO_INGEST: ${AUTO_INGEST:-true}
+      AUTO_INGEST: ${AUTO_INGEST:-false}
       INGEST_DOC_ROOT: ${INGEST_DOC_ROOT:-sample/plugin}
       INGEST_REBUILD: ${INGEST_REBUILD:-false}
       INGEST_ENABLE_PDF: ${INGEST_ENABLE_PDF:-false}
@@ -27,8 +25,8 @@ services:
       test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).read()"]
       interval: 30s
       timeout: 5s
-      retries: 5
-      start_period: 20s
+      retries: 10
+      start_period: 90s
 
 volumes:
   raglocal_runtime:

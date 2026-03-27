@@ -7,6 +7,12 @@
 - `.env.example`
 - `docker/start.sh`
 
+说明：
+
+- Dokploy 推荐直接在 GUI 里填写环境变量
+- 现在 `docker-compose.yml` 不再强依赖仓库中的 `.env` 文件
+- `.env.example` 主要用于本地参考，不再是线上启动前置条件
+
 ## 1. 推荐部署方式
 
 推荐在 Dokploy 里使用 `Docker Compose` 项目部署。
@@ -14,14 +20,16 @@
 这样可以直接利用：
 
 - `docker-compose.yml`
-- `.env` 环境变量
 - `raglocal_runtime` 持久卷
 
 在 Dokploy 场景下，Compose 现在只 `expose 8000`，不再把端口绑定到宿主机，避免 `already bind` 冲突。
+同时默认 `AUTO_INGEST=false`，优先保证容器先成功启动，再由你手动触发一次 `/ingest`。
 
 ## 2. 需要填写的环境变量
 
-把 `.env.example` 复制成 `.env` 后，至少按需填写这些值：
+如果你是本地运行，可以把 `.env.example` 复制成 `.env`。
+
+如果你是 Dokploy 部署，直接在 GUI 的 Environment 页面填写这些值即可：
 
 - `LLM_BASE_URL`
 - `LLM_API_KEY`
@@ -29,7 +37,7 @@
 
 如果你暂时不接外部 LLM，也可以先保留为空，系统会回退到本地 mock generation。
 
-如果你希望容器启动时一并导入 PDF，把：
+如果你希望启动后手动导入 PDF，把：
 
 - `INGEST_ENABLE_PDF=true`
 
@@ -59,7 +67,7 @@ LLM_BASE_URL=https://your-openai-compatible-host/v1
 LLM_API_KEY=replace-with-your-llm-api-key
 LLM_MODEL=replace-with-your-model-name
 LLM_TIMEOUT_SECONDS=60
-AUTO_INGEST=true
+AUTO_INGEST=false
 INGEST_DOC_ROOT=sample/plugin
 INGEST_REBUILD=false
 INGEST_ENABLE_PDF=false
@@ -97,6 +105,23 @@ INGEST_ENABLE_PDF=false
 - SQLite 数据库
 - dense index
 
+### 环境变量
+
+在 Dokploy GUI 中填写：
+
+- `HOST=0.0.0.0`
+- `PORT=8000`
+- `LLM_BASE_URL=...`
+- `LLM_API_KEY=...`
+- `LLM_MODEL=...`
+- `LLM_TIMEOUT_SECONDS=60`
+- `AUTO_INGEST=false`
+- `INGEST_DOC_ROOT=sample/plugin`
+- `INGEST_REBUILD=false`
+- `INGEST_ENABLE_PDF=true` 或 `false`
+
+推荐先用 `AUTO_INGEST=false`，等服务稳定启动后，再手动调用一次 `/ingest`。
+
 ## 6. 部署后的首次检查
 
 部署完成后，检查：
@@ -108,3 +133,26 @@ INGEST_ENABLE_PDF=false
 `/health` 现在会返回 `llm_enabled`，可以用来确认容器是否已经读到你的 LLM 配置。
 
 如果没有配置 LLM，页面也会正常返回，只是结果偏 mock/template。
+
+## 7. 如果部署后看到 502，优先检查什么
+
+最常见的是这几类：
+
+1. Dokploy 仍在使用旧的 Compose 配置
+   需要重新部署到最新提交。
+
+2. 之前的 `docker-compose.yml` 依赖 `.env`
+   如果线上工作区没有 `.env`，Compose 会直接启动失败。
+
+3. `AUTO_INGEST=true` 导致启动太慢
+   容器在 ingest 结束前不会监听 8000，反代会先报 502。
+
+4. Domain 的 Container Port 不是 `8000`
+   必须对准应用内部端口 `8000`。
+
+5. 查看 Dokploy 日志
+   重点搜：
+   - `Couldn't find env file`
+   - `Connection refused`
+   - `Auto ingest enabled`
+   - `ModuleNotFoundError`
